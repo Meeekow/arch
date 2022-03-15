@@ -81,6 +81,9 @@ let g:airline_theme='dracula'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 
+" auto remove trailing whitespace on save
+autocmd BufWritePre * :%s/\s\+$//e
+
 
 " custom function to load template for competitive programming
 function Meeko()
