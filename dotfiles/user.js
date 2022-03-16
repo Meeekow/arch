@@ -1,5 +1,12 @@
+
 /* Don't warn when opening about:config ***/
 user_pref("browser.aboutConfig.showWarning", false);
+
+
+/* EXPERIMENTAL ***/
+user_pref("dom.ipc.processCount", 1);
+user_pref("dom.ipc.processCount.webIsolated", 1);
+user_pref("dom.suspend_inactive.enabled", true);
 
 
 /* Reduce read/write operation of Firefox ***/
