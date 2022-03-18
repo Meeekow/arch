@@ -11,6 +11,6 @@ alias aa='setxkbmap us'
 alias mm='setxkbmap -layout us -variant dvorak -option caps:escape'
 
 salary () {
-  echo "print ($1 * 40 * 4 * 50)" | python3
+  python -c "print ('{:,.2f}'.format($1 * 4 * 40 * 50))"
 }
 export -f salary
