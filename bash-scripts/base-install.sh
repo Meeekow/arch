@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 ln -sf /usr/share/zoneinfo/Asia/Manila /etc/localtime
 hwclock --systohc
 sed -i '173s/.//' /etc/locale.gen
@@ -17,11 +16,7 @@ echo "::1       localhost" >> /etc/hosts
 echo "127.0.1.1 meredith" >> /etc/hosts
 echo root:mm | chpasswd
 
-# uncomment these 2 lines if download speed is meh
-# pacman -S --noconfirm --needed rsync reflector
-# reflector --download-timeout 15 --latest 5 --protocol https --sort rate --country "Singapore" --save /etc/pacman.d/mirrorlist
-
-pacman -S --noconfirm --needed grub efibootmgr networkmanager network-manager-applet dialog mtools dosfstools base-devel linux-headers bluez bluez-utils blueman alsa-utils pulseaudio pulseaudio-bluetooth pulseaudio-alsa pavucontrol ntfs-3g lxsession pcmanfm gvfs bash-completion scrot os-prober xclip r8168 dnsmasq openresolv vlc firefox ffmpeg rsync reflector dmenu kitty nitrogen
+pacman -S --noconfirm --needed grub efibootmgr networkmanager network-manager-applet dialog mtools dosfstools base-devel linux-headers bluez bluez-utils blueman alsa-utils pulseaudio pulseaudio-bluetooth pulseaudio-alsa pavucontrol ntfs-3g lxsession pcmanfm gvfs bash-completion scrot os-prober xclip r8168 dnsmasq openresolv firefox vlc ffmpeg rsync reflector dmenu kitty nitrogen
 
 pacman -S --noconfirm --needed xorg
 
@@ -29,7 +24,7 @@ pacman -S --noconfirm --needed nvidia nvidia-utils nvidia-settings
 
 pacman -S --noconfirm --needed lightdm lightdm-gtk-greeter
 
-# uncomment line below if xmonad from pacman is preferred instead of the stack xmonad
+# uncomment line below if xmonad from pacman is preferred instead of the xmonad via stack
 # pacman -S --noconfirm --needed xmonad xmonad-contrib xmobar dmenu kitty nitrogen
 
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
