@@ -16,8 +16,13 @@ cp /arch/dotfiles/vlcrc ~/.config/vlc/
 mkdir -p ~/.config/xmobar/
 cp /arch/dotfiles/xmobarrc ~/.config/xmobar/
 
-mkdir -p ~/.xmonad/
-cp /arch/dotfiles/xmonad.hs ~/.xmonad/
+# directory for pacman-xmonad
+# mkdir -p ~/.xmonad/
+# cp /arch/dotfiles/xmonad.hs ~/.xmonad/
+
+# directory for stack-xmonad
+mkdir -p ~/.config/xmonad/
+cp /arch/dotfiles/xmonad.hs ~/.config/xmonad/
 
 
 reboot
