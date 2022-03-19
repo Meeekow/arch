@@ -30,7 +30,7 @@ cp ~/arch/bash-scripts/build .
 chmod +x build
 
 # make entry for lightdm display manager
-cp ~/arch/dotfiles/xmonad.desktop /usr/share/xsessions/
+sudo cp /arch/dotfiles/xmonad.desktop /usr/share/xsessions/
 
 # symlink for recompile
-ln -s ~/.local/bin/xmonad /usr/bin
+sudo ln -s ~/.local/bin/xmonad /usr/bin
