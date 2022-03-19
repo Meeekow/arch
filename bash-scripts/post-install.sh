@@ -60,7 +60,6 @@ sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
 # install synth-shell
-cd ~/
 git clone --recursive https://github.com/andresgongora/synth-shell.git
 chmod +x synth-shell/setup.sh
 cd synth-shell && ./setup.sh
@@ -81,11 +80,9 @@ sed -i '37s/".*"/"85"/' ~/.config/synth-shell/synth-shell-prompt.config
 cat /arch/dotfiles/bashrc >> ~/.bashrc
 
 # remove arch from root directory
-cd /
 sudo rm -rf /arch/
 
 # remove synth-shell repo
-cd
 rm -rf ~/synth-shell/
 
 # clone repo to home directory
