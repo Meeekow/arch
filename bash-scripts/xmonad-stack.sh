@@ -39,5 +39,6 @@ cd ~/.config/xmonad/
 cp /arch/bash-scripts/build ~/.config/xmonad/
 chmod +x build
 
-# symlink for recompile
+# symlink xmonad and xmobar from local bin to /usr/bin
 sudo ln -s ~/.local/bin/xmonad /usr/bin
+sudo ln -s ~/.local/bin/xmobar /usr/bin
