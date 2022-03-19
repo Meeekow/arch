@@ -9,7 +9,7 @@ cd ~/.config/xmonad/
 # clone github repo of xmonad, xmonad-contrib and xmobar
 git clone https://github.com/xmonad/xmonad
 git clone https://github.com/xmonad/xmonad-contrib
-# git clone https://github.com/jaor/xmobar
+git clone https://github.com/jaor/xmobar
 
 # install stack
 cd ~/.config/xmonad/
@@ -21,7 +21,11 @@ stack upgrade
 
 # initialize stack in ~/.config/xmonad
 cd ~/.config/xmonad/
-stack init
+stack init --force
+
+# configure xmobar compile flags
+sed -i -e '46s/^/extra-deps: [netlink-1.1.1.0]\n/' ~/.config/xmonad/stack.yaml
+sed -i -e '50s/^/flags:\n\txmobar:\n\t\tall_extensions: true\n/' ~/.config/xmonad/stack.yaml
 
 # add path to path env variables
 export PATH="${PATH}:$HOME/.local/bin"
