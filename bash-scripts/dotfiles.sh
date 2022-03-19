@@ -23,6 +23,3 @@ cp /arch/dotfiles/xmobarrc ~/.config/xmobar/
 # directory for stack-xmonad
 mkdir -p ~/.config/xmonad/
 cp /arch/dotfiles/xmonad.hs ~/.config/xmonad/
-
-
-reboot
