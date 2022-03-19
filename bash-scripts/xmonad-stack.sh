@@ -26,7 +26,7 @@ export PATH="${PATH}:$HOME/.local/bin"
 stack install
 
 # copy custom build script for xmonad-stack
-cp ~/arch/bash-scripts/build .
+sudo cp /arch/bash-scripts/build .
 chmod +x build
 
 # make entry for lightdm display manager
