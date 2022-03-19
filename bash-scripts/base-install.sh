@@ -58,5 +58,8 @@ chmod +x /arch/bash-scripts/dotfiles.sh
 chmod +x /arch/bash-scripts/post-install.sh
 chmod +x /arch/bash-scripts/xmonad-stack.sh
 
+mkdir -p /usr/share/xsessions
+cp /arch/dotfiles/xmonad.desktop /usr/share/xsessions/
+
 
 printf "\e[1;32mDone! Type exit, umount -R /mnt and reboot.\e[0m\n"
