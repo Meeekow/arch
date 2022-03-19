@@ -1,4 +1,7 @@
 
+# Custom export for xmonad-stack
+export PATH="${PATH}:$HOME/.local/bin"
+
 # My Personal Aliases
 alias bt='rfkill block bluetooth && rfkill unblock bluetooth && bluetoothctl'
 alias ll='ls -aAFhl --color=auto --time-style="+%b %d %I:%M %P"'
