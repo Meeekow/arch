@@ -85,7 +85,7 @@ cd /
 sudo rm -rf /arch/
 
 # remove synth-shell repo
-cd /
+cd
 rm -rf ~/synth-shell/
 
 # clone repo to home directory
