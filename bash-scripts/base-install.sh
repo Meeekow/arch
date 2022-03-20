@@ -81,9 +81,12 @@ journalctl --vacuum-time=2weeks
 mkdir -p /usr/share/xsessions
 cp /arch/dotfiles/xmonad.desktop /usr/share/xsessions/
 
-# Remove repo from 'root' folder
-rm -rfv /arch/
-echo "Github repository removed from root directory."
+# Transfer repo from 'root' folder to 'home' directory
+mv /arch/ ~/
+echo "Github repository moved from root directory to home directory."
+chmod +x ~/arch/bash-scripts/dotfiles-symlink.sh
+chmod +x ~/arch/bash-scripts/xmonad-stack.sh
+chmod +x ~/arch/bash-scripts/post-install.sh
 
 
 # END OF BASE INSTALL
