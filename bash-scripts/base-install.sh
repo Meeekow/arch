@@ -61,7 +61,7 @@ echo "blacklist r8169" >> /etc/modprobe.d/r8169_blacklist.conf
 # sed -i -e '7s/()/(btrfs)/' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 
-# Enable packages to run during boot
+# Enable packages to run on boot
 systemctl enable NetworkManager
 systemctl enable bluetooth.service
 systemctl enable dnsmasq.service
@@ -77,14 +77,13 @@ echo "meeks ALL=(ALL) ALL" >> /etc/sudoers.d/meeks
 journalctl --vacuum-size=50M
 journalctl --vacuum-time=2weeks
 
-# Make scripts executable as part of the installation automation
-chmod +x /arch/bash-scripts/dotfiles.sh
-chmod +x /arch/bash-scripts/post-install.sh
-chmod +x /arch/bash-scripts/xmonad-stack.sh
-
 # Copy xmonad custom desktop entry for LightDM
 mkdir -p /usr/share/xsessions
 cp /arch/dotfiles/xmonad.desktop /usr/share/xsessions/
+
+# Remove repo from 'root' folder
+rm -rfv /arch/
+echo "Github repository removed from root directory."
 
 
 # END OF BASE INSTALL

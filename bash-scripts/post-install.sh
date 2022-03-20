@@ -77,17 +77,10 @@ sed -i '36s/".*"/"black"/' ~/.config/synth-shell/synth-shell-prompt.config
 sed -i '37s/".*"/"85"/' ~/.config/synth-shell/synth-shell-prompt.config
 
 # copy aliases to current .bashrc -> ~/.bashrc
-cat /arch/dotfiles/bashrc >> ~/.bashrc
-
-# remove arch from root directory
-sudo rm -rf /arch/
+cat ~/arch/dotfiles/bashrc >> ~/.bashrc
 
 # remove synth-shell repo
 rm -rf ~/synth-shell/
-
-# clone repo to home directory
-cd ~/
-git clone https://github.com/Meeekow/arch.git
 
 # make scripts executable
 sudo chmod +x ~/arch/bash-scripts/backup.sh
