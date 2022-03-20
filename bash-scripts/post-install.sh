@@ -83,8 +83,7 @@ cat ~/arch/dotfiles/bashrc >> ~/.bashrc
 rm -rf ~/synth-shell/
 
 # make scripts executable
-sudo chmod +x ~/arch/bash-scripts/backup.sh
-sudo chmod +x ~/arch/bash-scripts/screen-timeout.sh
+chmod +x ~/arch/bash-scripts/screen-timeout.sh
 
 
 reboot
