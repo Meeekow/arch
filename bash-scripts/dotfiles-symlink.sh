@@ -1,7 +1,5 @@
 #!/bin/bash
 
-git clone https://github.com/Meeekow/arch.git
-
 mkdir -p ~/.config/kitty/
 ln -s ~/arch/dotfiles/kitty.conf ~/.config/kitty/
 
