@@ -82,11 +82,13 @@ mkdir -p /usr/share/xsessions
 cp /arch/dotfiles/xmonad.desktop /usr/share/xsessions/
 
 # Transfer repo from 'root' folder to 'home' directory
-mv /arch/ ~/
-echo "Github repository moved from root directory to home directory."
-chmod +x ~/arch/bash-scripts/dotfiles-symlink.sh
-chmod +x ~/arch/bash-scripts/xmonad-stack.sh
-chmod +x ~/arch/bash-scripts/post-install.sh
+#mv /arch/ ~/
+#echo "Github repository moved from root directory to home directory."
+#chmod +x ~/arch/bash-scripts/dotfiles-symlink.sh
+#chmod +x ~/arch/bash-scripts/xmonad-stack.sh
+#chmod +x ~/arch/bash-scripts/post-install.sh
+rm -rfv /arch/
+echo "Github repository removed from root directory."
 
 
 # END OF BASE INSTALL
