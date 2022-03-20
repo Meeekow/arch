@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # install dependencies first
-sudo pacman -S --needed git xorg-server xorg-apps xorg-xinit xorg-xmessage libx11 libxft libxinerama libxrandr libxss pkgconf stack
+sudo pacman -S --needed git xorg-server xorg-apps xorg-xinit xorg-xmessage libx11 libxft libxinerama libxrandr libxss pkgconf
 
 # go to ~/.config/xmonad directory
 cd ~/.config/xmonad/
@@ -10,6 +10,9 @@ cd ~/.config/xmonad/
 git clone https://github.com/xmonad/xmonad
 git clone https://github.com/xmonad/xmonad-contrib
 git clone https://github.com/jaor/xmobar
+
+# install stack directly instead of using the repo version
+curl -sSL https://get.haskellstack.org/ | sh
 
 # make sure stack is up to date
 stack upgrade
