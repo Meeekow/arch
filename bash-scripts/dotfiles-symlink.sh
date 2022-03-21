@@ -22,3 +22,7 @@ ln -s ~/arch/dotfiles/xmobarrc ~/.config/xmobar/
 # directory for stack-xmonad
 mkdir -p ~/.config/xmonad/
 ln -s ~/arch/dotfiles/xmonad.hs ~/.config/xmonad/
+
+# execute next script
+sh ./arch/bash-scripts/xmonad-stack.sh
+echo "XMonad via Stack script executed."
