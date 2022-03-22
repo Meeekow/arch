@@ -81,7 +81,7 @@ journalctl --vacuum-time=2weeks
 
 # Copy xmonad custom desktop entry for LightDM
 mkdir -p /usr/share/xsessions
-cp /arch/dotfiles/xmonad.desktop /usr/share/xsessions/
+cp /arch/resource/xmonad/xmonad.desktop /usr/share/xsessions/
 
 # Remove repo from 'root' folder
 rm -rf /arch/

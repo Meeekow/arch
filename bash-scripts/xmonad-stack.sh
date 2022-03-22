@@ -31,7 +31,7 @@ export PATH="${PATH}:$HOME/.local/bin"
 stack install
 
 # copy custom build script for xmonad-stack
-sudo ln -s ~/arch/bash-scripts/build ~/.config/xmonad/
+sudo ln -s ~/arch/resource/xmonad/build ~/.config/xmonad/
 
 # symlink xmonad and xmobar from local bin to /usr/bin
 sudo ln -s ~/.local/bin/xmonad /usr/bin

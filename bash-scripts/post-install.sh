@@ -52,7 +52,7 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 # set pacman hook for nvidia updates
 # sudo mkdir -p /etc/pacman.d/hooks/
-# sudo cp ~/arch/bash-scripts/nvidia.hook /etc/pacman.d/hooks/
+# sudo cp ~/arch/resource/nvidia/nvidia.hook /etc/pacman.d/hooks/
 
 # install vim-plug
 cd ~/
@@ -77,7 +77,7 @@ sed -i '36s/".*"/"black"/' ~/.config/synth-shell/synth-shell-prompt.config
 sed -i '37s/".*"/"85"/' ~/.config/synth-shell/synth-shell-prompt.config
 
 # copy aliases to current .bashrc -> ~/.bashrc
-cat ~/arch/dotfiles/bashrc >> ~/.bashrc
+cat ~/arch/resource/bash/bashrc >> ~/.bashrc
 
 # remove synth-shell repo
 rm -rf ~/synth-shell/
