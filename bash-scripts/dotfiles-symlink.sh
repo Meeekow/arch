@@ -26,3 +26,7 @@ ln -s ~/arch/dotfiles/xmonad.hs ~/.config/xmonad/
 # execute next script
 sh ./arch/bash-scripts/xmonad-stack.sh
 echo "XMonad via Stack script executed."
+sleep 1
+
+
+reboot

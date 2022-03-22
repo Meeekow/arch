@@ -11,7 +11,7 @@ xset -r
 # force 'Full Composition Pipeline'
 # nvidia-settings -a CurrentMetaMode="DP-0:3440x1440_144 +0+0 {ForceFullCompositionPipeline=On}"
 
-# disable 'allow flipping' (0=True, 1=False)
+# disable 'Allow Flipping' (0=True, 1=False)
 nvidia-settings -a 'AllowFlipping=0'
 
 # set PowerMizer to prefer 'Maximum Performance'
