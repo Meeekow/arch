@@ -36,7 +36,7 @@ echo root:mm | chpasswd
 # Current packages I need for my setup
 # pacman -S --noconfirm --needed grub efibootmgr networkmanager network-manager-applet dialog mtools dosfstools base-devel linux-headers bluez bluez-utils blueman alsa-utils pulseaudio pulseaudio-bluetooth pulseaudio-alsa pavucontrol ntfs-3g lxsession pcmanfm gvfs bash-completion scrot os-prober xclip r8168 dnsmasq openresolv firefox vlc ffmpeg rsync reflector dmenu kitty nitrogen
 
-pacman -S --noconfirm --needed efibootmgr grub dnsmasq network-manager-applet networkmanager openresolv r8168 base-devel linux-headers dialog dosfstools mtools blueman bluez bluez-utils alsa-utils pavucontrol pulseaudio pulseaudio-alsa pulseaudio-bluetooth ntfs-3g gvfs lxsession pcmanfm ffmpeg vlc firefox bash-completion dmenu kitty nitrogen reflector scrot xclip
+pacman -S --noconfirm --needed efibootmgr grub os-prober dnsmasq network-manager-applet networkmanager openresolv r8168 base-devel linux-headers dialog dosfstools mtools blueman bluez bluez-utils alsa-utils pavucontrol pulseaudio pulseaudio-alsa pulseaudio-bluetooth ntfs-3g gvfs lxsession pcmanfm ffmpeg vlc firefox bash-completion dmenu kitty nitrogen reflector rsync scrot xclip
 
 # Display Server
 pacman -S --noconfirm --needed xorg
