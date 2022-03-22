@@ -41,10 +41,10 @@ pacman -S --noconfirm --needed efibootmgr grub dnsmasq network-manager-applet ne
 # Display Server
 pacman -S --noconfirm --needed xorg
 
-# Proprietary Display
+# Proprietary Display Driver
 pacman -S --noconfirm --needed nvidia nvidia-utils nvidia-settings
 
-# Display Manager
+# Display Manager (Login Window)
 pacman -S --noconfirm --needed lightdm lightdm-gtk-greeter
 
 # Uncomment the line below if xmonad/xmobar from pacman is preferred instead of the xmonad/xmobar via stack
