@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# add path to path env variables
+# add path to env variables
 export PATH="${PATH}:$HOME/.local/bin"
 
-# install dependencies first
+# install missing dependencies
 sudo pacman -S --needed git xorg-server xorg-apps xorg-xinit xorg-xmessage libx11 libxft libxinerama libxrandr libxss pkgconf
 
-# go to ~/.config/xmonad directory
+# change to this directory and clone repo below
 cd ~/.config/xmonad/
 
-# clone github repo of xmonad, xmonad-contrib and xmobar
+# clone github repo of xmonad, xmonad-contrib and xmobar to ~/.config/xmonad
 git clone https://github.com/xmonad/xmonad
 git clone https://github.com/xmonad/xmonad-contrib
 git clone https://github.com/jaor/xmobar
@@ -23,14 +23,14 @@ stack upgrade
 # initialize stack in ~/.config/xmonad
 stack init --force
 
-# configure xmobar compile flags
+# configure xmobar-stack compile flags
 sed -i -e '46s/^/extra-deps: [netlink-1.1.1.0]\n/' ~/.config/xmonad/stack.yaml
 sed -i -e '50s/^/flags:\n xmobar:\n    all_extensions: true\n/' ~/.config/xmonad/stack.yaml
 
-# install xmonad
+# install xmonad-stack
 stack install
 
-# copy custom build script for xmonad-stack
+# symlink custom build script for xmonad-stack
 sudo ln -s ~/arch/resource/xmonad/build ~/.config/xmonad/
 
 # symlink xmonad and xmobar from local bin to /usr/bin
