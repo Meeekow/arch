@@ -17,6 +17,8 @@ user_pref("browser.sessionstore.interval", 15000000);
 
 
 /* QoL Misc ***/
+// disable Download pop-up panel
+user_pref("browser.download.alwaysOpenPanel", false);
 // do not close even after closing the last tab
 user_pref("browser.tabs.closeWindowWithLastTab", false);
 // disable Pocket integration
