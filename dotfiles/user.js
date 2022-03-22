@@ -4,9 +4,9 @@ user_pref("browser.aboutConfig.showWarning", false);
 
 
 /* EXPERIMENTAL ***/
-user_pref("dom.ipc.processCount", 1);
-user_pref("dom.ipc.processCount.webIsolated", 1);
-user_pref("dom.suspend_inactive.enabled", true);
+user_pref("dom.ipc.processCount", -1); // -1 is equivalent to 'no limit', change accordingly;
+user_pref("dom.ipc.processCount.webIsolated", 1); // how much process for each website will be allocated
+user_pref("dom.suspend_inactive.enabled", true); // suspend inactive tabs
 
 
 /* Reduce read/write operation of Firefox ***/
