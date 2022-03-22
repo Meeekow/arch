@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# add path to path env variables
+export PATH="${PATH}:$HOME/.local/bin"
+
 # install dependencies first
 sudo pacman -S --needed git xorg-server xorg-apps xorg-xinit xorg-xmessage libx11 libxft libxinerama libxrandr libxss pkgconf
 
@@ -23,9 +26,6 @@ stack init --force
 # configure xmobar compile flags
 sed -i -e '46s/^/extra-deps: [netlink-1.1.1.0]\n/' ~/.config/xmonad/stack.yaml
 sed -i -e '50s/^/flags:\n xmobar:\n    all_extensions: true\n/' ~/.config/xmonad/stack.yaml
-
-# add path to path env variables
-export PATH="${PATH}:$HOME/.local/bin"
 
 # install xmonad
 stack install
