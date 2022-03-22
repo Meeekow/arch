@@ -1,4 +1,3 @@
-
 /* Don't warn when opening about:config ***/
 user_pref("browser.aboutConfig.showWarning", false);
 
