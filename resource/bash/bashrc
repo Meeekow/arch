@@ -1,15 +1,18 @@
 
-# Custom export for xmonad-stack
+# custom export for xmonad-stack install
 export PATH="${PATH}:$HOME/.local/bin"
 
-# My Personal Aliases
+# custom aliases
 alias bt='rfkill block bluetooth && rfkill unblock bluetooth && bluetoothctl'
 alias ll='ls -aAFhl --color=auto --time-style="+%b %d %I:%M %P"'
 alias nv='nvim'
+alias xm='export GLOBIGNORE="xmonad" && rm -rf * && unset GLOBIGNORE'
 alias xx='xmonad --recompile; pkill xmobar; xmonad --restart'
 alias cls='history -c && history -w'
+
 alias vlc='vlc --fullscreen'
 alias uml='sudo reflector --protocol https --sort rate --latest 5 --download-timeout 30 --save /etc/pacman.d/mirrorlist'
+
 alias aa='setxkbmap us'
 alias mm='setxkbmap -layout us -variant dvorak -option caps:escape'
 
