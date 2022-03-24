@@ -159,7 +159,7 @@ user_pref("general.smoothScroll.pixels.durationMinMS", 0);
 user_pref("general.smoothScroll.scrollbars.durationMaxMS", 100);
 user_pref("general.smoothScroll.scrollbars.durationMinMS", 0);
 user_pref("general.smoothScroll.stopDecelerationWeighting", "1.0");
-user_pref("layers.async-pan-zoom.enabled", true);
+user_pref("layers.async-pan-zoom.enabled", false);
 user_pref("layout.css.scroll-behavior.spring-constant", "250");
 user_pref("mousewheel.acceleration.factor", 10);
 user_pref("mousewheel.acceleration.start", -1);
