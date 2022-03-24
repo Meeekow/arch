@@ -16,6 +16,8 @@ user_pref("browser.sessionstore.interval", 15000000);
 
 
 /* QoL Misc ***/
+// disable blinding white flash before a page loads
+user_pref("browser.display.background_color", "#333");
 // disable Download pop-up panel
 user_pref("browser.download.alwaysOpenPanel", false);
 // do not close even after closing the last tab
