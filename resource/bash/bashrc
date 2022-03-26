@@ -11,7 +11,7 @@ alias xx='xmonad --recompile; pkill xmobar; xmonad --restart'
 alias cls='history -c && history -w'
 
 alias vlc='vlc --fullscreen'
-alias uml='sudo reflector --protocol https --sort rate --latest 5 --download-timeout 30 --save /etc/pacman.d/mirrorlist'
+alias uml='sudo reflector --protocol https --sort rate --latest 10 --download-timeout 15 --country "Hong Kong",Singapore --save /etc/pacman.d/mirrorlist'
 
 alias aa='setxkbmap us'
 alias mm='setxkbmap -layout us -variant dvorak -option caps:escape'
