@@ -47,7 +47,7 @@ myTestKey = [
             , ("<F1>", spawn "firefox")                                       -- F1              | launch firefox
             , ("<F2>", spawn "firefox -private-window google.com")            -- F2              | launch firefox in incognito mode
             , ("<F3>", spawn "firefox -private-window google.com & kitty")    -- F3              | launch firefox in incognito mode and kitty
-            , ("<Print>", spawn "sleep 0.2; scrot -s")                        -- Print           | launch screenshot
+            , ("<Print>", spawn "sleep 0.2; scrot -s 'foo.png' -e 'xclip -selection clipboard -t image/png -i $f'; rm -rf foo.png") -- Alt + Printscreen | launch screenshot -> copy to clipboard -> remove screenshot from disk
 
             -- Kill
             , ("M-S-<Backspace>", kill)                                       -- Alt + S + BkSpc | kill focused window in current workspace
