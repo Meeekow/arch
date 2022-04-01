@@ -11,7 +11,7 @@ sudo cp /run/media/fonts/* /usr/share/fonts/mononoki/
 
 # copy wallpaper
 mkdir -p ~/meeko/{docs,movies,series,wallpapers}
-sudo cp /run/media/wallpapers/* ~/meeko/Wallpapers/
+sudo cp /run/media/wallpapers/* ~/meeko/wallpapers/
 sudo umount /dev/sdb1
 
 # delete the ff. 5 lines if using btrfs instead of ext4
