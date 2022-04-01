@@ -18,7 +18,7 @@ xset -r
 nvidia-settings -a 'AllowFlipping=0'
 
 # set PowerMizer to prefer 'Maximum Performance'
-# nvidia-settings -a "[gpu:0] / GpuPowerMizerMode = 1"
+nvidia-settings -a "[gpu:0] / GpuPowerMizerMode = 1"
 
 # set 'openGL' to high quality (use 3 to use high performance)
 nvidia-settings -a "OpenGLImageSettings = 0"
