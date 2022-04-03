@@ -54,6 +54,18 @@ grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 # make a config for Grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
+# uncomment if using systemd instead of grub
+# bootctl --path=/boot install
+
+# sed -i -e '1s/.//' /boot/loader/loader.conf
+# echo "default arch-*" >> /boot/loader/loader.conf
+
+# touch /boot/loader/entries/arch.conf
+# echo "title Arch Linux" >> /boot/loader/entries/arch.conf
+# echo "linux	/vmlinuz-linux" >> /boot/loader/entries/arch.conf
+# echo "initrd	/initramfs-linux.img" >> /boot/loader/entries/arch.conf
+# echo "options	root=/dev/sda2 rw" >> /boot/loader/entries/arch.conf
+
 # install r8168 ethernet driver and blacklist r8169 ethernet driver which is being installed by default
 modprobe r8168
 echo "blacklist r8169" >> /etc/modprobe.d/r8169_blacklist.conf
