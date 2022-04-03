@@ -4,7 +4,7 @@
 export PATH="${PATH}:$HOME/.local/bin"
 
 # install missing dependencies
-sudo pacman -S --needed git xorg-server xorg-apps xorg-xinit xorg-xmessage libx11 libxft libxinerama libxrandr libxss pkgconf
+sudo pacman -S --needed --noconfirm git xorg-server xorg-apps xorg-xinit xorg-xmessage libx11 libxft libxinerama libxrandr libxss pkgconf
 
 # change to this directory and clone repo below
 cd ~/.config/xmonad/
