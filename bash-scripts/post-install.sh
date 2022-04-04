@@ -4,14 +4,18 @@
 git config --global user.email "mynameismeeko@gmail.com"
 git config --global user.name "Meeko"
 
+# mount hdd to copy over some files
+sudo mount /dev/sdb1 /run/media/
+
 # copy fonts
 sudo mkdir -p /usr/share/fonts/mononoki/
-sudo mount /dev/sdb1 /run/media/
 sudo cp /run/media/fonts/* /usr/share/fonts/mononoki/
 
 # copy wallpaper
 mkdir -p ~/meeko/{docs,movies,series,wallpapers}
-sudo cp /run/media/wallpapers/* ~/meeko/wallpapers/
+cp /run/media/wallpapers/* ~/meeko/wallpapers/
+
+# unmount hdd after copying over some files
 sudo umount /dev/sdb1
 
 # delete the ff. 5 lines if using btrfs instead of ext4
@@ -40,11 +44,13 @@ echo "rc-manager=resolvconf" | sudo tee -a /etc/NetworkManager/conf.d/rc-manager
 sudo touch /etc/modprobe.d/watchdog_blacklist.conf
 echo "blacklist iTCO_wdt" | sudo tee -a /etc/modprobe.d/watchdog_blacklist.conf > /dev/null
 echo "blacklist iTCO_vendor_support" | sudo tee -a /etc/modprobe.d/watchdog_blacklist.conf > /dev/null
-sudo sed -i -e '6s/quiet/quiet nowatchdog nmi_watchdog=0/' /etc/default/grub
+# uncomment line below if using grub instead of systemd-boot
+#sudo sed -i -e '6s/quiet/quiet nowatchdog nmi_watchdog=0/' /etc/default/grub
 
+# uncomment line below if using grub instead of systemd-boot
 # change grub timeout
-sudo sed -i -e '4s/5/0/' /etc/default/grub
-sudo grub-mkconfig -o /boot/grub/grub.cfg
+#sudo sed -i -e '4s/5/0/' /etc/default/grub
+#sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 # enable this if you want to ensure Nvidia is loaded at the earliest possible occasion
 # or if there is a startup issues (i.e nvidia kernel module being loaded after the display manager)

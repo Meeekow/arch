@@ -34,7 +34,10 @@ echo root:mm | chpasswd
 
 # packages clustered according to their function
 # current list of  packages I need for my setup
-pacman -S --noconfirm --needed efibootmgr grub os-prober dnsmasq network-manager-applet networkmanager openresolv r8168 base-devel linux-headers dialog dosfstools mtools blueman bluez bluez-utils alsa-utils pavucontrol pulseaudio pulseaudio-alsa pulseaudio-bluetooth ntfs-3g gvfs lxsession pcmanfm mtpfs gvfs-mtp ffmpeg vlc firefox bash-completion dmenu kitty nitrogen reflector rsync scrot xclip
+pacman -S --noconfirm --needed dnsmasq network-manager-applet networkmanager openresolv r8168 base-devel linux-headers dialog dosfstools mtools blueman bluez bluez-utils alsa-utils pavucontrol pulseaudio pulseaudio-alsa pulseaudio-bluetooth ntfs-3g gvfs lxsession pcmanfm mtpfs gvfs-mtp ffmpeg vlc firefox bash-completion dmenu kitty nitrogen reflector rsync scrot xclip
+
+# uncomment if grub bootloader will be used instead of systemd-boot
+# pacman -S --noconfirm --needed efibootmgr grub os-prober dnsmasq network-manager-applet networkmanager openresolv r8168 base-devel linux-headers dialog dosfstools mtools blueman bluez bluez-utils alsa-utils pavucontrol pulseaudio pulseaudio-alsa pulseaudio-bluetooth ntfs-3g gvfs lxsession pcmanfm mtpfs gvfs-mtp ffmpeg vlc firefox bash-completion dmenu kitty nitrogen reflector rsync scrot xclip
 
 # display server
 pacman -S --noconfirm --needed xorg
@@ -48,23 +51,23 @@ pacman -S --noconfirm --needed lightdm lightdm-gtk-greeter
 # uncomment the line below if xmonad/xmobar from pacman is preferred instead of the xmonad/xmobar via stack
 # pacman -S --noconfirm --needed xmonad xmonad-contrib xmobar
 
+# uncomment if grub will be used instead of systemd-boot
 # install Grub bootloader
-grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+# grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 
+# uncomment if grub will be used instead of systemd-boot
 # make a config for Grub
-grub-mkconfig -o /boot/grub/grub.cfg
+# grub-mkconfig -o /boot/grub/grub.cfg
 
-# uncomment if using systemd instead of grub
-# bootctl --path=/boot install
-
-# sed -i -e '1s/.//' /boot/loader/loader.conf
-# echo "default arch-*" >> /boot/loader/loader.conf
-
-# touch /boot/loader/entries/arch.conf
-# echo "title Arch Linux" >> /boot/loader/entries/arch.conf
-# echo "linux	/vmlinuz-linux" >> /boot/loader/entries/arch.conf
-# echo "initrd	/initramfs-linux.img" >> /boot/loader/entries/arch.conf
-# echo "options	root=/dev/sda2 rw" >> /boot/loader/entries/arch.conf
+# systemd-boot basic config
+bootctl --path=/boot install
+sed -i -e '1s/.//' /boot/loader/loader.conf
+echo "default arch-*" >> /boot/loader/loader.conf
+touch /boot/loader/entries/arch.conf
+echo "title Arch Linux" >> /boot/loader/entries/arch.conf
+echo "linux	/vmlinuz-linux" >> /boot/loader/entries/arch.conf
+echo "initrd	/initramfs-linux.img" >> /boot/loader/entries/arch.conf
+echo "options	root=/dev/sda2 rw" >> /boot/loader/entries/arch.conf
 
 # install r8168 ethernet driver and blacklist r8169 ethernet driver which is being installed by default
 modprobe r8168
