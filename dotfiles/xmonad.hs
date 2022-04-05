@@ -42,38 +42,38 @@ import qualified Data.Map        as M
             -- Notation in comments is in QWERTY layout, actual hotkeys are in DVORAK layout
 myTestKey = [
             -- Spawn
-              ("M-S-<Return>", spawn "kitty")                                 -- Alt + S + Enter | launch terminal
-            , ("M-l", spawn "dmenu_run -i -p \"Run: \"")                      -- Alt + p         | launch dmenu
-            , ("<F1>", spawn "firefox")                                       -- F1              | launch firefox
-            , ("<F2>", spawn "firefox -private-window google.com")            -- F2              | launch firefox in incognito mode
-            , ("<F3>", spawn "firefox -private-window google.com & kitty")    -- F3              | launch firefox in incognito mode and kitty
+              ("M-S-<Return>", spawn "kitty")                                        -- Alt + S + Enter | launch terminal
+            , ("M-l", spawn "dmenu_run -i -p \"Run: \"")                             -- Alt + p         | launch dmenu
+            , ("<F1>", spawn "firefox --sync")                                       -- F1              | launch firefox
+            , ("<F2>", spawn "firefox -private-window --sync google.com")            -- F2              | launch firefox in incognito mode
+            , ("<F3>", spawn "firefox -private-window --sync google.com & kitty")    -- F3              | launch firefox in incognito mode and kitty
             , ("<Print>", spawn "sleep 0.2; scrot -s 'foo.png' -e 'xclip -selection clipboard -t image/png -i $f'; rm -rf foo.png") -- Alt + Printscreen | launch screenshot -> copy to clipboard -> remove screenshot from disk
 
             -- Kill
-            , ("M-S-<Backspace>", kill)                                       -- Alt + S + BkSpc | kill focused window in current workspace
-            , ("<F4>", killAll)                                               -- F4              | kill all window in current workspace
+            , ("M-S-<Backspace>", kill)                                              -- Alt + S + BkSpc | kill focused window in current workspace
+            , ("<F4>", killAll)                                                      -- F4              | kill all window in current workspace
 
             -- Navigation
-            , ("M-<Space>", sendMessage NextLayout)                           -- Alt + Space     | cycle through available layouts
-            , ("M-<Tab>", windows W.focusDown)                                -- Alt + Tab       | cycle through available window(s)
-            , ("M-h", windows W.focusDown)                                    -- Alt + j         | navigation
-            , ("M-t", windows W.focusUp)                                      -- Alt + k         | navigation
+            , ("M-<Space>", sendMessage NextLayout)                                  -- Alt + Space     | cycle through available layouts
+            , ("M-<Tab>", windows W.focusDown)                                       -- Alt + Tab       | cycle through available window(s)
+            , ("M-h", windows W.focusDown)                                           -- Alt + j         | navigation
+            , ("M-t", windows W.focusUp)                                             -- Alt + k         | navigation
 
             -- Focus
-            , ("M-m", windows W.focusMaster)                                  -- Alt + m         | refocus to master window
-            , ("M-<Return>", windows W.swapMaster)                            -- Alt + S + Enter | make current window the master
-            , ("M-r", withFocused $ windows . W.sink)                         -- Alt + o         | push window back into tiling
+            , ("M-m", windows W.focusMaster)                                         -- Alt + m         | refocus to master window
+            , ("M-<Return>", windows W.swapMaster)                                   -- Alt + S + Enter | make current window the master
+            , ("M-r", withFocused $ windows . W.sink)                                -- Alt + o         | push window back into tiling
 
             -- Reorder / Resize
-            , ("M-S-h", windows W.swapDown)                                   -- Alt + S + j     | reorder windows
-            , ("M-S-t", windows W.swapUp)                                     -- Alt + S + k     | reorder windows
-            , ("M-v", sendMessage Shrink)                                     -- Alt + >         | adjust master window size
-            , ("M-z", sendMessage Expand)                                     -- Alt + ?         | adjust master window size
-            , ("M-j", sendMessage MirrorShrink)                               -- Alt + c         | adjust slave window size
-            , ("M-k", sendMessage MirrorExpand)                               -- Alt + v         | adjust slave window size
+            , ("M-S-h", windows W.swapDown)                                          -- Alt + S + j     | reorder windows
+            , ("M-S-t", windows W.swapUp)                                            -- Alt + S + k     | reorder windows
+            , ("M-v", sendMessage Shrink)                                            -- Alt + >         | adjust master window size
+            , ("M-z", sendMessage Expand)                                            -- Alt + ?         | adjust master window size
+            , ("M-j", sendMessage MirrorShrink)                                      -- Alt + c         | adjust slave window size
+            , ("M-k", sendMessage MirrorExpand)                                      -- Alt + v         | adjust slave window size
 
             -- Compile / Restart / Exit
-            , ("M-S-p", io (exitWith ExitSuccess))                            -- Alt + S + r     | logout current session
+            , ("M-S-p", io (exitWith ExitSuccess))                                   -- Alt + S + r     | logout current session
             , ("M-p", spawn "xmonad --recompile; pkill xmobar; xmonad --restart")
             ]
 
