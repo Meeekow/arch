@@ -67,7 +67,7 @@ touch /boot/loader/entries/arch.conf
 echo "title Arch Linux" >> /boot/loader/entries/arch.conf
 echo "linux	/vmlinuz-linux" >> /boot/loader/entries/arch.conf
 echo "initrd	/initramfs-linux.img" >> /boot/loader/entries/arch.conf
-echo "options	root=/dev/sda2 rw" >> /boot/loader/entries/arch.conf
+echo "options	root=/dev/sda2 rw nowatchdog nmi_watchdog=0 quiet splash" >> /boot/loader/entries/arch.conf
 
 # install r8168 ethernet driver and blacklist r8169 ethernet driver which is being installed by default
 modprobe r8168
