@@ -45,8 +45,8 @@ myTestKey = [
               ("M-S-<Return>", spawn "kitty")                                        -- Alt + S + Enter | launch terminal
             , ("M-l", spawn "dmenu_run -i -p \"Run: \"")                             -- Alt + p         | launch dmenu
             , ("<F1>", spawn "firefox --sync")                                       -- F1              | launch firefox
-            , ("<F2>", spawn "firefox -private-window --sync google.com")            -- F2              | launch firefox in incognito mode
-            , ("<F3>", spawn "firefox -private-window --sync google.com & kitty")    -- F3              | launch firefox in incognito mode and kitty
+            , ("<F2>", spawn "firefox --sync -private-window google.com")            -- F2              | launch firefox in incognito mode
+            , ("<F3>", spawn "firefox --sync -private-window google.com & kitty")    -- F3              | launch firefox in incognito mode and kitty
             , ("<Print>", spawn "sleep 0.2; scrot -s 'foo.png' -e 'xclip -selection clipboard -t image/png -i $f'; rm -rf foo.png") -- Alt + Printscreen | launch screenshot -> copy to clipboard -> remove screenshot from disk
 
             -- Kill
