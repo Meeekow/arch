@@ -137,7 +137,7 @@ settings.smoothScroll = true;
 settings.scrollFriction = 0;
 
 // scroll amount
-settings.scrollStepSize = 80;
+settings.scrollStepSize = 50;
 
 // cursor location whenever in insert mode
 settings.cursorAtEndOfInput = true;
