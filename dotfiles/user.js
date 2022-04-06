@@ -52,6 +52,8 @@ user_pref("media.eme.enabled", true);
 user_pref("media.gmp-widevinecdm.visible", true);
 user_pref("media.gmp-widevinecdm.enabled", true);
 ***/
+// Disable always show scrollbars
+user_pref("widget.gtk.overlay-scrollbars.enabled", true);
 // Enable picture-in-picture video controls
 user_pref("media.videocontrols.picture-in-picture.video-toggle.enabled", false);
 // Control media via keyboard, headset, or virtual interface
