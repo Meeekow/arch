@@ -41,9 +41,9 @@ echo "[main]" | sudo tee -a /etc/NetworkManager/conf.d/rc-manager.conf > /dev/nu
 echo "rc-manager=resolvconf" | sudo tee -a /etc/NetworkManager/conf.d/rc-manager.conf > /dev/null
 
 # turn off watchdog
-sudo touch /etc/modprobe.d/watchdog_blacklist.conf
-echo "blacklist iTCO_wdt" | sudo tee -a /etc/modprobe.d/watchdog_blacklist.conf > /dev/null
-echo "blacklist iTCO_vendor_support" | sudo tee -a /etc/modprobe.d/watchdog_blacklist.conf > /dev/null
+#sudo touch /etc/modprobe.d/watchdog_blacklist.conf
+#echo "blacklist iTCO_wdt" | sudo tee -a /etc/modprobe.d/watchdog_blacklist.conf > /dev/null
+#echo "blacklist iTCO_vendor_support" | sudo tee -a /etc/modprobe.d/watchdog_blacklist.conf > /dev/null
 # uncomment line below if using grub instead of systemd-boot
 #sudo sed -i -e '6s/quiet/quiet nowatchdog nmi_watchdog=0/' /etc/default/grub
 
@@ -62,6 +62,10 @@ echo "blacklist iTCO_vendor_support" | sudo tee -a /etc/modprobe.d/watchdog_blac
 # set pacman hook for nvidia updates
 # sudo mkdir -p /etc/pacman.d/hooks/
 # sudo cp ~/arch/resource/nvidia/nvidia.hook /etc/pacman.d/hooks/
+
+# set pacman hook for systemd-boot
+sudo mkdir -p /etc/pacman.d/hooks/
+sudo cp ~/arch/resource/systemd/100-systemd-boot.hook /etc/pacman.d/hooks/
 
 # install vim-plug
 cd ~/
