@@ -7,13 +7,13 @@ ln -sf /usr/share/zoneinfo/Asia/Manila /etc/localtime
 hwclock --systohc
 
 # select locale to EN_PH.UTF-8
-sed -i '173s/.//' /etc/locale.gen
+sed -i '178s/.//' /etc/locale.gen
 
 # generate locale
 locale-gen
 
 # add locale selected to configuration
-echo "LANG=en_PH.UTF-8" >> /etc/locale.conf
+echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 
 # change keyboard layout accordingly
 # uncomment "Dvorak" line if using Standard Qwerty
