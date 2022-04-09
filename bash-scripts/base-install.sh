@@ -34,7 +34,7 @@ echo root:mm | chpasswd
 
 # packages clustered according to their function
 # current list of  packages I need for my setup
-pacman -S --noconfirm --needed dnsmasq network-manager-applet networkmanager openresolv r8168 base-devel linux-headers dialog dosfstools mtools blueman bluez bluez-utils alsa-utils pavucontrol pulseaudio pulseaudio-alsa pulseaudio-bluetooth ntfs-3g gvfs lxsession pcmanfm mtpfs gvfs-mtp ffmpeg vlc firefox bash-completion dmenu kitty nitrogen reflector rsync scrot xclip
+pacman -S --noconfirm --needed dnsmasq network-manager-applet networkmanager openresolv r8168 base-devel linux-headers dialog dosfstools mtools blueman bluez bluez-utils alsa-utils pavucontrol pulseaudio pulseaudio-alsa pulseaudio-bluetooth ntfs-3g gvfs lxsession pcmanfm mtpfs gvfs-mtp ffmpeg vlc firefox exfatprogs bash-completion dmenu kitty nitrogen reflector rsync scrot xclip
 
 # uncomment if grub bootloader will be used instead of systemd-boot
 # pacman -S --noconfirm --needed efibootmgr grub os-prober dnsmasq network-manager-applet networkmanager openresolv r8168 base-devel linux-headers dialog dosfstools mtools blueman bluez bluez-utils alsa-utils pavucontrol pulseaudio pulseaudio-alsa pulseaudio-bluetooth ntfs-3g gvfs lxsession pcmanfm mtpfs gvfs-mtp ffmpeg vlc firefox bash-completion dmenu kitty nitrogen reflector rsync scrot xclip
