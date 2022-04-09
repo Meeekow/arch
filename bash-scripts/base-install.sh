@@ -18,8 +18,8 @@ echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 # change keyboard layout accordingly
 # uncomment "Dvorak" line if using Standard Qwerty
 # defaults to OWERTY layout since I am using a programmable keyboard
-echo "KEYMAP=dvorak" >> /etc/vconsole.conf
-# echo "KEYMAP=us" >> /etc/vconsole.conf
+# echo "KEYMAP=dvorak" >> /etc/vconsole.conf
+echo "KEYMAP=us" >> /etc/vconsole.conf
 
 # set hostname
 echo "meredith" >> /etc/hostname
