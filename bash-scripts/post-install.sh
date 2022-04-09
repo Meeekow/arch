@@ -56,12 +56,12 @@ echo "rc-manager=resolvconf" | sudo tee -a /etc/NetworkManager/conf.d/rc-manager
 # or if there is a startup issues (i.e nvidia kernel module being loaded after the display manager)
 
 # set DRM kernel mode setting
-# sudo sed -i -e '7s/()/(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
-# sudo mkinitcpio -p linux
+#sudo sed -i -e '7s/()/(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
+#sudo mkinitcpio -p linux
 
 # set pacman hook for nvidia updates
-# sudo mkdir -p /etc/pacman.d/hooks/
-# sudo cp ~/arch/resource/nvidia/nvidia.hook /etc/pacman.d/hooks/
+#sudo mkdir -p /etc/pacman.d/hooks/
+#sudo cp ~/arch/resource/nvidia/nvidia.hook /etc/pacman.d/hooks/
 
 # set pacman hook for systemd-boot
 sudo mkdir -p /etc/pacman.d/hooks/
@@ -94,6 +94,14 @@ cat ~/arch/resource/bash/bashrc >> ~/.bashrc
 
 # remove synth-shell repo
 rm -rf ~/synth-shell/
+
+# possible hotfix for slow umount/eject for usb drives
+# after copying a big file
+# NOTE: this will reduce the initial write speed to the
+# device you are copying the files
+# https://www.reddit.com/r/archlinux/comments/liq5i5/usb_taking_too_long_to_eject/
+#sudo echo 'vm.dirty_bytes = 67108864' | sudo tee /etc/sysctl.d/60-dirty.conf
+#sudo echo 'vm.dirty_background_bytes = 16777216' | sudo tee -a /etc/sysctl.d/60-dirty.conf
 
 # make script executable
 chmod +x ~/arch/bash-scripts/screen-timeout.sh
