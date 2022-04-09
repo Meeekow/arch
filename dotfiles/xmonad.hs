@@ -137,7 +137,7 @@ myWorkspaces                = ["1","2","3","4","5","6","7","8","9"]
 
 myStartupHook = do
   spawnOnce "xrandr --output DP-0 --mode 3440x1440 --rate 144.00"
-  spawnOnce "setxkbmap -layout us -variant dvorak -option caps:escape"
+  --spawnOnce "setxkbmap -layout us -variant dvorak -option caps:escape"
   spawnOnce "lxsession &"
   spawnOnce "nitrogen --restore &"
   --spawnOnce "picom &"
