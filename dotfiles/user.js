@@ -96,7 +96,7 @@ user_pref("browser.urlbar.showSearchSuggestionsFirst", false);
 
 /* Privacy & Security ***/
 // Enhanced Tracking Protection
-user_pref("browser.contentblocking.category", "strict");
+user_pref("browser.contentblocking.category", "standard");
 // Send websites a "Do Not Track" signal
 user_pref("privacy.donottrackheader.enabled", true);
 // Logins and Passwords
