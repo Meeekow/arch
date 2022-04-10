@@ -31,9 +31,12 @@ sudo sed -i -e '$aresolv_conf_options="trust-ad"' /etc/resolvconf.conf
 # configure dnsmasq
 sudo sed -i -e '1s/^/server=1.1.1.1\n/' /etc/dnsmasq.conf
 sudo sed -i -e '2s/^/server=1.0.0.1\n/' /etc/dnsmasq.conf
-sudo sed -i -e '3s/^/server=2606:4700:4700::1111\n/' /etc/dnsmasq.conf
-sudo sed -i -e '4s/^/server=2606:4700:4700::1001\n/' /etc/dnsmasq.conf
-sudo sed -i -e '5s/^/cache-size=1000\n/' /etc/dnsmasq.conf
+# uncomment the ff. 2 lines if ipv6 is needed
+#sudo sed -i -e '3s/^/server=2606:4700:4700::1111\n/' /etc/dnsmasq.conf
+#sudo sed -i -e '4s/^/server=2606:4700:4700::1001\n/' /etc/dnsmasq.conf
+sudo sed -i -e '60s/.//' /etc/dnsmasq.conf
+sudo sed -i -e '113s/#listen-address/listen-address=::1,127.0.0.1/' /etc/dnsmasq.conf
+sudo sed -i -e '567s/#cache-size=150/cache-size=1000/' /etc/dnsmasq.conf
 
 # configure networkmanager
 sudo touch /etc/NetworkManager/conf.d/rc-manager.conf
