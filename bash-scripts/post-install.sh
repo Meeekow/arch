@@ -21,7 +21,8 @@ sudo umount /dev/sdb1
 # delete the ff. 5 lines if using btrfs instead of ext4
 # configure mount options
 sudo sed -i '6s/relatime/noatime,commit=120/' /etc/fstab
-sudo sed -i '9s/relatime/noatime/' /etc/fstab
+sudo sed -i '9s/relatime/noatime,commit=120/' /etc/fstab
+sudo sed -i '12s/relatime/noatime/' /etc/fstab
 sudo tune2fs -O fast_commit /dev/sda2
 
 # configure openresolv
@@ -35,7 +36,7 @@ sudo sed -i -e '2s/^/server=1.0.0.1\n/' /etc/dnsmasq.conf
 #sudo sed -i -e '3s/^/server=2606:4700:4700::1111\n/' /etc/dnsmasq.conf
 #sudo sed -i -e '4s/^/server=2606:4700:4700::1001\n/' /etc/dnsmasq.conf
 sudo sed -i -e '60s/.//' /etc/dnsmasq.conf
-sudo sed -i -e '113s/#listen-address/listen-address=::1,127.0.0.1/' /etc/dnsmasq.conf
+sudo sed -i -e '113s/#listen-address=/listen-address=::1,127.0.0.1/' /etc/dnsmasq.conf
 sudo sed -i -e '567s/#cache-size=150/cache-size=1000/' /etc/dnsmasq.conf
 
 # configure networkmanager
