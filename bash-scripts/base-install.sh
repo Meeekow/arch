@@ -61,7 +61,7 @@ pacman -S --noconfirm --needed lightdm lightdm-gtk-greeter
 
 # systemd-boot basic config
 bootctl --path=/boot install
-sed -i -e '1s/.//' /boot/loader/loader.conf
+#sed -i -e '1s/.//' /boot/loader/loader.conf
 echo "default arch.conf" >> /boot/loader/loader.conf
 touch /boot/loader/entries/arch.conf
 echo "title   Arch Linux" >> /boot/loader/entries/arch.conf
