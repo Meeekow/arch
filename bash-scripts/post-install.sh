@@ -12,7 +12,7 @@ sudo mkdir -p /usr/share/fonts/mononoki/
 sudo cp /run/media/fonts/* /usr/share/fonts/mononoki/
 
 # copy wallpaper
-mkdir -p ~/meeko/{docs,movies,series,wallpapers}
+mkdir -p ~/meeko/{docs,movies,tv-series,wallpapers}
 cp /run/media/wallpapers/* ~/meeko/wallpapers/
 
 # unmount hdd after copying over some files
