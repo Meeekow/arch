@@ -165,6 +165,6 @@ Hints.style(
 
 // 'v' HINTS STYLE
 Hints.style(
-  "div{color: black; background: none; background-color: teal;} div.begin{color: black;}",
+  "div{border: solid 2px black; padding: 2px; color: black; background: none; background-color: skyblue;} div.begin{color: black;}",
   "text"
 );
