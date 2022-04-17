@@ -112,5 +112,9 @@ rm -rf ~/synth-shell/
 # make script executable
 chmod +x ~/arch/bash-scripts/screen-timeout.sh
 
+# slight delay before rebooting
+echo "Rebooting now..."
+sleep 1
+
 
 reboot
