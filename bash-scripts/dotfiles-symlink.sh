@@ -7,7 +7,7 @@ mkdir -p ~/.config/nvim/
 ln -s ~/arch/dotfiles/init.vim ~/.config/nvim/
 
 # mkdir -p ~/.config/picom/
-# ln -s ~/arch/dotfiles/picom.conf ~/.config/picom/
+#ln -s ~/arch/dotfiles/picom.conf ~/.config/picom/
 
 mkdir -p ~/.config/vlc/
 ln -s ~/arch/dotfiles/vlcrc ~/.config/vlc/
@@ -16,8 +16,8 @@ mkdir -p ~/.config/xmobar/
 ln -s ~/arch/dotfiles/xmobarrc ~/.config/xmobar/
 
 # directory for pacman-xmonad
-# mkdir -p ~/.xmonad/
-# ln -s ~/arch/dotfiles/xmonad.hs ~/.xmonad/
+#mkdir -p ~/.xmonad/
+#ln -s ~/arch/dotfiles/xmonad.hs ~/.xmonad/
 
 # directory for stack-xmonad
 mkdir -p ~/.config/xmonad/
