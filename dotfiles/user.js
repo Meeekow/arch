@@ -7,6 +7,8 @@ user_pref("dom.ipc.processCount", -1); // -1 is equivalent to 'no limit', change
 user_pref("dom.ipc.processCount.webIsolated", 1); // how much process for each website will be allocated
 user_pref("dom.suspend_inactive.enabled", true); // suspend inactive tabs
 user_pref("general.smoothScroll", false); // Browsing -> 'Use smooth scroll'
+user_pref("image.mem.min_discard_timeout_ms", 2100000000); // tweak from Arch Linux wiki
+user_pref("image.mem.max_decoded_image_kb", 512000); // tweak from Arch Linux wiki
 
 
 /* Reduce read/write operation of Firefox ***/
