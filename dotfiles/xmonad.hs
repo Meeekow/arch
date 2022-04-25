@@ -219,5 +219,5 @@ main =  do
                               --, ppVisible = xmobarColor myppVisible ""                  -- visible but not current workspace
                               --, ppHiddenNoWindows = xmobarColor myppHiddenNoWindows ""  -- hidden workspace (no windows)
                               --, ppUrgent = xmobarColor myppUrgent "" . wrap "!" "!"     -- urgent workspace
-                              } >> updatePointer (0.5, 0.5) (0, 0)
+                              } >> updatePointer (0.95, 0.05) (0, 0)
     } `additionalKeysP` myTestKey
