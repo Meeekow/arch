@@ -6,7 +6,7 @@ export PATH="${PATH}:$HOME/.local/bin"
 alias bt='rfkill block bluetooth && rfkill unblock bluetooth && bluetoothctl'
 alias ll='ls -aAFhl --color=auto --time-style="+%b %d %I:%M %P"'
 alias nv='nvim'
-alias xm='export GLOBIGNORE="xmonad" && rm -rf * && unset GLOBIGNORE'
+alias xm='cd .cache/ && export GLOBIGNORE="xmonad" && rm -rf * && unset GLOBIGNORE'
 alias xx='xmonad --recompile; pkill xmobar; xmonad --restart'
 alias cls='history -c && history -w'
 
