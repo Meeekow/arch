@@ -9,7 +9,7 @@ user_pref("dom.suspend_inactive.enabled", true); // suspend inactive tabs
 user_pref("general.smoothScroll", false); // Browsing -> 'Use smooth scroll'
 user_pref("image.mem.min_discard_timeout_ms", 2100000000); // tweak from Arch Linux wiki
 user_pref("image.mem.max_decoded_image_kb", 512000); // tweak from Arch Linux wiki
-
+user_pref("media.peerconnection.enabled", false); // prevent WebRTC leaks
 
 /* Reduce read/write operation of Firefox ***/
 user_pref("browser.cache.disk.enable", false);
