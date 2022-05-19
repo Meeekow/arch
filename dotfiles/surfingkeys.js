@@ -151,6 +151,10 @@ if ( self.origin === "https://www.messenger.com" ) {
   });
 };
 
+// redirect to old reddit layout instead of the current modern reddit design
+if ( self.origin === "https://www.reddit.com" ) {
+  location.href=location.href.replace("www.reddit","old.reddit");
+};
 
 /* * * * * * * * * * *
  *                   *
