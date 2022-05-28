@@ -5,7 +5,7 @@ git config --global user.email "mynameismeeko@gmail.com"
 git config --global user.name "Meeko"
 
 # mount hdd to copy over some files
-sudo mount /dev/sdb1 /run/media/
+sudo mount /dev/sda1 /run/media/
 
 # copy fonts
 sudo mkdir -p /usr/share/fonts/mononoki/
@@ -16,14 +16,14 @@ mkdir -p ~/meeko/{docs,movies,tv-series,wallpapers}
 cp /run/media/wallpapers/* ~/meeko/wallpapers/
 
 # unmount hdd after copying over some files
-sudo umount /dev/sdb1
+sudo umount /dev/sda1
 
 # delete the ff. 5 lines if using btrfs instead of ext4
 # configure mount options
 sudo sed -i '6s/relatime/noatime,commit=120/' /etc/fstab
 sudo sed -i '9s/relatime/noatime,commit=120/' /etc/fstab
 sudo sed -i '12s/relatime/noatime/' /etc/fstab
-sudo tune2fs -O fast_commit /dev/sda2
+sudo tune2fs -O fast_commit /dev/sdc2
 
 # configure openresolv
 sudo sed -i -e '$aname_servers="::1 127.0.0.1"' /etc/resolvconf.conf
