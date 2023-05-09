@@ -179,22 +179,43 @@ if ( window.location.href.match( 'https:\/\/www\.manga4life|webtoon\.com|xyz\/*'
 // bookparse custom actions
 if ( window.location.href.match( 'https:\/\/bookparse\.com\/*' ) ) {
 
+    // unmap 'f' to avoid unwanted accidents
+    unmap('f');
+
+    // click image
+    mapkey('i', 'click image', function() {
+        Hints.create("#task-specific-image", Hints.dispatchMouseClick);
+    });
+
+    // focus input box for book details like title, etc.
+    map('t', 'gi');
+
+    // simulate click on the generated amazon link
+    mapkey('l', 'Amazon Generated Link', function() {
+        document.getElementById("link-preview").click();
+    });
+
     // focus input box for asin value
-    mapkey('i', 'ASIN Value', function() {
+    mapkey('a', 'ASIN Value', function() {
         Hints.create("input#submit-asin-value", Hints.dispatchMouseClick);
     });
 
-    // simulate click on the generated link for amazon
-    mapkey('e', 'Amazon Generated Link', function() {
-        document.getElementById("link-preview").click();
+    // simulate click on the submit button
+    mapkey('s', 'Amazon Generated Link', function() {
+        Hints.create(".align-items-center.d-flex.justify-content-center button:nth-child(1)", Hints.dispatchMouseClick);
     });
 
 };
 
 // still part of bookparse custom actions
 if ( window.location.href.match( 'https:\/\/www\.amazon\.com\/*' ) ) {
-    // press 'w' instead of 'W' to open focused tab to a new window
-    map('w', 'W');
+
+    // press 'n' instead of 'W' to open focused tab to a new window
+    map('n', 'W');
+
+    // press 'c' instead of 'x' to close window
+    map('c', 'x');
+
 };
 
 /* * * * * * * * * * *
