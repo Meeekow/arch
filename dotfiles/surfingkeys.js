@@ -185,10 +185,16 @@ if ( window.location.href.match( 'https:\/\/bookparse\.com\/*' ) ) {
     });
 
     // simulate click on the generated link for amazon
-    mapkey('q', 'Amazon Generated Link', function() {
+    mapkey('e', 'Amazon Generated Link', function() {
         document.getElementById("link-preview").click();
     });
 
+};
+
+// still part of bookparse custom actions
+if ( window.location.href.match( 'https:\/\/www\.amazon\.com\/*' ) ) {
+    // press 'w' instead of 'W' to open focused tab to a new window
+    map('w', 'W');
 };
 
 /* * * * * * * * * * *
