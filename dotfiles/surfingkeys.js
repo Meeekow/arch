@@ -157,11 +157,6 @@ if ( self.origin === "https://www.messenger.com" ) {
   });
 };
 
-// redirect olj homepage to jobsearch page
-if ( window.location.href === "https://www.onlinejobs.ph/m" ) {
-  location.href=location.href.replace("m","jobseekers/jobsearch");
-};
-
 // redirect to old reddit layout instead of the current modern reddit design
 if ( self.origin === "https://www.reddit.com" ) {
   location.href=location.href.replace("www.reddit","old.reddit");
@@ -179,6 +174,21 @@ if ( window.location.href.match( 'https:\/\/www\.manga4life|webtoon\.com|xyz\/*'
       zoomFactor: -0.33
     });
   });
+};
+
+// bookparse custom actions
+if ( window.location.href.match( 'https:\/\/bookparse\.com\/*' ) ) {
+
+    // focus input box for asin value
+    mapkey('i', 'ASIN Value', function() {
+        Hints.create("input#submit-asin-value", Hints.dispatchMouseClick);
+    });
+
+    // simulate click on the generated link for amazon
+    mapkey('q', 'Amazon Generated Link', function() {
+        document.getElementById("link-preview").click();
+    });
+
 };
 
 /* * * * * * * * * * *
