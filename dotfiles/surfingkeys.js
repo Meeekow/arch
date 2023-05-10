@@ -43,6 +43,7 @@ const HK = [
   // tabs section
   'yt', 'yT',
   'g0', 'g$',
+  'gxt', 'gxT',
   'gx0', 'gx$', 'gxx',
   'E', 'R', 'T',
   '<Alt-p>', '<Alt-m>',
@@ -53,6 +54,7 @@ const HK = [
   'gu', 'gU',
   'S', 'D',
   'r',
+  '<Ctrl-6>',
 
   // clipboard section
   'yg', 'yG',
@@ -72,6 +74,9 @@ const HK = [
   // zoom
   'zr', 'zi', 'zo',
 
+  // insert mode
+  "<Ctrl-'>",
+
   // settings section
   ';e'
 ];
@@ -89,6 +94,10 @@ unmapAllExcept(HK);
 // open link in a new non active tab
 map('F', 'gf');
 unmap('C'); unmap('gf');
+
+// go to previous tab
+map('p', '<Ctrl-6>');
+unmap('<Ctrl-6>');
 
 // open a new active tab
 map('t', 'on');
@@ -148,16 +157,16 @@ settings.scrollStepSize = 60;
 // cursor location whenever in insert mode
 settings.cursorAtEndOfInput = true;
 
-// workaround for 'i' command in 'messenger.com'
+// custom actions/mapping for messenger.com
 if ( self.origin === "https://www.messenger.com" ) {
   settings.cursorAtEndOfInput = false;
 
-  mapkey('i', '#2Go to edit box', function() {
+  mapkey('i', '#1Enter insert mode in message box', function() {
     Hints.create("*[role=textbox]", Hints.dispatchMouseClick);
   });
 };
 
-// redirect to old reddit layout instead of the current modern reddit design
+// redirect to old reddit layout
 if ( self.origin === "https://www.reddit.com" ) {
   location.href=location.href.replace("www.reddit","old.reddit");
 };
@@ -167,18 +176,8 @@ if ( window.location.href === "https://www.webtoon.xyz/" ) {
   location.href=location.href.replace("xyz/","xyz/?s&post_type=wp-manga&adult=0&m_orderby=latest");
 };
 
-// custom zoom out level
-if ( window.location.href.match( 'https:\/\/www\.manga4life|webtoon\.com|xyz\/*' ) ) {
-  mapkey('zo', '#3Zoom Out', function() {
-    RUNTIME('setZoom', {
-      zoomFactor: -0.33
-    });
-  });
-};
-
 // bookparse custom actions
-if ( window.location.href.match( 'https:\/\/bookparse\.com\/*' ) ) {
-
+if ( window.location.href.match( 'https:\/\/bookparse\.com\/vataskmanager*' ) ) {
     // unmap 'f' to avoid unwanted accidents
     unmap('f');
 
@@ -204,18 +203,19 @@ if ( window.location.href.match( 'https:\/\/bookparse\.com\/*' ) ) {
     mapkey('s', 'Amazon Generated Link', function() {
         Hints.create(".align-items-center.d-flex.justify-content-center button:nth-child(1)", Hints.dispatchMouseClick);
     });
-
 };
 
 // still part of bookparse custom actions
 if ( window.location.href.match( 'https:\/\/www\.amazon\.com\/*' ) ) {
-
     // press 'n' instead of 'W' to open focused tab to a new window
     map('n', 'W');
 
+    // yank text value of an element
+    map('y', 'yv');
+    unmap('yv');
+
     // press 'c' instead of 'x' to close window
     map('c', 'x');
-
 };
 
 /* * * * * * * * * * *
