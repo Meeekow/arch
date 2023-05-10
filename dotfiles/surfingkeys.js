@@ -171,6 +171,13 @@ if ( self.origin === "https://www.reddit.com" ) {
   location.href=location.href.replace("www.reddit","old.reddit");
 };
 
+// custom actions/mapping for manga4life.com
+if ( self.origin === "https://www.manga4life.com" ) {
+  mapkey('i', '#1Enter insert mode in login box', function() {
+    Hints.create(".bottom-10 input.form-control.ng-valid-email", Hints.dispatchMouseClick);
+  });
+};
+
 // redirect to latest updates webpage instead of homepage
 if ( window.location.href === "https://www.webtoon.xyz/" ) {
   location.href=location.href.replace("xyz/","xyz/?s&post_type=wp-manga&adult=0&m_orderby=latest");
