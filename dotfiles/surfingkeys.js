@@ -233,11 +233,11 @@ if ( window.location.href.match( 'https:\/\/www\.amazon\.com\/*' ) ) {
 
 // 'f' HINTS STYLE
 Hints.style(
-  "font-size: 15px; padding: 1px; color: black; background: none; background-color: gold;"
+    "font-size: 13px; padding: 5px; color: #f8f8f2; background: none; background-color: #282a36; border: solid 1px #282a36;"
 );
 
 // 'v' HINTS STYLE
 Hints.style(
-  "div{border: solid 2px black; padding: 2px; color: black; background: none; background-color: skyblue;} div.begin{color: black;}",
+    "div{border: solid 1px #ffb86c; padding: 5px; color: black; background: none; background-color: #ffb86c; font-size: 13px; color: #282a36;} div.begin{color: #282a36;}",
   "text"
 );
