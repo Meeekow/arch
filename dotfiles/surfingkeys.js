@@ -208,7 +208,7 @@ if ( window.location.href.match( 'https:\/\/bookparse\.com\/vataskmanager*' ) ) 
 
     // simulate click on the submit button
     mapkey('s', 'Amazon Generated Link', function() {
-        Hints.create(".align-items-center.d-flex.justify-content-center button:nth-child(1)", Hints.dispatchMouseClick);
+        document.querySelector('.align-items-center.d-flex.justify-content-center button:nth-child(1)').click();
     });
 };
 
@@ -217,9 +217,12 @@ if ( window.location.href.match( 'https:\/\/www\.amazon\.com\/*' ) ) {
     // press 'n' instead of 'W' to open focused tab to a new window
     map('n', 'W');
 
-    // yank text value of an element
-    map('y', 'yv');
-    unmap('yv');
+    // yank ASIN value
+    // hints will appear like pressing 'f' instead of pressing 'y'
+    unmap('y');
+    mapkey('y', 'Yank ASIN Value', function() {
+        Hints.create(".xtaqv-copy", Hints.dispatchMouseClick);
+    });
 
     // press 'c' instead of 'x' to close window
     map('c', 'x');
@@ -241,3 +244,4 @@ Hints.style(
     "div{border: solid 1px #ffb86c; padding: 5px; color: black; background: none; background-color: #ffb86c; font-size: 13px; color: #282a36;} div.begin{color: #282a36;}",
   "text"
 );
+
