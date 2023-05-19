@@ -152,7 +152,7 @@ settings.smoothScroll = true;
 settings.scrollFriction = 0;
 
 // scroll amount
-settings.scrollStepSize = 60;
+settings.scrollStepSize = 50;
 
 // cursor location whenever in insert mode
 settings.cursorAtEndOfInput = true;
@@ -219,14 +219,14 @@ if ( window.location.href.match( 'https:\/\/www\.amazon\.com\/*' ) ) {
 
     // yank ASIN value
     // hints will appear like pressing 'f' instead of pressing 'y'
-    unmap('y');
-    mapkey('y', 'Yank ASIN Value', function() {
+    mapkey('b', 'Yank ASIN Value', function() {
         Hints.create(".xtaqv-copy", Hints.dispatchMouseClick);
     });
 
     // press 'c' instead of 'x' to close window
     map('c', 'x');
 };
+
 
 /* * * * * * * * * * *
  *                   *
