@@ -35,8 +35,8 @@ sudo sed -i -e '$aname_servers="::1 127.0.0.1"' /etc/resolvconf.conf
 sudo sed -i -e '$aresolv_conf_options="trust-ad"' /etc/resolvconf.conf
 
 # configure dnsmasq
-sudo sed -i -e '1s/^/server=1.1.1.1\n/' /etc/dnsmasq.conf
-sudo sed -i -e '2s/^/server=1.0.0.1\n/' /etc/dnsmasq.conf
+sudo sed -i -e '1s/^/server=8.8.8.8\n/' /etc/dnsmasq.conf
+sudo sed -i -e '2s/^/server=8.8.4.4\n/' /etc/dnsmasq.conf
 sudo sed -i -e '23s/.//' /etc/dnsmasq.conf
 sudo sed -i -e '60s/.//' /etc/dnsmasq.conf
 #sudo sed -i -e '123s/#listen-address=/listen-address=::1.127.0.0.1/' /etc/dnsmasq.conf
