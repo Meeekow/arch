@@ -31,19 +31,19 @@ echo root:mm | chpasswd
 
 # packages clustered according to their function
 # current list of  packages I need for my setup
-pacman -S --noconfirm --needed dnsmasq network-manager-applet networkmanager openresolv r8168 base-devel linux-headers dialog dosfstools mtools blueman bluez bluez-utils alsa-utils pavucontrol pulseaudio pulseaudio-alsa pulseaudio-bluetooth ntfs-3g gvfs lxsession pcmanfm mtpfs gvfs-mtp ffmpeg vlc firefox exfatprogs bash-completion dmenu kitty nitrogen reflector rsync wget scrot xclip
+pacman -S --noconfirm --needed dnsmasq network-manager-applet networkmanager openresolv r8168 base-devel linux-headers dialog dosfstools mtools blueman bluez bluez-utils alsa-utils pavucontrol pulseaudio pulseaudio-alsa pulseaudio-bluetooth ntfs-3g gvfs lxsession pcmanfm mtpfs gvfs-mtp ffmpeg vlc firefox exfatprogs bash-completion dmenu kitty nitrogen reflector rsync wget scrot stow xclip
 
 # uncomment if grub bootloader will be used instead of systemd-boot
 #pacman -S --noconfirm --needed efibootmgr grub os-prober dnsmasq network-manager-applet networkmanager openresolv r8168 base-devel linux-headers dialog dosfstools mtools blueman bluez bluez-utils alsa-utils pavucontrol pulseaudio pulseaudio-alsa pulseaudio-bluetooth ntfs-3g gvfs lxsession pcmanfm mtpfs gvfs-mtp ffmpeg vlc firefox bash-completion dmenu kitty nitrogen reflector rsync scrot xclip
 
 # display server
-pacman -S --noconfirm --needed xorg
+#pacman -S --noconfirm --needed xorg
 
 # proprietary display driver
 pacman -S --noconfirm --needed nvidia nvidia-utils nvidia-settings
 
 # display manager (login window)
-pacman -S --noconfirm --needed lightdm lightdm-gtk-greeter
+#pacman -S --noconfirm --needed lightdm lightdm-gtk-greeter
 
 # uncomment line if awesomewm will be used
 #pacman -S --noconfirm --needed awesome
@@ -85,17 +85,17 @@ systemctl enable reflector.timer
 systemctl enable fstrim.timer
 
 # add 'user'
-useradd -m -G wheel meeks
-echo meeks:mm | chpasswd
-echo "meeks ALL=(ALL) ALL" >> /etc/sudoers.d/meeks
+useradd -m -G wheel arabella
+echo arabella:mm | chpasswd
+echo "arabella ALL=(ALL) ALL" >> /etc/sudoers.d/arabella
 
 # set journal size and frequency of trim
 journalctl --vacuum-size=50M
 journalctl --vacuum-time=2weeks
 
 # copy xmonad custom desktop entry for LightDM
-mkdir -p /usr/share/xsessions
-cp /arch/resource/xmonad/xmonad.desktop /usr/share/xsessions/
+#mkdir -p /usr/share/xsessions
+#cp /arch/resource/xmonad/xmonad.desktop /usr/share/xsessions/
 
 # remove repo from 'root' folder
 rm -rf /arch/
