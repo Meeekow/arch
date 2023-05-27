@@ -223,6 +223,43 @@ if ( window.location.href.match( 'https:\/\/www\.amazon\.com\/*' ) ) {
         Hints.create(".xtaqv-copy", Hints.dispatchMouseClick);
     });
 
+    // clear input box and set value to "blank" and enter insert mode
+    unmap('gc');
+    mapkey('gc', 'Set input value to blank', function() {
+        document.querySelector('#twotabsearchtextbox').value="";
+        Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
+    });
+
+    // clear input box and set value to "hardcover" and enter insert mode
+    unmap('gh');
+    mapkey('gh', 'Set input value to hardcover', function() {
+        document.querySelector('#twotabsearchtextbox').value="hardcover ";
+        Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
+    });
+
+    // clear input box and set value to "paperback" and enter insert mode
+    unmap('gp');
+    mapkey('gp', 'Set input value to paperback', function() {
+        document.querySelector('#twotabsearchtextbox').value="paperback ";
+        Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
+    });
+
+    // clear input box and set value to "spiral bound" and enter insert mode
+    unmap('gs');
+    mapkey('gs', 'Set input value to spiral', function() {
+        document.querySelector('#twotabsearchtextbox').value="spiral ";
+        Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
+    });
+
+    // yank values from input box on amazon
+    // no need to press hints key
+    unmap('yi');
+    mapkey('yi', '#7Yank text of an input', function() {
+        Hints.create("#twotabsearchtextbox", function(element) {
+            Clipboard.write(element.value);
+        });
+    });
+
     // press 'c' instead of 'x' to close window
     map('c', 'x');
 };

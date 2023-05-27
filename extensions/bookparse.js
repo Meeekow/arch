@@ -10,7 +10,6 @@ document.querySelector('input#link-title-input').addEventListener("keydown", e =
 });
 
 
-
 /*
  * Wait for 1 second and then fill out the details
  * base on the value of the binding box
@@ -26,6 +25,7 @@ function whatBinding() {
         document.querySelector('#link-binding-selected').value = "Unknown";
     }
 };
+
 
 /*
  * Value is in milliseconds
