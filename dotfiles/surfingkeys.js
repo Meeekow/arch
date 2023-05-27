@@ -223,6 +223,12 @@ if ( window.location.href.match( 'https:\/\/www\.amazon\.com\/*' ) ) {
         Hints.create(".xtaqv-copy", Hints.dispatchMouseClick);
     });
 
+    // enter insert mode
+    unmap('i');
+    mapkey('i', 'Focus input box', function() {
+        Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
+    });
+
     // clear input box and set value to "blank" and enter insert mode
     unmap('gc');
     mapkey('gc', 'Set input value to blank', function() {

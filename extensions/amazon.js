@@ -34,6 +34,17 @@ document.getElementById("twotabsearchtextbox").addEventListener("input", () => {
 });
 
 
+document.getElementById('nav-search-bar-form').addEventListener("keydown", e => {
+
+    if ( e.keyCode === 27 ) {
+        // dirty way to remove the blur when pressing escape while in input box/search box
+        // simulate a click to the amazon logo at the top left
+        document.getElementById('nav-logo-sprites').click();
+    }
+
+});
+
+
 function detectOtherLang() {
 
     let language = document.querySelectorAll('.a-section.a-spacing-none.puis-padding-right-small.s-title-instructions-style span.a-size-base.a-color-secondary:nth-child(1)');
