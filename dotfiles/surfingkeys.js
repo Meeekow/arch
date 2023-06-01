@@ -183,6 +183,24 @@ if ( window.location.href === "https://www.webtoon.xyz/" ) {
   location.href=location.href.replace("xyz/","xyz/?s&post_type=wp-manga&adult=0&m_orderby=latest");
 };
 
+// custom zoom level
+if ( window.location.href.match(/^http(s)?:\/\/(www.)?asurascans|manga4life.com/i )) {
+    mapkey('zi', '#3zoom in', function() {
+        RUNTIME('setZoom', {
+            zoomFactor: 0
+        });
+        RUNTIME('setZoom', {
+            zoomFactor: 0.5
+        });
+    });
+
+    mapkey('zo', '#3zoom out', function() {
+        RUNTIME('setZoom', {
+            zoomFactor: 0
+        });
+    });
+};
+
 // bookparse custom actions
 if ( window.location.href.match( 'https:\/\/bookparse\.com\/vataskmanager*' ) ) {
     // unmap 'f' to avoid unwanted accidents
