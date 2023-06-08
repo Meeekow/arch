@@ -1,11 +1,32 @@
+function detectWrongBinding() {
+
+    let wrongBinding = document.querySelectorAll('.a-row.a-size-base.a-color-base:nth-child(1)');
+
+    wrongBinding.forEach( (e) => {
+
+        let pattern = /Kindle|Audible Audiobook|Audio Cassette/;
+
+        let re = new RegExp(pattern, "gi");
+
+        e.innerHTML = e.innerText.replace(re, match => `<mark style="background: #ff6700!important; font-size: 24px!important">${match}</mark>`);
+
+    } );
+
+}
+
+
 function detectOtherLang() {
 
     let language = document.querySelectorAll('.a-section.a-spacing-none.puis-padding-right-small.s-title-instructions-style span.a-size-base.a-color-secondary:nth-child(1)');
 
     language.forEach( (e) => {
+
         let pattern = e.innerHTML;
+
         let re = new RegExp(pattern, "gi");
-        e.innerHTML = e.innerText.replace(re, match => `<mark>${match}</mark>`);
+
+        e.innerHTML = e.innerText.replace(re, match => `<mark style="background: #ff6700!important; font-size: 24px!important">${match}</mark>`);
+
     } );
 
 }
@@ -14,21 +35,27 @@ function detectOtherLang() {
 function highlightExactMatch() {
 
     let searched = document.getElementById("twotabsearchtextbox").value.trim();
+
     searched = searched.replace(/hardcover |paperback |spiral /gi, "");
 
     let listingTitleMedium = document.querySelectorAll('.a-size-medium.a-color-base.a-text-normal');
+
     let listingTitleBasePlus = document.querySelectorAll('.a-size-base-plus.a-color-base.a-text-normal');
 
     let re = new RegExp(searched, "gi");
 
     if ( listingTitleMedium.length < listingTitleBasePlus.length ) {
+
         listingTitleBasePlus.forEach( (e) => {
             e.innerHTML = e.innerText.replace(re, match => `<mark>${match}</mark>`);
         } );
+
     } else {
+
         listingTitleMedium.forEach( (e) => {
             e.innerHTML = e.innerText.replace(re, match => `<mark>${match}</mark>`);
         } );
+
     }
 
 }
@@ -39,18 +66,23 @@ function highlightPartialMatch() {
     let searched = document.getElementById("twotabsearchtextbox").value.trim().split(" ");
 
     let listingTitleMedium = document.querySelectorAll('.a-size-medium.a-color-base.a-text-normal');
+
     let listingTitleBasePlus = document.querySelectorAll('.a-size-base-plus.a-color-base.a-text-normal');
 
     let re = new RegExp(searched.join("|"), "gi");
 
     if ( listingTitleMedium.length < listingTitleBasePlus.length ) {
+
         listingTitleBasePlus.forEach( (e) => {
             e.innerHTML = e.innerText.replace( re, match => `<mark>${match}</mark>` );
         } );
+
     } else {
+
         listingTitleMedium.forEach( (e) => {
             e.innerHTML = e.innerText.replace( re, match => `<mark>${match}</mark>` );
         } );
+
     }
 
 }
@@ -75,6 +107,13 @@ document.getElementById('nav-search-bar-form').addEventListener("keydown", e => 
 });
 
 
-setTimeout(highlightPartialMatch(), 5000);
-setTimeout(detectOtherLang(), 5000);
+function main() {
 
+    detectWrongBinding();
+    detectOtherLang();
+    highlightPartialMatch();
+
+}
+
+
+setTimeout(main(), 5000);

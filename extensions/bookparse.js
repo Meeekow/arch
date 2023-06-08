@@ -41,7 +41,7 @@ document.querySelector('input#link-title-input').addEventListener("keydown", e =
         title = title.replaceAll(' ', '+');
         if ( title ) {
         _preview.value = `https://www.amazon.com/s?k=${title}${_binding}`;
-        window.open(_preview.value, "_blank", "width=100,height=100");
+        window.open(_preview.value, "_blank", "width=200,height=200");
         }
     }
 });
@@ -63,3 +63,4 @@ const _whatBinding = setInterval( () => {
 
     clearInterval(_whatBinding);
 }, 100)
+
