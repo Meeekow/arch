@@ -1,10 +1,11 @@
 function detectWrongBinding() {
 
-    let wrongBinding = document.querySelectorAll('.a-row.a-size-base.a-color-base:nth-child(1)');
+    let wrongBinding = document.querySelectorAll('.a-row.a-size-base.a-color-base:nth-child(1) a.a-size-base.a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-bold');
 
     wrongBinding.forEach( (e) => {
 
-        let pattern = /Kindle|Audible Audiobook|Audio Cassette/;
+        // https://stackoverflow.com/questions/73678256/how-to-make-a-negative-lookahead-ignores-upper-or-lowercase-characters
+        let pattern = /^(?!(?:Hardcover|Paperback|Mass Market Paperback|Spiral-bound|Plastic Comb)$|.*  )\w.*/
 
         let re = new RegExp(pattern, "gi");
 
@@ -25,7 +26,7 @@ function detectOtherLang() {
 
         let re = new RegExp(pattern, "gi");
 
-        e.innerHTML = e.innerText.replace(re, match => `<mark style="background: #ff6700!important; font-size: 24px!important">${match}</mark>`);
+        e.innerHTML = e.innerText.replace(re, match => `<mark style="background: #ff6700!important; font-size: 18px!important">${match}</mark>`);
 
     } );
 

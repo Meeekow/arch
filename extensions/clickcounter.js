@@ -4,4 +4,3 @@
         document.title = document.querySelector('#count').value;
     });
 })();
-

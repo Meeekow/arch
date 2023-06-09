@@ -63,4 +63,3 @@ const _whatBinding = setInterval( () => {
 
     clearInterval(_whatBinding);
 }, 100)
-
