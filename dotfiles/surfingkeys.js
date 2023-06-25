@@ -1,140 +1,30 @@
 const {
-    Clipboard,
-    Front,
-    Hints,
-    //Normal,
-    RUNTIME,
-    Visual,
-    aceVimMap,
-    addSearchAlias,
-    cmap,
-    getClickableElements,
-    imap,
-    imapkey,
-    map,
-    mapkey,
-    readText,
-    removeSearchAlias,
-    tabOpenLink,
-    unmap,
-    unmapAllExcept,
-    vmapkey,
-    vunmap
+  aceVimMap,
+  addSearchAlias,
+  Clipboard,
+  cmap,
+  Front,
+  getClickableElements,
+  Hints,
+  imap,
+  imapkey,
+  map,
+  mapkey,
+  Normal,
+  readText,
+  removeSearchAlias,
+  RUNTIME,
+  tabOpenLink,
+  unmap,
+  unmapAllExcept,
+  Visual,
+  vmapkey,
+  vunmap
 } = api;
 
 
-const HK = [
-  // help section
-  '<Esc>', '?', '.',
-
-  // mouse click section
-  'f', 'af', 'cf', 'gf',
-  '[[', ']]',
-  'i', 'gi',
-  'q', ';fs',
-
-  // scroll page/element
-  '0', '$',
-  'cS',
-  'u', 'd',
-  'gg', 'G',
-  'j', 'k', 'h', 'l',
-
-  // tabs section
-  'yt', 'yT',
-  'g0', 'g$',
-  'gxt', 'gxT',
-  'gx0', 'gx$', 'gxx',
-  'E', 'R', 'T',
-  '<Alt-p>', '<Alt-m>',
-  'on', 'x', 'X', 'W',
-  '<<', '>>',
-
-  // page navigation section
-  'gu', 'gU',
-  'S', 'D',
-  'r',
-  '<Ctrl-6>',
-
-  // clipboard section
-  'yg', 'yG',
-  'yv', 'yi', 'yy',
-
-  // omnibar section
-  'go', 'oi', 'oh',
-  ':',
-
-  // visual mode section
-  '/', 'v', 'V',
-  '*', 'n', 'N',
-
-  // search
-  'sg',
-
-  // zoom
-  'zr', 'zi', 'zo',
-
-  // insert mode
-  "<Ctrl-'>",
-
-  // settings section
-  ';e'
-];
-
-
-unmapAllExcept(HK);
-
-
-/* * * * * * * * * *
- *                 *
- * VIMIUM BINDINGS *
- *                 *
- * * * * * * * * * */
-
-// open link in a new non active tab
-map('F', 'gf');
-unmap('C'); unmap('gf');
-
-// go to previous tab
-map('p', '<Ctrl-6>');
-unmap('<Ctrl-6>');
-
-// open a new active tab
-map('t', 'on');
-unmap('on');
-
-// open a url in the same tab
-map('o', 'go');
-unmap('go');
-
-// open a url in a new active tab
-mapkey('O', '#8Open a URL in new tab', function() {
-  Front.openOmnibar({type: "URLs", tabbed: true});
-});
-
-// go back/forward in history
-map('H', 'S');
-map('L', 'D');
-unmap('S'); unmap('D');
-
-// switch tab in focus
-map('J', 'E');
-map('K', 'R');
-unmap('E'); unmap('R');
-
-// reset to original scroll focus when page loads
-map('cs', 'cS');
-unmap('cS');
-
-
-/* * * * * * * * * * * *
- *                     *
- * EXTENSION BEHAVIOR  *
- *                     *
- * * * * * * * * * * * */
-
 // hints will be limited to this characters
-Hints.setCharacters("nrtsgyhaei");
+Hints.setCharacters("rtshae");
 
 // align hints to left instead of center
 settings.hintAlign = "left";
@@ -143,7 +33,7 @@ settings.hintAlign = "left";
 settings.focusAfterClosed = "last";
 
 // focus first result of matched result in omnibar
-settings.focusFirstCandidate = true;
+settings.focusFirstCandidate = false;
 
 // smooth scroll state
 settings.smoothScroll = true;
@@ -152,157 +42,171 @@ settings.smoothScroll = true;
 settings.scrollFriction = 0;
 
 // scroll amount
-settings.scrollStepSize = 50;
+settings.scrollStepSize = 75;
 
 // cursor location whenever in insert mode
 settings.cursorAtEndOfInput = true;
 
-// custom actions/mapping for messenger.com
+// disable sk
+settings.blocklistPattern = /.*monkeytype.com.*|.*whatsapp.com.*/i;
+
+
+// 'f'
+Hints.style(
+  "font-size: 13px; padding: 5px; color: #f8f8f2; background: none; background-color: #282a36; border: solid 1px #282a36;"
+);
+
+// 'v'
+Hints.style(
+  "div{border: solid 1px #ffb86c; padding: 5px; color:#000000; background: none; background-color: #ffb86c; font-size: 13px; color: #282a36;} div.begin{color:#282a36;}", "text"
+);
+
+
+// messenger
 if ( self.origin === "https://www.messenger.com" ) {
   settings.cursorAtEndOfInput = false;
 
-  mapkey('i', '#1Enter insert mode in message box', function() {
+  mapkey('i', '#1Focus chat box and enter insert mode', function() {
     Hints.create("*[role=textbox]", Hints.dispatchMouseClick);
   });
 };
 
-// redirect to old reddit layout
+
+// reddit
 if ( self.origin === "https://www.reddit.com" ) {
-  location.href=location.href.replace("www.reddit","old.reddit");
+  location.href=location.href.replace("www.reddit", "old.reddit");
 };
 
-// custom actions/mapping for manga4life.com
-if ( self.origin === "https://www.manga4life.com" ) {
-  mapkey('i', '#1Enter insert mode in login box', function() {
-    Hints.create(".bottom-10 input.form-control.ng-valid-email", Hints.dispatchMouseClick);
+
+// manga4life.com
+if ( self.origin === "https://www.manga4life.com" || self.origin === "https://www.asurascans.com" ) {
+  mapkey('i', '#1Insert username', function() {
+    document.querySelector('.bottom-10 input.form-control.ng-valid-email').value="mynameismeeko@gmail.com";
+  }, {domain: /manga4life\.com/i} );
+
+  mapkey('p', '#1Focus password box and enter insert mode', function() {
+    Hints.create(".bottom-10.ng-scope input.form-control.ng-pristine.ng-untouched.ng-valid.ng-empty", Hints.dispatchMouseClick);
+  }, {domain: /manga4life\.com/i} );
+
+  settings.scrollStepSize = 400;
+  map('h', 'j'); // down
+  map('a', 'k'); // up
+
+  mapkey('zi', '#3Zoom in', function() {
+    RUNTIME('setZoom', {
+      zoomFactor: 0
+    });
+
+    RUNTIME('setZoom', {
+      zoomFactor: 0.5
+    });
+  });
+
+  mapkey('zo', '#3Zoom out', function() {
+    RUNTIME('setZoom', {
+      zoomFactor: 0
+    });
   });
 };
 
-// redirect to latest updates webpage instead of homepage
-if ( window.location.href === "https://www.webtoon.xyz/" ) {
-  location.href=location.href.replace("xyz/","xyz/?s&post_type=wp-manga&adult=0&m_orderby=latest");
-};
 
-// custom zoom level
-if ( window.location.href.match(/^http(s)?:\/\/(www.)?asurascans|manga4life.com/i )) {
-    mapkey('zi', '#3zoom in', function() {
-        RUNTIME('setZoom', {
-            zoomFactor: 0
-        });
-        RUNTIME('setZoom', {
-            zoomFactor: 0.5
-        });
-    });
+// bookparse
+// remove everything to avoid unwanted actions
+unmapAllExcept(['r', '<Esc>'], /bookparse\.com\/fulfilltasks/i);
 
-    mapkey('zo', '#3zoom out', function() {
-        RUNTIME('setZoom', {
-            zoomFactor: 0
-        });
-    });
-};
+// zoom
+mapkey('i', 'Zoom in', function() {
+  document.querySelector('.fulfillment-container').style.width = '1000px';
+}, {domain: /bookparse\.com\/fulfilltasks/i} );
 
-// bookparse custom actions
-if ( window.location.href.match( 'https:\/\/bookparse\.com\/vataskmanager*' ) ) {
-    // unmap 'f' to avoid unwanted accidents
-    unmap('f');
+// focus input box for book details like title, etc.
+mapkey('t', 'Focus title input box', function() {
+  Hints.create(".form-nice-control.link-title-input", Hints.dispatchMouseClick);
+}, {domain: /bookparse\.com\/fulfilltasks/i} );
 
-    // click image
-    mapkey('i', 'click image', function() {
-        Hints.create("#task-specific-image", Hints.dispatchMouseClick);
-    });
+// simulate click on the generated amazon link
+mapkey('l', 'Click amazon generated link', function() {
+  document.querySelector('.form-nice-readonly-control.link-preview-value').click();
+}, {domain: /bookparse\.com\/fulfilltasks/i} );
 
-    // focus input box for book details like title, etc.
-    map('t', 'gi');
+// focus input box for asin value
+mapkey('a', 'Focus submit ASIN box', function() {
+  Hints.create(".form-nice-control.asin-submission-value", Hints.dispatchMouseClick);
+}, {domain: /bookparse\.com\/fulfilltasks/i} );
 
-    // simulate click on the generated amazon link
-    mapkey('l', 'Amazon Generated Link', function() {
-        document.getElementById("link-preview").click();
-    });
-
-    // focus input box for asin value
-    mapkey('a', 'ASIN Value', function() {
-        Hints.create("input#submit-asin-value", Hints.dispatchMouseClick);
-    });
-
-    // simulate click on the submit button
-    mapkey('s', 'Amazon Generated Link', function() {
-        document.querySelector('.align-items-center.d-flex.justify-content-center button:nth-child(1)').click();
-    });
-};
-
-// still part of bookparse custom actions
-if ( window.location.href.match( 'https:\/\/www\.amazon\.com\/*' ) ) {
-    // press 'n' instead of 'W' to open focused tab to a new window
-    map('n', 'W');
-
-    // yank ASIN value
-    // hints will appear like pressing 'f' instead of pressing 'y'
-    mapkey('b', 'Yank ASIN Value', function() {
-        Hints.create(".xtaqv-copy", Hints.dispatchMouseClick);
-    });
-
-    // enter insert mode
-    unmap('i');
-    mapkey('i', 'Focus input box', function() {
-        Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
-    });
-
-    // clear input box and set value to "blank" and enter insert mode
-    unmap('gc');
-    mapkey('gc', 'Set input value to blank', function() {
-        document.querySelector('#twotabsearchtextbox').value="";
-        Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
-    });
-
-    // clear input box and set value to "hardcover" and enter insert mode
-    unmap('gh');
-    mapkey('gh', 'Set input value to hardcover', function() {
-        document.querySelector('#twotabsearchtextbox').value="hardcover ";
-        Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
-    });
-
-    // clear input box and set value to "paperback" and enter insert mode
-    unmap('gp');
-    mapkey('gp', 'Set input value to paperback', function() {
-        document.querySelector('#twotabsearchtextbox').value="paperback ";
-        Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
-    });
-
-    // clear input box and set value to "spiral bound" and enter insert mode
-    unmap('gs');
-    mapkey('gs', 'Set input value to spiral', function() {
-        document.querySelector('#twotabsearchtextbox').value="spiral ";
-        Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
-    });
-
-    // yank values from input box on amazon
-    // no need to press hints key
-    unmap('yi');
-    mapkey('yi', '#7Yank text of an input', function() {
-        Hints.create("#twotabsearchtextbox", function(element) {
-            Clipboard.write(element.value);
-        });
-    });
-
-    // press 'c' instead of 'x' to close window
-    map('c', 'x');
-};
+// simulate click on the submit button
+mapkey('s', 'Click submit ASIN button', function() {
+  document.querySelector('.btn.btn-primary').click();
+}, {domain: /bookparse\.com\/fulfilltasks/i} );
 
 
-/* * * * * * * * * * *
- *                   *
- * VISUAL AESTHETICS *
- *                   *
- * * * * * * * * * * */
+// amazon
+// avoid accidental reloads
+unmap('r', /amazon\.com/i);
 
-// 'f' HINTS STYLE
-Hints.style(
-    "font-size: 13px; padding: 5px; color: #f8f8f2; background: none; background-color: #282a36; border: solid 1px #282a36;"
-);
+// press 'n' instead of 'W' to open focused tab to a new window
+map('n', 'W', /amazon\.com/i);
 
-// 'v' HINTS STYLE
-Hints.style(
-    "div{border: solid 1px #ffb86c; padding: 5px; color: black; background: none; background-color: #ffb86c; font-size: 13px; color: #282a36;} div.begin{color: #282a36;}",
-  "text"
-);
+// press 'c' instead of 'x' to close window
+map('c', 'x', /amazon\.com/i);
 
+// track clicked ASIN
+let clickedElement = [];
+// yank ASIN value
+mapkey('h', 'Yank ASIN Value', function() {
+  Hints.create(".xtaqv-copy", (element) => {
+    // copy ASIN
+    Clipboard.write(element.textContent);
+
+    // remove style on all other ASIN boxes
+    // only one highlighted ASIN box at any given time
+    clickedElement.forEach( element => { element.removeAttribute('style') } );
+
+    // apply style to ASIN box that we 'clicked'
+    element.closest('.xtaqv-root').setAttribute('style', 'background-color: #BFE6B1 !important');
+
+    // track ASIN box so we can remove applied style later
+    clickedElement.push(element.closest('.xtaqv-root'));
+  }, Hints.dispatchMouseClick);
+}, {domain: /amazon\.com/i} );
+
+// enter insert mode
+mapkey('i', 'Focus search box', function() {
+  Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
+}, {domain: /amazon\.com/i} );
+
+// clear input box and set value to "blank" and enter insert mode
+mapkey('gc', 'Set input value to blank', function() {
+  document.querySelector('#twotabsearchtextbox').value="";
+  Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
+}, {domain: /amazon\.com/i} );
+
+// clear input box and set value to "hardcover" and enter insert mode
+mapkey('gh', 'Set input value to hardcover', function() {
+  document.querySelector('#twotabsearchtextbox').value="hardcover ";
+  Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
+}, {domain: /amazon\.com/i} );
+
+// clear input box and set value to "paperback" and enter insert mode
+mapkey('gp', 'Set input value to paperback', function() {
+  document.querySelector('#twotabsearchtextbox').value="paperback ";
+  Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
+}, {domain: /amazon\.com/i} );
+
+// clear input box and set value to "spiral bound" and enter insert mode
+mapkey('gs', 'Set input value to spiral', function() {
+  document.querySelector('#twotabsearchtextbox').value="spiral ";
+  Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
+}, {domain: /amazon\.com/i} );
+
+// yank values from input box without pressing hints key
+mapkey('yi', 'Yank text from search box', function() {
+  Hints.create("#twotabsearchtextbox", function(element) {
+    Clipboard.write(element.value);
+  });
+}, {domain: /amazon\.com/i} );
+
+
+// add amazon search aliases
+addSearchAlias('h', 'amazon hardcover', 'https://www.amazon.com/s?k={0}&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656020011');
+addSearchAlias('p', 'amazon paperback', 'https://www.amazon.com/s?k={0}&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656022011');
