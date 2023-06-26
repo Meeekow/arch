@@ -42,13 +42,17 @@ settings.smoothScroll = true;
 settings.scrollFriction = 0;
 
 // scroll amount
-settings.scrollStepSize = 75;
+settings.scrollStepSize = 50;
 
 // cursor location whenever in insert mode
 settings.cursorAtEndOfInput = true;
 
 // disable sk
 settings.blocklistPattern = /.*monkeytype.com.*|.*whatsapp.com.*/i;
+
+
+map('F', 'f' ); unmap('f');
+map('f', 'af'); unmap('af'); unmap('C');
 
 
 // 'f'
@@ -88,7 +92,6 @@ if ( self.origin === "https://www.manga4life.com" || self.origin === "https://ww
     Hints.create(".bottom-10.ng-scope input.form-control.ng-pristine.ng-untouched.ng-valid.ng-empty", Hints.dispatchMouseClick);
   }, {domain: /manga4life\.com/i} );
 
-  settings.scrollStepSize = 400;
   map('h', 'j'); // down
   map('a', 'k'); // up
 
