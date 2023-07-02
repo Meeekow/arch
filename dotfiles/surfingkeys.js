@@ -84,16 +84,13 @@ if ( self.origin === "https://www.reddit.com" ) {
 
 // manga4life.com
 if ( self.origin === "https://www.manga4life.com" || self.origin === "https://www.asurascans.com" ) {
-  mapkey('i', '#1Insert username', function() {
-    document.querySelector('.bottom-10 input.form-control.ng-valid-email').value="mynameismeeko@gmail.com";
+  mapkey('i', '#1Focus username input box', function() {
+      document.querySelector('input[type=email]').focus()
   }, {domain: /manga4life\.com/i} );
 
-  mapkey('p', '#1Focus password box and enter insert mode', function() {
-    Hints.create(".bottom-10.ng-scope input.form-control.ng-pristine.ng-untouched.ng-valid.ng-empty", Hints.dispatchMouseClick);
+  mapkey('h', '#1Go to subscription', function() {
+      window.open("https://www.manga4life.com/user/subscription.php", "_self");
   }, {domain: /manga4life\.com/i} );
-
-  map('h', 'j'); // down
-  map('a', 'k'); // up
 
   mapkey('zi', '#3Zoom in', function() {
     RUNTIME('setZoom', {
