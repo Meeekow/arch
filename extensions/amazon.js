@@ -34,39 +34,44 @@ function detectOtherLang() {
 
 function removeGarbageData() {
   // book binding data from ds amazon quick view
-  document.querySelectorAll('.a-row.a-spacing-mini').forEach(e => {
+  document.querySelectorAll(".a-section.a-spacing-none.a-spacing-top-mini").forEach((e) => {
     e.remove();
-  } );
+  });
 
   // price
-  document.querySelectorAll('.a-row.a-size-base.a-color-base:nth-child(2)').forEach( e => {
-    e.remove();
-  } );
+  document.querySelectorAll(".a-row.a-size-base.a-color-base:nth-child(2)").forEach((e) => {
+      e.remove();
+  });
 
   // delivery
-  document.querySelectorAll('.a-row.a-size-base.a-color-secondary.s-align-children-center').forEach( e => {
-    e.remove();
-  } );
+  document.querySelectorAll(".a-row.a-size-base.a-color-secondary.s-align-children-center").forEach((e) => {
+      e.remove();
+  });
 
   // more buying choices
-  document.querySelectorAll('.a-row.a-size-base.a-color-secondary:nth-child(1)').forEach( e => {
-    e.remove();
-  } );
+  document.querySelectorAll(".a-row.a-size-base.a-color-secondary:nth-child(1)").forEach((e) => {
+      e.remove();
+  });
 
   // age
-  document.querySelectorAll('.a-section.a-spacing-none.a-spacing-top-micro.s-product-grid-adjustment').forEach( e => {
-    e.remove();
-  } );
+  document.querySelectorAll(".a-section.a-spacing-none.a-spacing-top-micro.s-product-grid-adjustment").forEach((e) => {
+      e.remove();
+  });
 
   // get free / free with audible trial
-  document.querySelectorAll('.a-row.a-size-small.a-color-secondary').forEach( e => {
-    e.remove();
-  } );
+  document.querySelectorAll(".a-row.a-size-small.a-color-secondary").forEach((e) => {
+      e.remove();
+  });
 
   // other format(s)
-  document.querySelectorAll('.a-row.a-spacing-top-micro.a-size-small.a-color-base').forEach( e => {
+  document.querySelectorAll(".a-row.a-spacing-top-micro.a-size-small.a-color-base").forEach((e) => {
+      e.remove();
+  });
+
+  // small businesses
+  document.querySelectorAll(".s-align-children-center").forEach((e) => {
     e.remove();
-  } );
+  });
 }
 
 
@@ -95,6 +100,10 @@ function highlightExactMatch() {
 
 function highlightPartialMatch() {
   let searched = document.getElementById("twotabsearchtextbox").value.trim().split(" ");
+
+  let pattern = ['a', 'i'];
+
+  searched = searched.filter( (e) => { return pattern.indexOf(e) == -1 ? true : false } );
 
   let listingTitleMedium = document.querySelectorAll('.a-size-medium.a-color-base.a-text-normal');
 
