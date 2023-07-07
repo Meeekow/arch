@@ -51,8 +51,7 @@ settings.cursorAtEndOfInput = true;
 settings.blocklistPattern = /.*monkeytype.com.*|.*whatsapp.com.*/i;
 
 
-map('F', 'f' ); unmap('f');
-map('f', 'af'); unmap('af'); unmap('C');
+map('F', 'af'); unmap('af');
 
 
 // 'f'
