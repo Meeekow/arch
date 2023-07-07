@@ -42,7 +42,7 @@ settings.smoothScroll = true;
 settings.scrollFriction = 0;
 
 // scroll amount
-settings.scrollStepSize = 50;
+settings.scrollStepSize = 75;
 
 // cursor location whenever in insert mode
 settings.cursorAtEndOfInput = true;
@@ -84,7 +84,7 @@ if ( self.origin === "https://www.reddit.com" ) {
 // manga4life.com
 if ( self.origin === "https://www.manga4life.com" || self.origin === "https://www.asurascans.com" ) {
   mapkey('i', '#1Focus username input box', function() {
-      document.querySelector('input[type=email]').focus()
+      document.querySelector('input[type=email]').focus();
   }, {domain: /manga4life\.com/i} );
 
   mapkey('h', '#1Go to subscription', function() {
@@ -110,38 +110,85 @@ if ( self.origin === "https://www.manga4life.com" || self.origin === "https://ww
 
 
 // bookparse
-// remove everything to avoid unwanted actions
-unmapAllExcept(['r', '<Esc>'], /bookparse\.com\/fulfilltasks/i);
+// remove everything except the ff. to avoid unwanted actions
+unmapAllExcept(['r', 'l', 'h', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse\.com\/fulfilltasks/i);
+
+map('c', 'gxx', /bookparse\.com\/fulfilltasks/i); unmap('gxx', /bookparse\.com\/fulfilltasks/i);
 
 // zoom
-mapkey('i', 'Zoom in', function() {
+mapkey('i', 'zoom image', function() {
   document.querySelector('.fulfillment-container').style.width = '1000px';
 }, {domain: /bookparse\.com\/fulfilltasks/i} );
 
+// activate voice detection
+mapkey('s', 'activate voice detection', function() {
+  Hints.create(".form-nice-control.link-title-input", Hints.dispatchMouseClick);
+  document.querySelector('.form-nice-control.link-title-input').blur();
+  document.getElementById('dictation-microphone').click();
+}, {domain: /bookparse\.com\/fulfilltasks/i} );
+
 // focus input box for book details like title, etc.
-mapkey('t', 'Focus title input box', function() {
+mapkey('t', 'focus title input box', function() {
   Hints.create(".form-nice-control.link-title-input", Hints.dispatchMouseClick);
 }, {domain: /bookparse\.com\/fulfilltasks/i} );
 
 // simulate click on the generated amazon link
-mapkey('l', 'Click amazon generated link', function() {
+mapkey('f', 'click amazon generated link', function() {
   document.querySelector('.form-nice-readonly-control.link-preview-value').click();
 }, {domain: /bookparse\.com\/fulfilltasks/i} );
 
+// open current image url to google lens
+mapkey('e', 'open in google lens', function() {
+  window.open(`https://lens.google.com/uploadbyurl?url=${document.querySelector(".fulfillment-container .w-100").src}`);
+}, {domain: /bookparse\.com\/fulfilltasks/i} );
+
+// paste clipboard value to title box and enter insert mode
+mapkey('p', 'paste clipboard value and enter insert mode', function() {
+  Clipboard.read( (response) => {
+    document.querySelector('.form-nice-control.link-title-input').value = response.data;
+  });
+  Hints.create(".form-nice-control.link-title-input", Hints.dispatchMouseClick);
+}, {domain: /bookparse\.com\/fulfilltasks/i} );
+
 // focus input box for asin value
-mapkey('a', 'Focus submit ASIN box', function() {
+mapkey('a', 'focus submit ASIN box', function() {
   Hints.create(".form-nice-control.asin-submission-value", Hints.dispatchMouseClick);
 }, {domain: /bookparse\.com\/fulfilltasks/i} );
 
 // simulate click on the submit button
-mapkey('s', 'Click submit ASIN button', function() {
+mapkey('q', 'click submit ASIN button', function() {
   document.querySelector('.btn.btn-primary').click();
 }, {domain: /bookparse\.com\/fulfilltasks/i} );
+
+// click exit
+mapkey('b', 'click exit', function() {
+  document.querySelector('.mx-3.mt-2.link-task').click();
+}, {domain: /bookparse\.com\/fulfilltasks/i} );
+
+
+// lens.google.com
+// avoid accidental reloads
+unmap('r', /lens.google\.com/i);
+
+// press 'c' instead of 'x' to close window
+map('c', 'x', /lens.google\.com/i);
+
+// remap highlight whole element
+map('t', 'zv', /lens.google\.com/i);
+
+// yank text detected by lens
+mapkey('h', 'yank text detected by lens', function() {
+  let result = document.querySelector('.DeMn2d') || document.querySelector('.piBj5') || document.querySelector('.wCgoWb');
+  Clipboard.write(result.textContent);
+}, {domain: /lens.google\.com/i} );
 
 
 // amazon
 // avoid accidental reloads
 unmap('r', /amazon\.com/i);
+
+// avoid mapping
+unmap('m', /amazon\.com/i);
 
 // press 'n' instead of 'W' to open focused tab to a new window
 map('n', 'W', /amazon\.com/i);
@@ -203,6 +250,12 @@ mapkey('yi', 'Yank text from search box', function() {
   Hints.create("#twotabsearchtextbox", function(element) {
     Clipboard.write(element.value);
   });
+}, {domain: /amazon\.com/i} );
+
+// yank values from input box without pressing hints key
+mapkey('sa', 'Site specific search', function() {
+  window.close();
+  window.open(`https://www.google.com/search?q=site:amazon.com+"${document.getElementById('twotabsearchtextbox').value}"`);
 }, {domain: /amazon\.com/i} );
 
 
