@@ -1,97 +1,68 @@
-let previousImg = "";
-const zoomAuto = setInterval( () => {
-  let currentImg = document.querySelector('.fulfillment-container .w-100').src;
-  if ( currentImg != previousImg ) {
-    previousImg = document.querySelector('.fulfillment-container .w-100').src;
-    document.querySelector('.fulfillment-container').style.width = '1000px';
-    clearInterval(zoomAuto);
-  };
-}, 1000);
+const cssCustom = `
+  <style>
+  .fulfillment-container {
+    width: 1000px;
+  }
+  </style>
+`;
+document.head.insertAdjacentHTML('beforeend', cssCustom);
 
 
-function rotateImage() {
-  document.addEventListener("keydown", (e) => {
-    if ( e.target.nodeName != 'INPUT' ) {
-      switch ( e.key ) {
-      case "ArrowLeft":
-        document.querySelector('.fulfillment-container').style.transform = 'rotate(270deg)';
-        break;
-      case "ArrowUp":
-        document.querySelector('.fulfillment-container').style.transform = 'rotate(0deg)';
-        break;
-      case "ArrowRight":
-        document.querySelector('.fulfillment-container').style.transform = 'rotate(90deg)';
-        break;
-      case "ArrowDown":
-        document.querySelector('.fulfillment-container').style.transform = 'rotate(180deg)';
-        break;
-      };
-    };
+const dictationMic = document.createElement("button");
+dictationMic.id = "dictation-microphone";
+dictationMic.innerText = "Transcribe";
+dictationMic.style.cssText = "position: relative; left: 73%; background-color: #F3F3F3;";
+dictationMic.onclick = () => { transcribe() };
+document.body.appendChild(dictationMic);
+
+
+function triggerEvent() {
+  const titleBox = document.querySelector(".form-nice-control.link-title-input");
+  titleBox.blur();
+  titleBox.focus();
+  titleBox.dispatchEvent( new Event('keyup') );
+};
+
+
+function transcribe() {
+  const titleBox = document.querySelector(".form-nice-control.link-title-input");
+
+  const speechRecognition = window.webkitSpeechRecognition;
+  const recognition = new speechRecognition();
+  recognition.interimResults = true;
+
+  recognition.start();
+
+  recognition.addEventListener("audiostart", () => {
+    dictationMic.innerText = "Transcribing...";
+    dictationMic.style.cssText = "position: relative; left: 73%; background-color: #FAA0A0;";
+  });
+
+  recognition.addEventListener("result", (e) => {
+    const transcript = Array.from(e.results)
+      .map((result) => result[0])
+      .map((result) => result.transcript);
+
+    titleBox.value = transcript;
+    triggerEvent();
+  });
+
+  recognition.addEventListener("audioend", () => {
+    dictationMic.innerText = "Transcribe";
+    dictationMic.style.cssText = "position: relative; left: 73%; background-color: #F3F3F3;";
   });
 };
 
 
-function clickToTranscribe() {
-  const dictationMic = document.createElement("button");
-  dictationMic.id = "dictation-microphone";
-  dictationMic.innerText = "Click to Transcribe";
-  dictationMic.style.cssText = "position: relative; left: 73%; background-color: #F3F3F3;";
+function partialTextReplace() {
+  const titleBox = document.querySelector(".form-nice-control.link-title-input");
 
-  dictationMic.onclick = () => {
-    const titleBox = document.querySelector(".form-nice-control.link-title-input");
+  let beforeWord = titleBox.value.slice(0, titleBox.selectionStart);
+  let afterWord = titleBox.value.slice(titleBox.selectionEnd);
 
-    var speechRecognition = window.webkitSpeechRecognition;
-    const recognition = new speechRecognition();
-    recognition.interimResults = true;
-
-    recognition.start();
-
-    recognition.addEventListener("audiostart", () => {
-      dictationMic.innerText = "Transcribing...";
-      dictationMic.style.cssText = "position: relative; left: 73%; background-color: #FAA0A0;";
-    });
-
-    recognition.addEventListener("result", (e) => {
-      const transcript = Array.from(e.results)
-        .map((result) => result[0])
-        .map((result) => result.transcript);
-
-      titleBox.value = transcript;
-    });
-
-    recognition.addEventListener("audioend", () => {
-      dictationMic.innerText = "Click to Transcribe";
-      dictationMic.style.cssText = "position: relative; left: 73%; background-color: #F3F3F3;";
-      titleBox.focus();
-    });
-  };
-
-  document.body.appendChild(dictationMic);
-};
-clickToTranscribe();
-
-
-function replaceSelectedText(replacementText) {
-  const title = document.querySelector(".form-nice-control.link-title-input");
-
-  let start = title.selectionStart;
-  let end = title.selectionEnd;
-
-  let selectedText = title.value.slice(start, end);
-
-  let before = title.value.slice(0, start);
-  let after = title.value.slice(end);
-
-  let result = before + replacementText + ' ' + after;
-  title.value = result;
-};
-
-
-function dictateToReplace() {
-  const dictationMic = document.getElementById("dictation-microphone");
-
-  var speechRecognition = window.webkitSpeechRecognition;
+  const speechRecognition = window.webkitSpeechRecognition;
   const recognition = new speechRecognition();
+  recognition.interimResults = true;
 
   recognition.start();
 
@@ -103,16 +74,23 @@ function dictateToReplace() {
   recognition.addEventListener("result", (e) => {
     const transcript = Array.from(e.results)
       .map((result) => result[0])
-      .map((result) => result.transcript);
-
-    replaceSelectedText(transcript);
+      .map((result) => result.transcript)
+      .join("");
+    replaceSelectedText(transcript, beforeWord, afterWord);
   });
 
   recognition.addEventListener("audioend", () => {
-      dictationMic.innerText = "Click to Transcribe";
+      dictationMic.innerText = "Transcribe";
       dictationMic.style.cssText = "position: relative; left: 73%; background-color: #F3F3F3;";
-      titleBox.focus();
   });
+};
+
+
+function replaceSelectedText(replacementText, beforeWord, afterWord) {
+  let titleBox = document.querySelector('.form-nice-control.link-title-input');
+  let result = beforeWord + replacementText + ' ' + afterWord;
+  titleBox.value = result.replace(/\s+/g, " ");
+  triggerEvent();
 };
 
 
@@ -120,11 +98,12 @@ function customActions() {
   document.querySelector('.form-nice-control.link-title-input').addEventListener("keydown", (e) => {
     if ( e.ctrlKey && e.key === 's' ) {
       e.preventDefault();
-      document.getElementById('dictation-microphone').click();
+      transcribe();
     };
 
     if ( e.key === "Enter" ) {
-      dictateToReplace();
+      e.preventDefault();
+      partialTextReplace();
     };
 
     if ( e.key === "Escape" ) {
@@ -158,6 +137,28 @@ function customActions() {
       if ( title ) {
         _preview.value = `https://www.amazon.com/s?k=${title}${_binding}`;
         window.open(_preview.value, "_blank", "width=200,height=200");
+      };
+    };
+  });
+};
+
+
+function rotateImage() {
+  document.addEventListener("keydown", (e) => {
+    if ( e.target.nodeName != 'INPUT' ) {
+      switch ( e.key ) {
+      case "ArrowLeft":
+        document.querySelector('.fulfillment-container').style.transform = 'rotate(270deg)';
+        break;
+      case "ArrowUp":
+        document.querySelector('.fulfillment-container').style.transform = 'rotate(0deg)';
+        break;
+      case "ArrowRight":
+        document.querySelector('.fulfillment-container').style.transform = 'rotate(90deg)';
+        break;
+      case "ArrowDown":
+        document.querySelector('.fulfillment-container').style.transform = 'rotate(180deg)';
+        break;
       };
     };
   });
