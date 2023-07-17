@@ -187,9 +187,6 @@ mapkey('h', 'yank text detected by lens', function() {
 // avoid accidental reloads
 unmap('r', /amazon\.com/i);
 
-// avoid mapping
-unmap('m', /amazon\.com/i);
-
 // press 'n' instead of 'W' to open focused tab to a new window
 map('n', 'W', /amazon\.com/i);
 
