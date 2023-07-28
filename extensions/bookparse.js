@@ -1,4 +1,5 @@
-const css = `
+const css =
+`
   <style>
   .fulfillment-container {
     width: 1000px;
@@ -16,7 +17,7 @@ dictationMic.onclick = () => { transcribe() };
 document.body.appendChild(dictationMic);
 
 
-function triggerEvent() {
+const triggerKeyUpEvent = () => {
   const titleBox = document.querySelector('.form-nice-control.link-title-input');
   titleBox.blur();
   titleBox.focus();
@@ -24,7 +25,7 @@ function triggerEvent() {
 }
 
 
-function transcribe(isPartialTextReplace = false) {
+const transcribe = (isPartialTextReplace = false) => {
   const titleBox = document.querySelector('.form-nice-control.link-title-input');
 
   const wordSelectionStart = titleBox.value.slice(0, titleBox.selectionStart);
@@ -54,7 +55,7 @@ function transcribe(isPartialTextReplace = false) {
         titleBox.value = transcript;
     }
 
-    triggerEvent();
+    triggerKeyUpEvent();
   });
 
   recognition.addEventListener('audioend', () => {
@@ -64,20 +65,20 @@ function transcribe(isPartialTextReplace = false) {
 }
 
 
-function replaceSelectedText(replacementText, wordSelectionStart, wordSelectionEnd) {
+const replaceSelectedText = (replacementText, wordSelectionStart, wordSelectionEnd) => {
   const titleBox = document.querySelector('.form-nice-control.link-title-input');
   const result = `${wordSelectionStart} ${replacementText} ${wordSelectionEnd}`;
-  titleBox.value = result.replace(/\s+/g, ' ').replace(/\s+$/g, '');
+  titleBox.value = result.replace(/^\s+/g, '').replace(/\s+/g, ' ').replace(/\s+$/g, '');
 }
 
 
-function linkBuilder() {
+const linkBuilder = () => {
   const _preview = document.querySelector('.form-nice-readonly-control.link-preview-value');
   const _title_input = document.querySelector('.form-nice-control.link-title-input');
   const _binding_selected = document.querySelector('.form-select.form-select-sm.link-binding-selected');
 
   const selected_b = _binding_selected.value;
-  let title = _title_input.value.toLowerCase().replace(/\s+/g, ' ').replace(/\s+$/g, '');
+  let title = _title_input.value.toLowerCase().replace(/^\s+/g, '').replace(/\s+/g, ' ').replace(/\s+$/g, '');
   let _binding = '';
 
   switch(selected_b) {
@@ -107,7 +108,7 @@ function linkBuilder() {
 }
 
 
-function rotateImage() {
+const rotateImage = () => {
   document.addEventListener('keydown', (e) => {
     if(e.target.nodeName != 'INPUT') {
       switch(e.key) {
@@ -129,7 +130,7 @@ function rotateImage() {
 }
 
 
-function customActions() {
+const customActions = () => {
   document.querySelector('.form-nice-control.link-title-input').addEventListener('keydown', (e) => {
     switch(e.key) {
       case 'Escape':
@@ -150,11 +151,8 @@ function customActions() {
 }
 
 
-function main() {
+const main = () => {
   rotateImage();
   customActions();
 }
-
-
-setInterval( () => { main() }, 1000);
-
+setInterval(() => { main() }, 1000);
