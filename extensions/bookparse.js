@@ -35,8 +35,6 @@ const transcribe = (isPartialTextReplace = false) => {
   const recognition = new speechRecognition();
   recognition.interimResults = true;
 
-  recognition.start();
-
   recognition.addEventListener('audiostart', () => {
     dictationMic.innerText = 'Transcribing...';
     dictationMic.style.cssText = 'position: relative; left: 73%; background-color: #FAA0A0;';
@@ -62,6 +60,8 @@ const transcribe = (isPartialTextReplace = false) => {
     dictationMic.innerText = 'Transcribe';
     dictationMic.style.cssText = 'position: relative; left: 73%; background-color: #F3F3F3;';
   });
+
+  recognition.start();
 }
 
 
@@ -78,7 +78,7 @@ const linkBuilder = () => {
   const _binding_selected = document.querySelector('.form-select.form-select-sm.link-binding-selected');
 
   const selected_b = _binding_selected.value;
-  let title = _title_input.value.toLowerCase().replace(/^\s+/g, '').replace(/\s+/g, ' ').replace(/\s+$/g, '');
+  const title = _title_input.value.toLowerCase().replace(/^\s+/g, '').replace(/\s+/g, ' ').replace(/\s+$/g, '').replaceAll(' ', '+');
   let _binding = '';
 
   switch(selected_b) {
@@ -98,8 +98,6 @@ const linkBuilder = () => {
       _binding = '';
       break;
   }
-
-  title = title.replaceAll(' ', '+');
 
   if(title) {
     _preview.value = `https://www.amazon.com/s?k=${title}${_binding}`;
