@@ -113,12 +113,10 @@ if ( self.origin === "https://www.manga4life.com" || self.origin === "https://ww
 // remove everything except the ff. to avoid unwanted actions
 unmapAllExcept(['r', 'l', 'h', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse\.com\/fulfilltasks/i);
 
-map('c', 'gxx', /bookparse\.com\/fulfilltasks/i); unmap('gxx', /bookparse\.com\/fulfilltasks/i);
+map('n', 'l', /bookparse\.com\/fulfilltasks/i); unmap('l', /bookparse\.com\/fulfilltasks/i);
+map('i', 'h', /bookparse\.com\/fulfilltasks/i); unmap('h', /bookparse\.com\/fulfilltasks/i);
 
-// zoom
-mapkey('i', 'zoom image', function() {
-  document.querySelector('.fulfillment-container').style.width = '1000px';
-}, {domain: /bookparse\.com\/fulfilltasks/i} );
+map('c', 'gxx', /bookparse\.com\/fulfilltasks/i); unmap('gxx', /bookparse\.com\/fulfilltasks/i);
 
 // activate voice detection
 mapkey('s', 'activate voice detection', function() {
@@ -150,14 +148,21 @@ mapkey('p', 'paste clipboard value and enter insert mode', function() {
   Hints.create(".form-nice-control.link-title-input", Hints.dispatchMouseClick);
 }, {domain: /bookparse\.com\/fulfilltasks/i} );
 
-// focus input box for asin value
-mapkey('a', 'focus submit ASIN box', function() {
-  Hints.create(".form-nice-control.asin-submission-value", Hints.dispatchMouseClick);
+// ASIN box
+mapkey('a', 'paste clipboard content, hit submit button', function() {
+  Clipboard.read( (response) => {
+    document.querySelector('.form-nice-control.asin-submission-value').value = response.data;
+    Hints.create(".fulfill-btn.btn.btn-primary", Hints.dispatchMouseClick);
+  });
 }, {domain: /bookparse\.com\/fulfilltasks/i} );
 
-// simulate click on the submit button
-mapkey('q', 'click submit ASIN button', function() {
-  document.querySelector('.btn.btn-primary').click();
+// click undecided button and toggle hints for dropdown
+mapkey('h', 'click undecided button and toggle hints for dropdown', function() {
+  if(document.querySelector('button[aria-expanded="false"]')) {
+    Hints.create(".fulfill-btn.btn.btn-outline-primary.dropdown-toggle-split", Hints.dispatchMouseClick);
+  } else {
+    Hints.create("button.fulfill-btn.btn.w-100", Hints.dispatchMouseClick);
+  }
 }, {domain: /bookparse\.com\/fulfilltasks/i} );
 
 // click exit
