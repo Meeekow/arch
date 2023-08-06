@@ -9,6 +9,11 @@ const css =
 document.head.insertAdjacentHTML('beforeend', css);
 
 
+window.onfocus = () => {
+  document.querySelector('.form-nice-control.link-title-input').blur();
+}
+
+
 const dictationMic = document.createElement('button');
 dictationMic.id = 'dictation-microphone';
 dictationMic.innerText = 'Transcribe';
@@ -35,9 +40,15 @@ const transcribe = (isPartialTextReplace = false) => {
   const recognition = new speechRecognition();
   recognition.interimResults = true;
 
-  recognition.addEventListener('audiostart', () => {
+  recognition.addEventListener('start', () => {
     dictationMic.innerText = 'Transcribing...';
     dictationMic.style.cssText = 'position: relative; left: 73%; background-color: #FAA0A0;';
+  });
+
+  recognition.addEventListener('end', () => {
+    dictationMic.innerText = 'Transcribe';
+    dictationMic.style.cssText = 'position: relative; left: 73%; background-color: #F3F3F3;';
+    recognition.stop();
   });
 
   recognition.addEventListener('result', (e) => {
@@ -54,11 +65,6 @@ const transcribe = (isPartialTextReplace = false) => {
     }
 
     triggerKeyUpEvent();
-  });
-
-  recognition.addEventListener('audioend', () => {
-    dictationMic.innerText = 'Transcribe';
-    dictationMic.style.cssText = 'position: relative; left: 73%; background-color: #F3F3F3;';
   });
 
   recognition.start();
@@ -132,6 +138,7 @@ const customActions = () => {
   document.querySelector('.form-nice-control.link-title-input').addEventListener('keydown', (e) => {
     switch(e.key) {
       case 'Escape':
+        e.preventDefault();
         linkBuilder();
         break;
       case 'Enter':
@@ -148,9 +155,25 @@ const customActions = () => {
   });
 }
 
+// https://makersaid.com/wait-for-element-to-exist-javascript/
+const waitForElement = (selector, callback) => {
+  const observer = new MutationObserver(function(mutations, me) {
+    const element = document.querySelector(selector);
+    if (element) {
+      callback(element);
+        // me.disconnect(); // Once the element has been found, we can stop observing for mutations
+        return;
+    }
+  });
+  observer.observe(document, { childList: true, subtree: true });
+}
+
 
 const main = () => {
   rotateImage();
   customActions();
 }
-setInterval(() => { main() }, 1000);
+
+
+waitForElement('.form-nice-control.link-title-input', main);
+
