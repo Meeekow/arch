@@ -1,44 +1,21 @@
-" enable vim sneak
-let g:sneak#label = 1
-
-" rebinded 'f' and 'F' for vim sneak
-nmap <silent> f <Plug>Sneak_s
-nmap <silent> F <Plug>Sneak_S
-
 " map leader to spacebar
 let mapleader = " "
 
 " general remaps
-" shortcut to yank current line and feed yanked line to <C-R> + 0; Space + R
-nnoremap <leader>R yy/<c-r>0<cr>
-" shortcut to force quit; Space + cc
-nnoremap <leader>cc :q!<cr>
-" shortcut to check marks; Space + mm
-nnoremap <leader>mm :<C-u>marks<cr>:normal!
+" shortcut to yank current line and feed yanked line to <C-R> + 0; Space + yr
+nnoremap <leader>yr yy/<c-r>0<cr>
+
 " shortcut to remove highlight from search; Space + rr
 nnoremap <silent> <leader>rr :noh<cr>
-" shortcut to save and quit; Space + ss
-nnoremap <leader>ss :x<cr>
-" shortcut to force save; Space + ww
-nnoremap <leader>ww :w!<cr>
+
 " shortcut to yank all lines to sys clipboard; Space + yy
 nnoremap <silent> <leader>yy :%y+<cr>
 
-" better nvim split navigation
-" down/up
-nnoremap <c-j> <c-w><c-j>
-nnoremap <c-k> <c-w><c-k>
-" left/right
-nnoremap <c-h> <c-w><c-h>
-nnoremap <c-l> <c-w><c-l>
+" ctrl + d + zz
+nnoremap <silent> <C-d> <C-d>zz
 
-" remap for C++
-" shortcut for for loops; Space + ff
-nnoremap <leader>ff ofor () {<cr>}<esc>k4la
-" load template; Space + T
-nnoremap <leader>T :call Meeko()<cr>kdd6jcc
-" save and compile current *.cpp in buffer; Space + C
-autocmd filetype cpp nnoremap <leader>C :w <bar> !g++ -O2 -Wall % -o %:r <cr>
+" ctrl + u + zz
+nnoremap <silent> <C-u> <C-u>zz
 
 " nvim behavior
 set tabstop=2 softtabstop=2 shiftwidth=2
@@ -63,7 +40,6 @@ call plug#begin('~/.vim/plugged')
 Plug 'dracula/vim', {'as':'dracula'}
 Plug 'vim-airline/vim-airline'
 Plug 'jiangmiao/auto-pairs'
-Plug 'justinmk/vim-sneak'
 call plug#end()
 
 " set theme
@@ -77,7 +53,3 @@ let g:airline#extensions#tabline#enabled = 1
 " auto remove trailing whitespace on save
 autocmd BufWritePre * :%s/\s\+$//e
 
-" custom function; load template for cp
-function Meeko()
-   :read ~/Scripts/cpp/tmp.cpp
-endfunction
