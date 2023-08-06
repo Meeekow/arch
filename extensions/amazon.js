@@ -33,43 +33,38 @@ function detectOtherLang() {
 
 
 function removeGarbageData() {
-  // book binding data from ds amazon quick view
-  document.querySelectorAll(".a-section.a-spacing-none.a-spacing-top-mini").forEach((e) => {
+  // amazon ds quick view other bindings data
+  document.querySelectorAll('.a-row.a-row.a-spacing-mini').forEach((e) => {
     e.remove();
   });
 
-  // price
-  document.querySelectorAll(".a-row.a-size-base.a-color-base:nth-child(2)").forEach((e) => {
-      e.remove();
+  // prices
+  document.querySelectorAll('.sg-col-inner .a-row.a-size-base.a-color-base:nth-child(2)').forEach((e) => {
+    e.remove();
   });
 
-  // delivery
-  document.querySelectorAll(".a-row.a-size-base.a-color-secondary.s-align-children-center").forEach((e) => {
-      e.remove();
+  // delivery, shipping
+  document.querySelectorAll('.a-row.a-size-base.a-color-secondary.s-align-children-center').forEach((e) => {
+    e.remove();
   });
 
-  // more buying choices
-  document.querySelectorAll(".a-row.a-size-base.a-color-secondary:nth-child(1)").forEach((e) => {
-      e.remove();
+  // delivery, shipping and other formats
+  document.querySelectorAll('.a-section.a-spacing-none.a-spacing-top-mini').forEach((e) => {
+    e.remove();
   });
 
-  // age
-  document.querySelectorAll(".a-section.a-spacing-none.a-spacing-top-micro.s-product-grid-adjustment").forEach((e) => {
-      e.remove();
+  // stock left
+  document.querySelectorAll('.a-size-base.a-color-price').forEach((e) => {
+    e.remove();
   });
 
   // get free / free with audible trial
   document.querySelectorAll(".a-row.a-size-small.a-color-secondary").forEach((e) => {
       e.remove();
-  });
+  })
 
-  // other format(s)
-  document.querySelectorAll(".a-row.a-spacing-top-micro.a-size-small.a-color-base").forEach((e) => {
-      e.remove();
-  });
-
-  // small businesses
-  document.querySelectorAll(".s-align-children-center").forEach((e) => {
+  // synopsis, ages
+  document.querySelectorAll('.sg-col-inner .a-section.a-spacing-none.a-spacing-top-micro.s-product-grid-adjustment').forEach((e) => {
     e.remove();
   });
 }
