@@ -120,9 +120,11 @@ map('c', 'gxx', /bookparse\.com\/fulfilltasks/i); unmap('gxx', /bookparse\.com\/
 
 // activate voice detection
 mapkey('s', 'activate voice detection', function() {
-  Hints.create(".form-nice-control.link-title-input", Hints.dispatchMouseClick);
-  document.querySelector('.form-nice-control.link-title-input').blur();
-  document.getElementById('dictation-microphone').click();
+  if(document.querySelector(".form-nice-control.link-title-input")) {
+    Hints.create(".form-nice-control.link-title-input", Hints.dispatchMouseClick);
+    document.querySelector('.form-nice-control.link-title-input').blur();
+    document.getElementById('dictation-microphone').click();
+  }
 }, {domain: /bookparse\.com\/fulfilltasks/i} );
 
 // focus input box for book details like title, etc.
@@ -264,3 +266,4 @@ mapkey('sa', 'Site specific search', function() {
 // add amazon search aliases
 addSearchAlias('h', 'amazon hardcover', 'https://www.amazon.com/s?k={0}&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656020011');
 addSearchAlias('p', 'amazon paperback', 'https://www.amazon.com/s?k={0}&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656022011');
+
