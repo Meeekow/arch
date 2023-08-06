@@ -35,6 +35,9 @@ settings.focusAfterClosed = "last";
 // focus first result of matched result in omnibar
 settings.focusFirstCandidate = false;
 
+// return to normal mode after yanking
+settings.modeAfterYank = "Normal";
+
 // smooth scroll state
 settings.smoothScroll = true;
 
