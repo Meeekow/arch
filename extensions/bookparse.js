@@ -40,12 +40,12 @@ const transcribe = (isPartialTextReplace = false) => {
   const recognition = new speechRecognition();
   recognition.interimResults = true;
 
-  recognition.addEventListener('start', () => {
+  recognition.addEventListener('audiostart', () => {
     dictationMic.innerText = 'Transcribing...';
     dictationMic.style.cssText = 'position: relative; left: 73%; background-color: #FAA0A0;';
   });
 
-  recognition.addEventListener('end', () => {
+  recognition.addEventListener('audioend', () => {
     dictationMic.innerText = 'Transcribe';
     dictationMic.style.cssText = 'position: relative; left: 73%; background-color: #F3F3F3;';
     recognition.stop();
@@ -67,7 +67,17 @@ const transcribe = (isPartialTextReplace = false) => {
     triggerKeyUpEvent();
   });
 
-  recognition.start();
+  recognition.addEventListener('error', (e) => {
+    console.log(e);
+    recognition.stop();
+    initialize();
+  });
+
+  async function initialize() {
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    recognition.start();
+  }
+  initialize();
 }
 
 
@@ -176,4 +186,3 @@ const main = () => {
 
 
 waitForElement('.form-nice-control.link-title-input', main);
-
