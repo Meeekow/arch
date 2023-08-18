@@ -1,3 +1,17 @@
+// https://makersaid.com/wait-for-element-to-exist-javascript/
+const waitForElement = (selector, callback) => {
+  const observer = new MutationObserver(function(mutations, me) {
+    const element = document.querySelector(selector);
+    if (element) {
+      callback(element);
+      me.disconnect(); // Once the element has been found, we can stop observing for mutations
+      return;
+    }
+  });
+  observer.observe(document, { childList: true, subtree: true });
+}
+
+
 function removeGarbageData() {
   // customers who viewed items in your browsing history also viewed
   waitForElement('#rhf-shoveler', () => { document.getElementById('rhf-shoveler').remove() });
@@ -10,7 +24,7 @@ function removeGarbageData() {
   waitForElement('#s-refinements', () => { document.getElementById('s-refinements').remove() });
 
   // 2nd, 3rd binding amazon details
-  document.querySelectorAll('.a-section.puis-price-hierarchy-twister-wrapper').forEach((e) => {
+  document.querySelectorAll('.a-section.a-spacing-none.a-spacing-top-mini > .a-row').forEach((e) => {
     e.remove();
   });
 
@@ -21,6 +35,11 @@ function removeGarbageData() {
 
   // delivery, ships to
   document.querySelectorAll('.a-row.a-size-base.a-color-secondary.s-align-children-center').forEach((e) => {
+    e.remove();
+  });
+
+  // usually ships within x days
+  document.querySelectorAll('span.a-size-small').forEach((e) => {
     e.remove();
   });
 
@@ -152,24 +171,9 @@ document.getElementById("twotabsearchtextbox").addEventListener("input", () => {
 // dirty way to remove the blur when pressing escape while in input box/search box
 document.getElementById('nav-search-bar-form').addEventListener("keydown", e => {
   if ( e.keyCode === 27 ) {
-    // simulate a click to the amazon logo at the top left
-    document.getElementById('nav-logo-sprites').click();
+    document.getElementById('nav-logo-sprites').click(); // simulate a click to the amazon logo at the top left
   }
 });
-
-
-// https://makersaid.com/wait-for-element-to-exist-javascript/
-const waitForElement = (selector, callback) => {
-  const observer = new MutationObserver(function(mutations, me) {
-    const element = document.querySelector(selector);
-    if (element) {
-      callback(element);
-        // me.disconnect(); // Once the element has been found, we can stop observing for mutations
-        return;
-    }
-  });
-  observer.observe(document, { childList: true, subtree: true });
-}
 
 
 function main() {
@@ -183,18 +187,10 @@ function main() {
 main();
 
 
-// no idea what event for url change, naive implementation for now
-// store current url
-let currentPage = location.href;
-
-// wait for x time then
-setInterval( () => {
-  // if current url is not equal to the previous url
-  if ( currentPage != location.href) {
-    // run main function
+let previousUrl = location.href;
+setInterval(() => {
+  if (previousUrl !== location.href) {
     main();
-
-    // then wait x time before updating previous url to the current url
-    setTimeout(() => {currentPage = location.href;}, 2000); // 2 seconds
+    setTimeout(() => {previousUrl = location.href}, 2000);
   }
-}, 5 * 100 ); // 500ms
+}, 1000);
