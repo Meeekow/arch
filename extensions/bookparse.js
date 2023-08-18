@@ -63,21 +63,20 @@ const transcribe = (isPartialTextReplace = false) => {
       default:
         titleBox.value = transcript;
     }
-
     triggerKeyUpEvent();
   });
 
   recognition.addEventListener('error', (e) => {
     console.log(e);
     recognition.stop();
-    initialize();
+    start();
   });
 
-  async function initialize() {
-    await new Promise((resolve) => setTimeout(resolve, 200));
-    recognition.start();
+  async function start() {
+    await new Promise((resolve) => setTimeout(resolve, 225));
+    await recognition.start();
   }
-  initialize();
+  start();
 }
 
 
@@ -183,6 +182,4 @@ const main = () => {
   rotateImage();
   customActions();
 }
-
-
 waitForElement('.form-nice-control.link-title-input', main);
