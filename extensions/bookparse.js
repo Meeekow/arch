@@ -30,7 +30,12 @@ const triggerKeyUpEvent = () => {
 }
 
 
-const transcribe = (isPartialTextReplace = false) => {
+const sleep = async (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+
+const transcribe = async (isPartialTextReplace = false) => {
   const titleBox = document.querySelector('.form-nice-control.link-title-input');
 
   const wordSelectionStart = titleBox.value.slice(0, titleBox.selectionStart);
@@ -66,17 +71,22 @@ const transcribe = (isPartialTextReplace = false) => {
     triggerKeyUpEvent();
   });
 
-  recognition.addEventListener('error', (e) => {
-    console.log(e);
-    recognition.stop();
-    start();
-  });
+  let retryCount = 0;
+  while (true) {
+    try {
+      recognition.start();
+      break;
+    } catch (error) {
+      console.log(error);
+      retryCount++;
 
-  async function start() {
-    await new Promise((resolve) => setTimeout(resolve, 225));
-    await recognition.start();
+      if (retryCount >= 3) {
+        recognition.stop();
+        break;
+      }
+    }
   }
-  start();
+  await sleep(1000);
 }
 
 
@@ -164,6 +174,7 @@ const customActions = () => {
   });
 }
 
+
 // https://makersaid.com/wait-for-element-to-exist-javascript/
 const waitForElement = (selector, callback) => {
   const observer = new MutationObserver(function(mutations, me) {
@@ -182,4 +193,6 @@ const main = () => {
   rotateImage();
   customActions();
 }
+
+
 waitForElement('.form-nice-control.link-title-input', main);
