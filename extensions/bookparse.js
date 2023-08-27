@@ -43,6 +43,7 @@ const transcribe = async (isPartialTextReplace = false) => {
 
   const speechRecognition = window.webkitSpeechRecognition;
   const recognition = new speechRecognition();
+  recognition.lang = "en-US";
   recognition.interimResults = true;
 
   recognition.addEventListener('audiostart', () => {
