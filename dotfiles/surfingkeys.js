@@ -133,6 +133,9 @@ mapkey('s', 'activate voice detection', function() {
 // focus input box for book details like title, etc.
 mapkey('t', 'focus title input box', function() {
   Hints.create(".form-nice-control.link-title-input", Hints.dispatchMouseClick);
+  // Hints.create(".form-nice-control.link-title-input", function(element) {
+  //   Front.showEditor(element);
+  // });
 }, {domain: /bookparse\.com\/fulfilltasks/i} );
 
 // simulate click on the generated amazon link
@@ -159,10 +162,12 @@ mapkey('a', 'paste clipboard content, hit submit button', function() {
     document.querySelector('.form-nice-control.asin-submission-value').value = response.data;
     Hints.create(".fulfill-btn.btn.btn-primary", Hints.dispatchMouseClick);
   });
+  Clipboard.write(' ');
 }, {domain: /bookparse\.com\/fulfilltasks/i} );
 
 // click undecided button and toggle hints for dropdown
 mapkey('h', 'click undecided button and toggle hints for dropdown', function() {
+  document.querySelector('.form-nice-control.asin-submission-value').value = '';
   if(document.querySelector('button[aria-expanded="false"]')) {
     Hints.create(".fulfill-btn.btn.btn-outline-primary.dropdown-toggle-split", Hints.dispatchMouseClick);
   } else {
@@ -269,4 +274,3 @@ mapkey('sa', 'Site specific search', function() {
 // add amazon search aliases
 addSearchAlias('h', 'amazon hardcover', 'https://www.amazon.com/s?k={0}&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656020011');
 addSearchAlias('p', 'amazon paperback', 'https://www.amazon.com/s?k={0}&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656022011');
-
