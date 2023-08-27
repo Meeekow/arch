@@ -58,26 +58,56 @@ const turnIntoOneWord = () => {
 
     const result = document.createElement('span');
     result.classList = 'a-size-medium a-color-base a-text-normal one-word';
-    result.innerHTML = title.join('').replaceAll(/’/g, "\'");
+    result.innerHTML = title.join('').replaceAll(/’|`/g, "\'");
     e.appendChild(result);
     title.length = 0;
   });
 }
 
 
-const changeBindingFontSize = () => {
-  document.querySelectorAll('.a-row.a-size-base.a-color-base:nth-child(1) a.a-size-base.a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-bold').forEach((e) => {
-    e.setAttribute('style', 'background: #FFC562 !important; font-size: 18px !important; color: #0F1111 !important');
-  });
+const getBindingFromUrl = () => {
+  const url = location.href;
+
+  let binding = '';
+
+  if (url.includes('&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656022011')) {
+    binding = 'Paperback';
+  } else if (url.includes('&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656020011')) {
+    binding = 'Hardcover';
+  } else if (url.includes('&rh=n%3A283155%2Cp_n_feature_browse-bin%3A23488071011')) {
+    binding = 'Spiral-bound';
+  } else if (url.includes('&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656019011')) {
+    binding = 'Board';
+  }
+
+  return binding;
 }
 
 
 const detectWrongBinding = () => {
+  const correctBinding = getBindingFromUrl();
+
   document.querySelectorAll('.a-row.a-size-base.a-color-base:nth-child(1) a.a-size-base.a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-bold').forEach((e) => {
-    // https://stackoverflow.com/questions/73678256/how-to-make-a-negative-lookahead-ignores-upper-or-lowercase-characters
-    const pattern = /^(?!(?:Hardcover|Paperback|(?:Mass Market )?Paperback|Spiral-bound|Plastic Comb)$|.*  )\w.*/;
-    const re = new RegExp(pattern, "gi");
-    e.innerHTML = e.innerText.replace(re, match => `<mark style="background: #FF6D74 !important; font-size: 18px !important">${match}</mark>`);
+    if (correctBinding === 'Paperback' && e.textContent.trim() === 'Mass Market Paperback') {
+      e.setAttribute('style', 'background: #FFC562 !important; font-size: 18px !important; color: #0F1111 !important');
+      return;
+    }
+
+    if (correctBinding === 'Spiral-bound' && e.textContent.trim() === 'Ring-bound') {
+      e.setAttribute('style', 'background: #FFC562 !important; font-size: 18px !important; color: #0F1111 !important');
+      return;
+    }
+
+    if (correctBinding !== e.textContent.trim()) {
+      // const pattern = `.*${e.textContent.trim()}.*`;
+      // const re = new RegExp(pattern, "gi");
+      // e.innerHTML = e.innerText.replace(re, (match) => `<mark style="background: #FF6D74 !important; font-size: 18px !important">${match}</mark>`);
+      e.setAttribute('style', 'background: #FF6D74 !important; font-size: 18px !important; color: #0F1111 !important');
+      return;
+    }
+
+    // if listing binding is correct
+    e.setAttribute('style', 'background: #FFC562 !important; font-size: 18px !important; color: #0F1111 !important');
   });
 }
 
@@ -91,14 +121,25 @@ const detectOtherLang = () => {
 }
 
 
-const highlightPartialMatch = () => {
-  const patternToIgnore = ['a', 'i'];
-  let searchQuery = document.getElementById('twotabsearchtextbox').value.trim().split(' ');
-  searchQuery = searchQuery.filter( (e) => { return patternToIgnore.indexOf(e) == -1 ? true : false } );
-  searchQuery.sort((a, b) => { return b.length - a.length });
-  const re = new RegExp(searchQuery.join('|'), 'gi');
+const highlightMatches = () => {
+  const searchedQuery = document.getElementById('twotabsearchtextbox');
+  const cleanedQuery = searchedQuery.value.replace(/\s\:\w+$/gi, '');
+  searchedQuery.value = cleanedQuery;
+
+  const completeMatch = searchedQuery.value.trim();
+  const completeMatchRegEx = new RegExp(completeMatch, 'gi');
   document.querySelectorAll('.a-size-medium.a-color-base.a-text-normal').forEach((e) => {
-    e.innerHTML = e.innerText.replace(re, (match) => `<mark>${match}</mark>`);
+    e.innerHTML = e.innerText.replace(completeMatchRegEx, match => `<mark style="background: #A0DB9A !important; font-size: 18px !important">${match}</mark>`);
+  });
+
+  const partialMatch = searchedQuery.value.trim().split(' ');
+  const partialMatchJoined = partialMatch.join('|');
+  const partialMatchRegEx = new RegExp(`(?!<mark[^>]*?>)(${partialMatchJoined})(?![^<]*?</mark>)`, 'gi');
+
+  document.querySelectorAll('.a-size-medium.a-color-base.a-text-normal').forEach((e) => {
+    e.innerHTML = e.innerHTML.replace(partialMatchRegEx, function(match) {
+      return `<mark style="background: #FFFA70 !important; font-size: 18px !important">${match}</mark>`;
+    });
   });
 }
 
@@ -118,10 +159,9 @@ document.getElementById('nav-search-bar-form').addEventListener("keydown", e => 
 function main() {
   removeGarbageData();
   turnIntoOneWord();
-  changeBindingFontSize();
   detectWrongBinding();
   detectOtherLang();
-  highlightPartialMatch();
+  highlightMatches();
 }
 main();
 
