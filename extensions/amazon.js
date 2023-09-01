@@ -89,25 +89,23 @@ const detectWrongBinding = () => {
 
   document.querySelectorAll('.a-row.a-size-base.a-color-base:nth-child(1) a.a-size-base.a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-bold').forEach((e) => {
     if (correctBinding === 'Paperback' && e.textContent.trim() === 'Mass Market Paperback') {
-      e.setAttribute('style', 'background: #FFC562 !important; font-size: 18px !important; color: #0F1111 !important');
+      e.setAttribute('style', 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important');
       return;
     }
 
     if (correctBinding === 'Spiral-bound' && e.textContent.trim() === 'Ring-bound') {
-      e.setAttribute('style', 'background: #FFC562 !important; font-size: 18px !important; color: #0F1111 !important');
+      e.setAttribute('style', 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important');
       return;
     }
 
+    // if listing binding is incorrect
     if (correctBinding !== e.textContent.trim()) {
-      // const pattern = `.*${e.textContent.trim()}.*`;
-      // const re = new RegExp(pattern, "gi");
-      // e.innerHTML = e.innerText.replace(re, (match) => `<mark style="background: #FF6D74 !important; font-size: 18px !important">${match}</mark>`);
       e.setAttribute('style', 'background: #FF6D74 !important; font-size: 18px !important; color: #0F1111 !important');
       return;
     }
 
     // if listing binding is correct
-    e.setAttribute('style', 'background: #FFC562 !important; font-size: 18px !important; color: #0F1111 !important');
+    e.setAttribute('style', 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important');
   });
 }
 
@@ -123,22 +121,21 @@ const detectOtherLang = () => {
 
 const highlightMatches = () => {
   const searchedQuery = document.getElementById('twotabsearchtextbox');
-  const cleanedQuery = searchedQuery.value.replace(/\s\:\w+$/gi, '');
+  const cleanedQuery = searchedQuery.value.replace(/\s\:\w.+/gi, '');
   searchedQuery.value = cleanedQuery;
 
   const completeMatch = searchedQuery.value.trim();
-  const completeMatchRegEx = new RegExp(completeMatch, 'gi');
+  const completeMatchRegEx = new RegExp(`\\b${completeMatch}\\b`, 'gi');
   document.querySelectorAll('.a-size-medium.a-color-base.a-text-normal').forEach((e) => {
-    e.innerHTML = e.innerText.replace(completeMatchRegEx, match => `<mark style="background: #A0DB9A !important; font-size: 18px !important">${match}</mark>`);
+    e.innerHTML = e.innerText.replace(completeMatchRegEx, match => `<mark style="background: #B4FF9F !important; font-size: 18px !important">${match}</mark>`);
   });
 
   const partialMatch = searchedQuery.value.trim().split(' ');
   const partialMatchJoined = partialMatch.join('|');
-  const partialMatchRegEx = new RegExp(`(?!<mark[^>]*?>)(${partialMatchJoined})(?![^<]*?</mark>)`, 'gi');
-
+  const partialMatchRegEx = new RegExp(`(?!<mark[^>]*?>)\\b(${partialMatchJoined})\\b(?![^<]*?</mark>)`, 'gi');
   document.querySelectorAll('.a-size-medium.a-color-base.a-text-normal').forEach((e) => {
     e.innerHTML = e.innerHTML.replace(partialMatchRegEx, function(match) {
-      return `<mark style="background: #FFFA70 !important; font-size: 18px !important">${match}</mark>`;
+      return `<mark style="background: #ffd09f !important; font-size: 18px !important">${match}</mark>`;
     });
   });
 }
