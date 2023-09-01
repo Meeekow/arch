@@ -116,6 +116,11 @@ if ( self.origin === "https://www.manga4life.com" || self.origin === "https://ww
 // remove everything except the ff. to avoid unwanted actions
 unmapAllExcept(['r', 'l', 'h', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse\.com\/fulfilltasks/i);
 
+// change scroll step size for better horizontal scrolling
+if ( self.origin === "https://bookparse.com" ) {
+  settings.scrollStepSize = 200;
+};
+
 map('n', 'l', /bookparse\.com\/fulfilltasks/i); unmap('l', /bookparse\.com\/fulfilltasks/i);
 map('i', 'h', /bookparse\.com\/fulfilltasks/i); unmap('h', /bookparse\.com\/fulfilltasks/i);
 
