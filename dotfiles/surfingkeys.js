@@ -173,11 +173,8 @@ mapkey('a', 'paste clipboard content, hit submit button', function() {
 // click undecided button and toggle hints for dropdown
 mapkey('h', 'click undecided button and toggle hints for dropdown', function() {
   document.querySelector('.form-nice-control.asin-submission-value').value = '';
-  if(document.querySelector('button[aria-expanded="false"]')) {
-    Hints.create(".fulfill-btn.btn.btn-outline-primary.dropdown-toggle-split", Hints.dispatchMouseClick);
-  } else {
-    Hints.create("button.fulfill-btn.btn.w-100", Hints.dispatchMouseClick);
-  }
+  Hints.create(".fulfill-btn.btn.btn-outline-primary.dropdown-toggle-split", Hints.dispatchMouseClick);
+  setTimeout(() => { Hints.create("button.fulfill-btn.btn.w-100", Hints.dispatchMouseClick) }, 100);
 }, {domain: /bookparse\.com\/fulfilltasks/i} );
 
 // click exit
