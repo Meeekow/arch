@@ -1,20 +1,14 @@
-const garbageDataSelectors = ['.a-section.a-spacing-none.a-spacing-top-mini > .a-row', // 2nd, 3rd binding amazon details
-                          '.a-size-base.a-link-normal.s-no-hover.s-underline-text.s-underline-link-text.s-link-style.a-text-normal', // price
-                          '.a-row.a-size-base.a-color-secondary.s-align-children-center', // delivery, ships to
-                          'span.a-size-small', // usually ships within x days
-                          '.a-section.a-spacing-none.a-spacing-top-mini .a-row.a-size-base.a-color-secondary', // more buying choices
-                          '.a-size-base.a-color-price', // stock left
-                          '.a-section.a-spacing-none.a-spacing-top-micro.s-product-grid-adjustment', // synopsis, age
-                          'span[aria-label="Temporarily out of stock."]', // temporarily out of stock
-                          '.a-section.a-spacing-none.a-spacing-top-micro .s-align-children-center' // small business
-                         ];
-
-
-const deleteSelectors = (selector) => {
-  document.querySelectorAll(selector).forEach((e) => {
-    e.remove();
-  });
-}
+const garbageDataSelectors = [
+  '.a-section.a-spacing-none.a-spacing-top-mini > .a-row', // 2nd, 3rd binding amazon details
+  '.a-size-base.a-link-normal.s-no-hover.s-underline-text.s-underline-link-text.s-link-style.a-text-normal', // price
+  '.a-row.a-size-base.a-color-secondary.s-align-children-center', // delivery, ships to
+  'span.a-size-small', // usually ships within x days
+  '.a-section.a-spacing-none.a-spacing-top-mini .a-row.a-size-base.a-color-secondary', // more buying choices
+  '.a-size-base.a-color-price', // stock left
+  '.a-section.a-spacing-none.a-spacing-top-micro.s-product-grid-adjustment', // synopsis, age
+  'span[aria-label="Temporarily out of stock."]', // temporarily out of stock
+  '.a-section.a-spacing-none.a-spacing-top-micro .s-align-children-center' // small business
+];
 
 
 const waitForElement = (selector, callback) => {
@@ -42,8 +36,10 @@ const removeGarbageData = () => {
   waitForElement('#navFooter', () => { document.getElementById('navFooter').remove() });
 
   // loop over the array
-  garbageDataSelectors.forEach((e) => {
-    deleteSelectors(e);
+  garbageDataSelectors.forEach((selector) => {
+    document.querySelectorAll(selector).forEach((e) => {
+      e.remove();
+    });
   });
 }
 
@@ -135,7 +131,7 @@ const highlightMatches = () => {
   const partialMatchRegEx = new RegExp(`(?!<mark[^>]*?>)\\b(${partialMatchJoined})\\b(?![^<]*?</mark>)`, 'gi');
   document.querySelectorAll('.a-size-medium.a-color-base.a-text-normal').forEach((e) => {
     e.innerHTML = e.innerHTML.replace(partialMatchRegEx, function(match) {
-      return `<mark style="background: #ffd09f !important; font-size: 18px !important">${match}</mark>`;
+      return `<mark style="background: #FFF562 !important; font-size: 18px !important">${match}</mark>`;
     });
   });
 }
