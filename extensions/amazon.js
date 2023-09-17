@@ -11,12 +11,12 @@ const garbageDataSelectors = [
 ];
 
 
-const waitForElement = (selector, callback) => {
+const waitForElementAndRemove = (selector) => {
   const observer = new MutationObserver(function(mutations, me) {
     const element = document.querySelector(selector);
-    if ( element ) {
-      callback(element);
-      me.disconnect(); // Once the element has been found, we can stop observing for mutations
+    if (element) {
+      me.disconnect(); // Once the element has been found, stop observing for mutations
+      element.remove(); // Delete the element that has been found
       return;
     }
   });
@@ -26,19 +26,19 @@ const waitForElement = (selector, callback) => {
 
 const removeGarbageData = () => {
   // sidebar
-  waitForElement('#s-refinements', () => { document.getElementById('s-refinements').remove() });
+  waitForElementAndRemove('#s-refinements');
 
   // customers who viewed items in your browsing history also viewed
-  waitForElement('#rhf-shoveler', () => { document.getElementById('rhf-shoveler').remove() });
-  waitForElement('.rhf-frame', () => { document.querySelector('.rhf-frame').remove() });
+  waitForElementAndRemove('#rhf-shoveler');
+  waitForElementAndRemove('.rhf-frame');
 
   // footer
-  waitForElement('#navFooter', () => { document.getElementById('navFooter').remove() });
+  waitForElementAndRemove('#navFooter');
 
   // loop over the array
   garbageDataSelectors.forEach((selector) => {
-    document.querySelectorAll(selector).forEach((e) => {
-      e.remove();
+    document.querySelectorAll(selector).forEach((element) => {
+      element.remove();
     });
   });
 }
@@ -46,17 +46,27 @@ const removeGarbageData = () => {
 
 const turnIntoOneWord = () => {
   document.querySelectorAll('.a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal').forEach((e) => {
-    let title = [];
+    let bookTitle = [];
     e.querySelectorAll('span.a-size-medium.a-color-base').forEach((el) => {
-      title.push(el.closest('span').textContent);
-      el.closest('span').remove();
+      bookTitle.push(el.closest('span').textContent);
     });
 
     const result = document.createElement('span');
     result.classList = 'a-size-medium a-color-base a-text-normal one-word';
-    result.innerHTML = title.join('').replaceAll(/’|`/g, "\'");
-    e.appendChild(result);
-    title.length = 0;
+    result.innerHTML = bookTitle.join('').replaceAll(/’|`/g, "\'");
+    e.replaceChildren(result);
+  });
+
+  document.querySelectorAll('.a-row.a-size-base.a-color-secondary > .a-row').forEach((e) => {
+    let bookDetails = [];
+    for (const child of e.children) {
+      bookDetails.push(child.textContent);
+    }
+
+    const result = document.createElement('span');
+    result.classList = 'a-size-base meeko';
+    result.innerHTML = bookDetails.join('');
+    e.replaceChildren(result);
   });
 }
 
@@ -83,42 +93,32 @@ const getBindingFromUrl = () => {
 const detectWrongBinding = () => {
   const correctBinding = getBindingFromUrl();
 
-  document.querySelectorAll('.a-row.a-size-base.a-color-base:nth-child(1) a.a-size-base.a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-bold').forEach((e) => {
-    if (correctBinding === 'Paperback' && e.textContent.trim() === 'Mass Market Paperback') {
-      e.setAttribute('style', 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important');
+  document.querySelectorAll('.a-row.a-size-base.a-color-base:nth-child(1) a.a-size-base.a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-bold').forEach((element) => {
+    let listingBinding = element.textContent.trim();
+
+    if (correctBinding === 'Paperback' && listingBinding === 'Mass Market Paperback') {
+      element.setAttribute('style', 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important');
       return;
     }
 
-    if (correctBinding === 'Spiral-bound' && e.textContent.trim() === 'Ring-bound') {
-      e.setAttribute('style', 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important');
+    if (correctBinding === 'Spiral-bound' && listingBinding === 'Ring-bound') {
+      element.setAttribute('style', 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important');
       return;
     }
 
-    // if listing binding is incorrect
-    if (correctBinding !== e.textContent.trim()) {
-      e.setAttribute('style', 'background: #FF6D74 !important; font-size: 18px !important; color: #0F1111 !important');
+    if (correctBinding !== listingBinding) {
+      element.setAttribute('style', 'background: #FF6D74 !important; font-size: 18px !important; color: #0F1111 !important');
       return;
     }
 
-    // if listing binding is correct
-    e.setAttribute('style', 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important');
-  });
-}
-
-
-const detectOtherLang = () => {
-  document.querySelectorAll('.a-section.a-spacing-none.puis-padding-right-small.s-title-instructions-style span.a-size-base.a-color-secondary:nth-child(1)').forEach((e) => {
-    const pattern = e.innerHTML;
-    const re = new RegExp(pattern, "gi");
-    e.innerHTML = e.innerText.replace(re, match => `<mark style="background: #FF6D74 !important; font-size: 18px !important">${match}</mark>`);
+    element.setAttribute('style', 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important');
   });
 }
 
 
 const highlightMatches = () => {
-  const searchedQuery = document.getElementById('twotabsearchtextbox');
-  const cleanedQuery = searchedQuery.value.replace(/\s\:\w.+/gi, '');
-  searchedQuery.value = cleanedQuery;
+  let searchedQuery = document.getElementById('twotabsearchtextbox');
+  searchedQuery.value = searchedQuery.value.replace(/\s\:\w.*$/gi, '');
 
   const completeMatch = searchedQuery.value.trim();
   const completeMatchRegEx = new RegExp(`\\b${completeMatch}\\b`, 'gi');
@@ -137,35 +137,58 @@ const highlightMatches = () => {
 }
 
 
-document.getElementById("twotabsearchtextbox").addEventListener("input", () => {
-  highlightPartialMatch();
+const highlightAuthor = () => {
+  const pattern = /(?<=by\s)(\w.*?)(?=(?:\s\||$))/;
+  document.querySelectorAll('.meeko').forEach((e) => {
+    let re = new RegExp(pattern, 'gi');
+    e.innerHTML = e.innerHTML.replace(re, function (match, group) {
+      return `<mark style="background: #D7ABFF !important; font-size: 17px !important">${group}</mark>`;
+    });
+  });
+};
+
+
+const detectWrongLang = () => {
+  const pattern = /(?:\w.*?)Edition/;
+  document.querySelectorAll('.meeko').forEach((e) => {
+    let re = new RegExp(pattern, 'gi');
+    e.innerHTML = e.innerHTML.replace(re, function (match) {
+      return `<mark style="background: #FF6D74 !important; font-size: 18px !important">${match}</mark>`;
+    });
+  });
+}
+
+
+document.getElementById('twotabsearchtextbox').addEventListener('input', () => {
+  highlightMatches();
 });
 
 
-document.getElementById('nav-search-bar-form').addEventListener("keydown", e => {
-  if ( e.code === 'Escape' ) {
+document.getElementById('nav-search-bar-form').addEventListener('keydown', (e) => {
+  if (e.code === 'Escape') {
     document.getElementById('nav-logo-sprites').click(); // simulate a click to the amazon logo at the top left
   }
 });
 
 
-function main() {
+const main = () => {
   removeGarbageData();
   turnIntoOneWord();
   detectWrongBinding();
-  detectOtherLang();
   highlightMatches();
+  highlightAuthor();
+  detectWrongLang();
 }
 main();
 
 
 let previousUrl = location.href;
 setInterval(() => {
-  if ( previousUrl !== location.href ) {
+  if (previousUrl !== location.href) {
     main();
     setTimeout(() => {
       main();
-      previousUrl = location.href
+      previousUrl = location.href;
     }, 2500);
   }
-}, 1000);
+}, 250);
