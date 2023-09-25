@@ -118,7 +118,7 @@ const detectWrongBinding = () => {
 
 const highlightMatches = () => {
   let searchedQuery = document.getElementById('twotabsearchtextbox');
-  searchedQuery.value = searchedQuery.value.replace(/\s\:\w.*$/gi, '');
+  searchedQuery.value = searchedQuery.value.replace(/\s\:\s?\w.*$/gi, '');
 
   const completeMatch = searchedQuery.value.trim();
   const completeMatchRegEx = new RegExp(`\\b${completeMatch}\\b`, 'gi');
