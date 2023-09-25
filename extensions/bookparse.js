@@ -1,32 +1,50 @@
-const css =
-`
-  <style>
-  .fulfillment-container {
-    width: 1000px;
-  }
-  </style>
-`;
-document.head.insertAdjacentHTML('beforeend', css);
-
-
 window.onfocus = () => {
-  document.querySelector('.form-nice-control.link-title-input').blur();
+  document.querySelector('.mb-2 > .form-control.form-control-second-primary').blur();
 }
 
 
-const dictationMic = document.createElement('button');
-dictationMic.id = 'dictation-microphone';
-dictationMic.innerText = 'Transcribe';
-dictationMic.style.cssText = 'position: relative; left: 73%; background-color: #F3F3F3;';
-dictationMic.onclick = () => { transcribe() };
-document.body.appendChild(dictationMic);
+const waitForElement = (selector, callback) => {
+  const observer = new MutationObserver(function(mutations, me) {
+    const element = document.querySelector(selector);
+    if (element) {
+      me.disconnect(); // Once the element has been found, we can stop observing for mutations
+      callback(element);
+      return;
+    }
+  });
+  observer.observe(document, { childList: true, subtree: true });
+}
 
 
-const triggerKeyUpEvent = () => {
-  const titleBox = document.querySelector('.form-nice-control.link-title-input');
-  titleBox.blur();
-  titleBox.focus();
-  titleBox.dispatchEvent(new Event('keyup'));
+const changeImageSize = (selector) => {
+  selector.style.cssText = 'height: 580px; width: 770px';
+}
+waitForElement('img', changeImageSize);
+
+
+const renderTranscribeButton = (selector) => {
+  const transcribeButton = document.createElement('button');
+  transcribeButton.id = 'dictation-microphone';
+  transcribeButton.innerText = 'Transcribe';
+  transcribeButton.style.cssText = 'position: relative; left: 43%; background-color: #F3F3F3; border-style: none; top: 8px;';
+  transcribeButton.onclick = () => { transcribe() };
+  selector.parentNode.appendChild(transcribeButton);
+}
+waitForElement('.form-control-select.w-100', renderTranscribeButton);
+
+
+const setNativeValue = (element, value) => {
+  let lastValue = element.value;
+  element.value = value;
+  let event = new Event("input", { target: element, bubbles: true });
+  // React 15
+  event.simulated = true;
+  // React 16
+  let tracker = element._valueTracker;
+  if (tracker) {
+      tracker.setValue(lastValue);
+  }
+  element.dispatchEvent(event);
 }
 
 
@@ -36,7 +54,8 @@ const sleep = async (ms) => {
 
 
 const transcribe = async (isPartialTextReplace = false) => {
-  const titleBox = document.querySelector('.form-nice-control.link-title-input');
+  const titleBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
+  const transcribeButton = document.getElementById('dictation-microphone');
 
   const wordSelectionStart = titleBox.value.slice(0, titleBox.selectionStart);
   const wordSelectionEnd = titleBox.value.slice(titleBox.selectionEnd);
@@ -47,13 +66,13 @@ const transcribe = async (isPartialTextReplace = false) => {
   recognition.interimResults = true;
 
   recognition.addEventListener('audiostart', () => {
-    dictationMic.innerText = 'Transcribing...';
-    dictationMic.style.cssText = 'position: relative; left: 73%; background-color: #FAA0A0;';
+    transcribeButton.innerText = 'Transcribing...';
+    transcribeButton.style.cssText = 'position: relative; left: 43%; background-color: #FAA0A0; border-style: none; top: 8px;';
   });
 
   recognition.addEventListener('audioend', () => {
-    dictationMic.innerText = 'Transcribe';
-    dictationMic.style.cssText = 'position: relative; left: 73%; background-color: #F3F3F3;';
+    transcribeButton.innerText = 'Transcribe';
+    transcribeButton.style.cssText = 'position: relative; left: 43%; background-color: #F3F3F3; border-style: none; top: 8px;';
     recognition.stop();
   });
 
@@ -67,9 +86,9 @@ const transcribe = async (isPartialTextReplace = false) => {
         replaceSelectedText(transcript, wordSelectionStart, wordSelectionEnd);
         break;
       default:
-        titleBox.value = transcript;
+        setNativeValue(titleBox, transcript);
     }
-    triggerKeyUpEvent();
+    titleBox.focus();
   });
 
   let retryCount = 0;
@@ -80,7 +99,6 @@ const transcribe = async (isPartialTextReplace = false) => {
     } catch (error) {
       console.log(error);
       retryCount++;
-
       if (retryCount >= 3) {
         recognition.stop();
         break;
@@ -92,16 +110,15 @@ const transcribe = async (isPartialTextReplace = false) => {
 
 
 const replaceSelectedText = (replacementText, wordSelectionStart, wordSelectionEnd) => {
-  const titleBox = document.querySelector('.form-nice-control.link-title-input');
+  const titleBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
   const result = `${wordSelectionStart} ${replacementText} ${wordSelectionEnd}`;
-  titleBox.value = result.replace(/^\s+/g, '').replace(/\s+/g, ' ').replace(/\s+$/g, '');
+  setNativeValue(titleBox, result.replace(/^\s+/g, '').replace(/\s+/g, ' ').replace(/\s+$/g, ''));
 }
 
 
 const linkBuilder = () => {
-  const _preview = document.querySelector('.form-nice-readonly-control.link-preview-value');
-  const _title_input = document.querySelector('.form-nice-control.link-title-input');
-  const _binding_selected = document.querySelector('.form-select.form-select-sm.link-binding-selected');
+  const _title_input = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
+  const _binding_selected = document.querySelector('.form-control-select.w-100');
 
   const selected_b = _binding_selected.value;
   const title = _title_input.value.toLowerCase().replace(/^\s+/g, '').replace(/\s+/g, ' ').replace(/\s+$/g, '').replaceAll(' ', '+');
@@ -126,8 +143,7 @@ const linkBuilder = () => {
   }
 
   if(title) {
-    _preview.value = `https://www.amazon.com/s?k=${title}${_binding}`;
-    window.open(_preview.value, '_blank', 'width=200,height=200');
+    window.open(`https://www.amazon.com/s?k=${title}${_binding}`, '_blank', 'width=200,height=200');
   }
 }
 
@@ -137,16 +153,16 @@ const rotateImage = () => {
     if(e.target.nodeName != 'INPUT') {
       switch(e.key) {
         case 'ArrowUp':
-          document.querySelector('.fulfillment-container').style.transform = 'rotate(0deg)';
+          document.querySelector('.card-body').style.transform = 'rotate(0deg)';
           break;
         case 'ArrowRight':
-          document.querySelector('.fulfillment-container').style.transform = 'rotate(90deg)';
+          document.querySelector('.card-body').style.transform = 'rotate(90deg)';
           break;
         case 'ArrowDown':
-          document.querySelector('.fulfillment-container').style.transform = 'rotate(180deg)';
+          document.querySelector('.card-body').style.transform = 'rotate(180deg)';
           break;
         case 'ArrowLeft':
-          document.querySelector('.fulfillment-container').style.transform = 'rotate(270deg)';
+          document.querySelector('.card-body').style.transform = 'rotate(270deg)';
           break;
       }
     }
@@ -155,7 +171,7 @@ const rotateImage = () => {
 
 
 const customActions = () => {
-  document.querySelector('.form-nice-control.link-title-input').addEventListener('keydown', (e) => {
+  document.querySelector('.mb-2 > .form-control.form-control-second-primary').addEventListener('keydown', (e) => {
     switch(e.key) {
       case 'Escape':
         e.preventDefault();
@@ -176,24 +192,8 @@ const customActions = () => {
 }
 
 
-// https://makersaid.com/wait-for-element-to-exist-javascript/
-const waitForElement = (selector, callback) => {
-  const observer = new MutationObserver(function(mutations, me) {
-    const element = document.querySelector(selector);
-    if (element) {
-      callback(element);
-        // me.disconnect(); // Once the element has been found, we can stop observing for mutations
-        return;
-    }
-  });
-  observer.observe(document, { childList: true, subtree: true });
-}
-
-
 const main = () => {
   rotateImage();
   customActions();
 }
-
-
-waitForElement('.form-nice-control.link-title-input', main);
+waitForElement('.mb-2 > .form-control.form-control-second-primary', main);
