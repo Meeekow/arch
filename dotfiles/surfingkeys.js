@@ -79,9 +79,9 @@ if ( self.origin === "https://www.messenger.com" ) {
 
 
 // reddit
-if ( self.origin === "https://www.reddit.com" ) {
-  location.href=location.href.replace("www.reddit", "old.reddit");
-};
+// if ( self.origin === "https://www.reddit.com" ) {
+//   location.href=location.href.replace("www.reddit", "old.reddit");
+// };
 
 
 // manga4life.com
@@ -114,73 +114,79 @@ if ( self.origin === "https://www.manga4life.com" || self.origin === "https://ww
 
 // bookparse
 // remove everything except the ff. to avoid unwanted actions
-unmapAllExcept(['r', 'l', 'h', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse\.com\/fulfilltasks/i);
+unmapAllExcept(['r', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse.com\/dashboard\/1\/*/i);
 
-// change scroll step size for better horizontal scrolling
-if ( self.origin === "https://bookparse.com" ) {
-  settings.scrollStepSize = 200;
-};
-
-map('n', 'l', /bookparse\.com\/fulfilltasks/i); unmap('l', /bookparse\.com\/fulfilltasks/i);
-map('i', 'h', /bookparse\.com\/fulfilltasks/i); unmap('h', /bookparse\.com\/fulfilltasks/i);
-
-map('c', 'gxx', /bookparse\.com\/fulfilltasks/i); unmap('gxx', /bookparse\.com\/fulfilltasks/i);
+map('c', 'gxx', /bookparse.com\/dashboard\/1\/*/i); unmap('gxx', /bookparse.com\/dashboard\/1\/*/i);
 
 // activate voice detection
 mapkey('s', 'activate voice detection', function() {
-  if(document.querySelector(".form-nice-control.link-title-input")) {
-    Hints.create(".form-nice-control.link-title-input", Hints.dispatchMouseClick);
-    document.querySelector('.form-nice-control.link-title-input').blur();
+  if(document.querySelector(".mb-2 > .form-control.form-control-second-primary")) {
+    Hints.create(".mb-2 > .form-control.form-control-second-primary", Hints.dispatchMouseClick);
+    document.querySelector('.mb-2 > .form-control.form-control-second-primary').blur();
     document.getElementById('dictation-microphone').click();
   }
-}, {domain: /bookparse\.com\/fulfilltasks/i} );
+}, {domain: /bookparse.com\/dashboard\/1\/*/i} );
 
 // focus input box for book details like title, etc.
 mapkey('t', 'focus title input box', function() {
-  Hints.create(".form-nice-control.link-title-input", Hints.dispatchMouseClick);
+  Hints.create(".mb-2 > .form-control.form-control-second-primary", Hints.dispatchMouseClick);
   // Hints.create(".form-nice-control.link-title-input", function(element) {
   //   Front.showEditor(element);
   // });
-}, {domain: /bookparse\.com\/fulfilltasks/i} );
+}, {domain: /bookparse.com\/dashboard\/1\/*/i} );
 
 // simulate click on the generated amazon link
 mapkey('f', 'click amazon generated link', function() {
-  document.querySelector('.form-nice-readonly-control.link-preview-value').click();
-}, {domain: /bookparse\.com\/fulfilltasks/i} );
+  document.querySelector('.form-control.link-preview-value').click();
+}, {domain: /bookparse.com\/dashboard\/1\/*/i} );
 
 // open current image url to google lens
 mapkey('e', 'open in google lens', function() {
-  window.open(`https://lens.google.com/uploadbyurl?url=${document.querySelector(".fulfillment-container .w-100").src}`);
-}, {domain: /bookparse\.com\/fulfilltasks/i} );
+  window.open(`https://lens.google.com/uploadbyurl?url=${document.querySelector("img").src}`);
+}, {domain: /bookparse.com\/dashboard\/1\/*/i} );
 
 // paste clipboard value to title box and enter insert mode
 mapkey('p', 'paste clipboard value and enter insert mode', function() {
   Clipboard.read( (response) => {
-    document.querySelector('.form-nice-control.link-title-input').value = response.data;
+    document.querySelector('.mb-2 > .form-control.form-control-second-primary').value = response.data;
   });
-  Hints.create(".form-nice-control.link-title-input", Hints.dispatchMouseClick);
-}, {domain: /bookparse\.com\/fulfilltasks/i} );
+  Hints.create(".mb-2 > .form-control.form-control-second-primary", Hints.dispatchMouseClick);
+}, {domain: /bookparse.com\/dashboard\/1\/*/i} );
 
 // ASIN box
 mapkey('a', 'paste clipboard content, hit submit button', function() {
+  const triggerEvent = ( obj, event ) => {
+    const evt = new Event( event, {target: obj, bubbles: true} );
+    return obj ? obj.dispatchEvent(evt) : false;
+  }
+  const el = document.querySelector('.form-control.form-control-second-primary');
   Clipboard.read( (response) => {
-    document.querySelector('.form-nice-control.asin-submission-value').value = response.data;
-    Hints.create(".fulfill-btn.btn.btn-primary", Hints.dispatchMouseClick);
+    el.value = response.data;
   });
+  triggerEvent(el, 'input');
+  Hints.create('.btn-second-primary', Hints.dispatchMouseClick);
   Clipboard.write(' ');
-}, {domain: /bookparse\.com\/fulfilltasks/i} );
+}, {domain: /bookparse.com\/dashboard\/1\/*/i} );
 
 // click undecided button and toggle hints for dropdown
 mapkey('h', 'click undecided button and toggle hints for dropdown', function() {
-  document.querySelector('.form-nice-control.asin-submission-value').value = '';
-  Hints.create(".fulfill-btn.btn.btn-outline-primary.dropdown-toggle-split", Hints.dispatchMouseClick);
-  setTimeout(() => { Hints.create("button.fulfill-btn.btn.w-100", Hints.dispatchMouseClick) }, 100);
-}, {domain: /bookparse\.com\/fulfilltasks/i} );
+  if (document.querySelector('.btn-outline.mb-2')) {
+    Hints.create(".btn-outline.mb-2", Hints.dispatchMouseClick);
+    setTimeout(() => { Hints.create("li > button", Hints.dispatchMouseClick) }, 100);
+  } else {
+    Hints.create(".btn.mb-2", Hints.dispatchMouseClick);
+    setTimeout(() => { Hints.create("li > button", Hints.dispatchMouseClick) }, 100);
+  }
+}, {domain: /bookparse.com\/dashboard\/1\/*/i} );
 
-// click exit
-mapkey('b', 'click exit', function() {
-  document.querySelector('.mx-3.mt-2.link-task').click();
-}, {domain: /bookparse\.com\/fulfilltasks/i} );
+// simulate click on the generated amazon link
+mapkey('u', 'click undecided tab', function() {
+  if (document.querySelector('.mini-navbar-list.mini-navbar-item-active[d-key="#notcomplete"]')) {
+    document.querySelector('.mini-navbar-list[d-key="#undecided"] > a').click();
+  } else {
+    document.querySelector('.mini-navbar-list[d-key="#notcomplete"] > a').click();
+  }
+}, {domain: /bookparse.com\/dashboard\/1\/*/i} );
 
 
 // lens.google.com
@@ -271,6 +277,14 @@ mapkey('sa', 'Site specific search', function() {
   window.close();
   window.open(`https://www.google.com/search?q=site:amazon.com+"${document.getElementById('twotabsearchtextbox').value}"`);
 }, {domain: /amazon\.com/i} );
+
+
+// bookrun
+if ( self.origin === 'https://www.google.com' ) {
+  mapkey('<Space>', 'press verify/next', function() {
+    Hints.create('.rc-button-default.goog-inline-block', Hints.dispatchMouseClick);
+  });
+}
 
 
 // add amazon search aliases
