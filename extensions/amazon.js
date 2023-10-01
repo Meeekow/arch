@@ -7,7 +7,10 @@ const garbageDataSelectors = [
   '.a-size-base.a-color-price', // stock left
   '.a-section.a-spacing-none.a-spacing-top-micro.s-product-grid-adjustment', // synopsis, age
   'span[aria-label="Temporarily out of stock."]', // temporarily out of stock
-  '.a-section.a-spacing-none.a-spacing-top-micro .s-align-children-center' // small business
+  '.a-section.a-spacing-none.a-spacing-top-micro .s-align-children-center', // small business
+  'span.s-coupon-unclipped', // save coupon
+  'span.a-color-secondary', // free with audible trial, sponsored
+  '.a-row.a-size-small.a-color-secondary > span' // pre-order price guarantee
 ];
 
 
@@ -34,6 +37,10 @@ const removeGarbageData = () => {
 
   // footer
   waitForElementAndRemove('#navFooter');
+
+  // related inspiration
+  waitForElementAndRemove('.s-include-content-margin.posts-feed-preview-wrapper .sg-col-inner');
+  waitForElementAndRemove('#anonCarousel1');
 
   // loop over the array
   garbageDataSelectors.forEach((selector) => {
