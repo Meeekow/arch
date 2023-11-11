@@ -1,25 +1,32 @@
 const garbageDataSelectors = [
-  '.a-section.a-spacing-none.a-spacing-top-mini > .a-row', // 2nd, 3rd binding amazon details
-  '.a-size-base.a-link-normal.s-no-hover.s-underline-text.s-underline-link-text.s-link-style.a-text-normal', // price
-  '.a-row.a-size-base.a-color-secondary.s-align-children-center', // delivery, ships to
+  '.a-section.a-spacing-none.a-spacing-top-mini', // other book bindings
+  '.a-row.a-size-base.a-color-secondary.s-align-children-center', // delivery date, ships to
   'span.a-size-small', // usually ships within x days
   '.a-section.a-spacing-none.a-spacing-top-mini .a-row.a-size-base.a-color-secondary', // more buying choices
   '.a-size-base.a-color-price', // stock left
-  '.a-section.a-spacing-none.a-spacing-top-micro.s-product-grid-adjustment', // synopsis, age
+  '.a-section.a-spacing-none.a-spacing-top-micro.puis-product-grid-adjustment', // synopsis
   'span[aria-label="Temporarily out of stock."]', // temporarily out of stock
-  '.a-section.a-spacing-none.a-spacing-top-micro .s-align-children-center', // small business
+  '.a-section.a-spacing-none.a-spacing-top-micro .s-align-children-center', // free delivery
   'span.s-coupon-unclipped', // save coupon
-  'span.a-color-secondary', // free with audible trial, sponsored
-  '.a-row.a-size-small.a-color-secondary > span' // pre-order price guarantee
+  '.a-row.a-size-small.a-color-secondary .a-link-normal.s-underline-text.s-underline-link-text.s-link-style', // join now
+  '.a-row.a-size-small.a-color-secondary > span', // pre-order price guarantee
+  '.a-row .a-badge' // best seller, limited time deal, editor's pick
+  //'.a-section.a-spacing-none.a-spacing-top-micro.s-product-grid-adjustment', // synopsis, age
+  //'.a-size-base.a-link-normal.s-no-hover.s-underline-text.s-underline-link-text.s-link-style.a-text-normal', // price
 ];
 
 
-const waitForElementAndRemove = (selector) => {
+const waitForElementAndRemove = (selector, isArray = false) => {
   const observer = new MutationObserver(function(mutations, me) {
     const element = document.querySelector(selector);
     if (element) {
-      me.disconnect(); // Once the element has been found, stop observing for mutations
-      element.remove(); // Delete the element that has been found
+      if (!isArray) {
+        element.remove();
+      } else {
+        document.querySelectorAll(selector).forEach((element) => {
+          element.remove();
+        });
+      }
       return;
     }
   });
@@ -29,24 +36,22 @@ const waitForElementAndRemove = (selector) => {
 
 const removeGarbageData = () => {
   // sidebar
-  waitForElementAndRemove('#s-refinements');
+  waitForElementAndRemove('#s-refinements', false);
 
   // customers who viewed items in your browsing history also viewed
-  waitForElementAndRemove('#rhf-shoveler');
-  waitForElementAndRemove('.rhf-frame');
+  waitForElementAndRemove('#rhf-shoveler', false);
+  waitForElementAndRemove('.rhf-frame', false);
 
   // footer
-  waitForElementAndRemove('#navFooter');
+  waitForElementAndRemove('#navFooter', false);
 
   // related inspiration
-  waitForElementAndRemove('.s-include-content-margin.posts-feed-preview-wrapper .sg-col-inner');
-  waitForElementAndRemove('#anonCarousel1');
+  waitForElementAndRemove('.s-include-content-margin.posts-feed-preview-wrapper .sg-col-inner', false);
+  waitForElementAndRemove('#anonCarousel1', false);
 
   // loop over the array
   garbageDataSelectors.forEach((selector) => {
-    document.querySelectorAll(selector).forEach((element) => {
-      element.remove();
-    });
+    waitForElementAndRemove(selector, true);
   });
 }
 
@@ -103,14 +108,18 @@ const detectWrongBinding = () => {
   document.querySelectorAll('.a-row.a-size-base.a-color-base:nth-child(1) a.a-size-base.a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-bold').forEach((element) => {
     let listingBinding = element.textContent.trim();
 
-    if (correctBinding === 'Paperback' && listingBinding === 'Mass Market Paperback') {
-      element.setAttribute('style', 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important');
-      return;
+    if (correctBinding === 'Paperback') {
+      if (listingBinding === 'Mass Market Paperback' || listingBinding === 'Perfect Paperback') {
+        element.setAttribute('style', 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important');
+        return;
+      }
     }
 
-    if (correctBinding === 'Spiral-bound' && listingBinding === 'Ring-bound') {
-      element.setAttribute('style', 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important');
-      return;
+    if (correctBinding === 'Spiral-bound') {
+      if (listingBinding === 'Ring-bound' || listingBinding === 'Plastic Comb') {
+        element.setAttribute('style', 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important');
+        return;
+      }
     }
 
     if (correctBinding !== listingBinding) {
