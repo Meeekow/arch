@@ -3,6 +3,25 @@ window.onfocus = () => {
 }
 
 
+const detectUnknownBinding = () => {
+  const observer = new MutationObserver(function(mutations, me) {
+    const cardBody = document.querySelector('.col-md-5.mb-2.react-draggable .card-body');
+    const binding = document.querySelector('.form-control');
+
+    if (binding) {
+      if (binding.value !== 'Unknown') {
+        cardBody.removeAttribute('style');
+      } else {
+        cardBody.style.cssText = 'background-color: #E74C3C';
+      }
+    }
+
+  });
+  observer.observe(document, { childList: true, subtree: true });
+}
+detectUnknownBinding();
+
+
 const waitForElement = (selector, callback) => {
   const observer = new MutationObserver(function(mutations, me) {
     const element = document.querySelector(selector);
@@ -17,7 +36,7 @@ const waitForElement = (selector, callback) => {
 
 
 const changeImageSize = (selector) => {
-  selector.style.cssText = 'height: 580px; width: 770px';
+  selector.style.cssText = 'height: 600px; width: 800px';
 }
 waitForElement('img', changeImageSize);
 
@@ -104,8 +123,8 @@ const transcribe = async (isPartialTextReplace = false) => {
         break;
       }
     }
-  }
   await sleep(1000);
+  }
 }
 
 
@@ -150,7 +169,7 @@ const linkBuilder = () => {
 
 const rotateImage = () => {
   document.addEventListener('keydown', (e) => {
-    if(e.target.nodeName != 'INPUT') {
+    if(e.target.nodeName === 'BODY') {
       switch(e.key) {
         case 'ArrowUp':
           document.querySelector('.card-body').style.transform = 'rotate(0deg)';
@@ -170,16 +189,37 @@ const rotateImage = () => {
 }
 
 
+const resetImageOrientation = () => {
+  const observer = new MutationObserver(function(mutations, me) {
+    const element = document.querySelector('.out-label.ms-auto');
+    if (element) {
+      document.querySelector('.card-body').style.transform = null;
+      return;
+    }
+  });
+  observer.observe(document, { characterData: true, subtree: true });
+}
+resetImageOrientation();
+
+
 const customActions = () => {
-  document.querySelector('.mb-2 > .form-control.form-control-second-primary').addEventListener('keydown', (e) => {
+  const titleBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
+
+  titleBox.addEventListener('keydown', (e) => {
     switch(e.key) {
       case 'Escape':
         e.preventDefault();
         linkBuilder();
         break;
       case 'Enter':
-        e.preventDefault();
-        transcribe(true);
+        if(e.ctrlKey) {
+          e.preventDefault();
+          titleBox.blur();
+          document.querySelector('.btn-outline.mb-2').focus();
+        } else {
+          e.preventDefault();
+          transcribe(true);
+        }
         break;
       case 's':
         if(e.ctrlKey) {
@@ -189,7 +229,28 @@ const customActions = () => {
         break;
     }
   });
+
+
+  // Apply changes made via Surfingkeys VIM mode.
+  titleBox.addEventListener('change', (e) => {
+    const event = new Event('input', { bubbles: true });
+    titleBox.dispatchEvent(event);
+  });
+
+
+  const bindingBox = document.querySelector('.form-control-select.w-100');
+
+  bindingBox.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') {
+      e.preventDefault();
+      titleBox.focus();
+    }
+  });
 }
+
+
+// Click button on page load to hide side panel.
+waitForElement('.navigation-btn.ms-auto', () => { document.querySelector('.navigation-btn.ms-auto').click() });
 
 
 const main = () => {
