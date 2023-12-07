@@ -114,9 +114,9 @@ if ( self.origin === "https://www.manga4life.com" || self.origin === "https://ww
 
 // bookparse
 // remove everything except the ff. to avoid unwanted actions
-unmapAllExcept(['r', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse.com\/dashboard\/1\/*/i);
+unmapAllExcept(['r', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse.com\/dashboard\/*\/*/i);
 
-map('c', 'gxx', /bookparse.com\/dashboard\/1\/*/i); unmap('gxx', /bookparse.com\/dashboard\/1\/*/i);
+map('c', 'gxx', /bookparse.com\/dashboard\/*\/*/i); unmap('gxx', /bookparse.com\/dashboard\/*\/*/i);
 
 // activate voice detection
 mapkey('s', 'activate voice detection', function() {
@@ -125,7 +125,7 @@ mapkey('s', 'activate voice detection', function() {
     document.querySelector('.mb-2 > .form-control.form-control-second-primary').blur();
     document.getElementById('dictation-microphone').click();
   }
-}, {domain: /bookparse.com\/dashboard\/1\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
 
 // focus input box for book details like title, etc.
 mapkey('t', 'focus title input box', function() {
@@ -133,17 +133,17 @@ mapkey('t', 'focus title input box', function() {
   // Hints.create(".form-nice-control.link-title-input", function(element) {
   //   Front.showEditor(element);
   // });
-}, {domain: /bookparse.com\/dashboard\/1\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
 
 // simulate click on the generated amazon link
 mapkey('f', 'click amazon generated link', function() {
   document.querySelector('.form-control.link-preview-value').click();
-}, {domain: /bookparse.com\/dashboard\/1\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
 
 // open current image url to google lens
 mapkey('e', 'open in google lens', function() {
   window.open(`https://lens.google.com/uploadbyurl?url=${document.querySelector("img").src}`);
-}, {domain: /bookparse.com\/dashboard\/1\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
 
 // paste clipboard value to title box and enter insert mode
 mapkey('p', 'paste clipboard value and enter insert mode', function() {
@@ -151,7 +151,7 @@ mapkey('p', 'paste clipboard value and enter insert mode', function() {
     document.querySelector('.mb-2 > .form-control.form-control-second-primary').value = response.data;
   });
   Hints.create(".mb-2 > .form-control.form-control-second-primary", Hints.dispatchMouseClick);
-}, {domain: /bookparse.com\/dashboard\/1\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
 
 // ASIN box
 mapkey('a', 'paste clipboard content, hit submit button', function() {
@@ -166,7 +166,7 @@ mapkey('a', 'paste clipboard content, hit submit button', function() {
   triggerEvent(el, 'input');
   Hints.create('.btn-second-primary', Hints.dispatchMouseClick);
   Clipboard.write(' ');
-}, {domain: /bookparse.com\/dashboard\/1\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
 
 // click undecided button and toggle hints for dropdown
 mapkey('h', 'click undecided button and toggle hints for dropdown', function() {
@@ -177,7 +177,7 @@ mapkey('h', 'click undecided button and toggle hints for dropdown', function() {
     Hints.create(".btn.mb-2", Hints.dispatchMouseClick);
     setTimeout(() => { Hints.create("li > button", Hints.dispatchMouseClick) }, 100);
   }
-}, {domain: /bookparse.com\/dashboard\/1\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
 
 // simulate click on the generated amazon link
 mapkey('u', 'click undecided tab', function() {
@@ -186,7 +186,7 @@ mapkey('u', 'click undecided tab', function() {
   } else {
     document.querySelector('.mini-navbar-list[d-key="#notcomplete"] > a').click();
   }
-}, {domain: /bookparse.com\/dashboard\/1\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
 
 
 // lens.google.com
