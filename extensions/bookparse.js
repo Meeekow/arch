@@ -202,6 +202,15 @@ const resetImageOrientation = () => {
 resetImageOrientation();
 
 
+const focusTitleBoxOnImageLoad = () => {
+  const titleBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
+
+  document.querySelector('img').addEventListener('load', () => {
+    titleBox.focus();
+  });
+}
+
+
 const customActions = () => {
   const titleBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
 
@@ -238,6 +247,7 @@ const customActions = () => {
   });
 
 
+  // Bring focus back to the titlebox whenever you hit 'Esc' from the dropdown menu for selecting a book binding.
   const bindingBox = document.querySelector('.form-control-select.w-100');
 
   bindingBox.addEventListener('keydown', (e) => {
@@ -256,5 +266,6 @@ waitForElement('.navigation-btn.ms-auto', () => { document.querySelector('.navig
 const main = () => {
   rotateImage();
   customActions();
+  focusTitleBoxOnImageLoad();
 }
 waitForElement('.mb-2 > .form-control.form-control-second-primary', main);
