@@ -95,7 +95,7 @@ const getBindingFromUrl = () => {
   } else if (url.includes('&rh=n%3A283155%2Cp_n_feature_browse-bin%3A23488071011')) {
     binding = 'Spiral-bound';
   } else if (url.includes('&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656019011')) {
-    binding = 'Board';
+    binding = 'Board book';
   }
 
   return binding;
