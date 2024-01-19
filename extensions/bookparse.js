@@ -1,5 +1,12 @@
+const loseFocus = () => {
+  document.body.tabIndex = 0;
+  document.body.focus();
+  document.body.tabIndex = -1;
+}
+
+
 window.onfocus = () => {
-  document.querySelector('.mb-2 > .form-control.form-control-second-primary').blur();
+  loseFocus();
 }
 
 
@@ -22,6 +29,73 @@ const detectUnknownBinding = () => {
 detectUnknownBinding();
 
 
+// Detect wrong binding from recognition software results
+const checkRecognitionSoftwareBindings = () => {
+  const observer = new MutationObserver(function(mutations, me) {
+    const correctBinding = document.querySelector('.form-control');
+    const resultBox = document.querySelectorAll('.sm-card.d-flex');
+    if (resultBox) {
+      resultBox.forEach((e) => {
+        const bindingToCheck = e.querySelector('.d-block:nth-child(3)').firstChild.nextSibling.textContent;
+        if (correctBinding.value === 'Paperback' && bindingToCheck === 'Mass Market Paperback') {
+          return;
+        }
+        if (correctBinding.value !== bindingToCheck) {
+          e.style.cssText = 'background-color: #000039';
+        }
+      });
+    }
+  });
+  observer.observe(document, { childList: true, subtree: true });
+}
+checkRecognitionSoftwareBindings();
+
+
+// Detect sales rank
+const checkRecognitionSoftwareSalesRank = () => {
+  const observer = new MutationObserver(function(mutations, me) {
+    const targets = document.querySelectorAll('.d-block');
+    if (targets) {
+      targets.forEach((target) => {
+        if (target.textContent.includes('Sales Rank')) {
+          target.style.cssText = 'background-color: #023020';
+        }
+      });
+    }
+  });
+  observer.observe(document, { childList: true, subtree: true });
+}
+checkRecognitionSoftwareSalesRank();
+
+
+const resetImageOrientation = () => {
+  const observer = new MutationObserver(function(mutations, me) {
+    const element = document.querySelector('.out-label.ms-auto');
+    if (element) {
+      document.querySelector('.card-body').style.transform = null;
+      return;
+    }
+  });
+  observer.observe(document, { characterData: true, subtree: true });
+}
+resetImageOrientation();
+
+
+const changeWidthAndReposition = () => {
+  const observer = new MutationObserver(function(mutations, me) {
+    const element = document.querySelectorAll('.card')[1];
+    if (element) {
+      me.disconnect(); // Once the element has been found, we can stop observing for mutations
+      element.style.width = '500px'; // card width
+      document.querySelector('.col-md-5.mb-2.react-draggable').style.transform = 'translate(615px, -492px)'; // card position
+      return;
+    }
+  });
+  observer.observe(document, { childList: true, subtree: true });
+}
+// changeWidthAndReposition();
+
+
 const waitForElement = (selector, callback) => {
   const observer = new MutationObserver(function(mutations, me) {
     const element = document.querySelector(selector);
@@ -35,8 +109,12 @@ const waitForElement = (selector, callback) => {
 }
 
 
+// Click button on page load to hide side panel.
+waitForElement('.navigation-btn.ms-auto', () => { document.querySelector('.navigation-btn.ms-auto').click() });
+
+
 const changeImageSize = (selector) => {
-  selector.style.cssText = 'height: 600px; width: 800px';
+  selector.style.cssText = 'height: 557px; width: 800px';
 }
 waitForElement('img', changeImageSize);
 
@@ -67,8 +145,10 @@ const setNativeValue = (element, value) => {
 }
 
 
-const sleep = async (ms) => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+const replaceSelectedText = (replacementText, wordSelectionStart, wordSelectionEnd) => {
+  const titleBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
+  const result = `${wordSelectionStart} ${replacementText} ${wordSelectionEnd}`;
+  setNativeValue(titleBox, result.replace(/^\s+/g, '').replace(/\s+/g, ' ').replace(/\s+$/g, ''));
 }
 
 
@@ -110,28 +190,15 @@ const transcribe = async (isPartialTextReplace = false) => {
     titleBox.focus();
   });
 
-  let retryCount = 0;
-  while (true) {
-    try {
+  recognition.addEventListener('error', () => {
+    recognition.stop();
+    setNativeValue(titleBox, '');
+    setTimeout(() => {
       recognition.start();
-      break;
-    } catch (error) {
-      console.log(error);
-      retryCount++;
-      if (retryCount >= 3) {
-        recognition.stop();
-        break;
-      }
-    }
-  await sleep(1000);
-  }
-}
+    }, 100);
+  });
 
-
-const replaceSelectedText = (replacementText, wordSelectionStart, wordSelectionEnd) => {
-  const titleBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
-  const result = `${wordSelectionStart} ${replacementText} ${wordSelectionEnd}`;
-  setNativeValue(titleBox, result.replace(/^\s+/g, '').replace(/\s+/g, ' ').replace(/\s+$/g, ''));
+  recognition.start();
 }
 
 
@@ -189,28 +256,6 @@ const rotateImage = () => {
 }
 
 
-const resetImageOrientation = () => {
-  const observer = new MutationObserver(function(mutations, me) {
-    const element = document.querySelector('.out-label.ms-auto');
-    if (element) {
-      document.querySelector('.card-body').style.transform = null;
-      return;
-    }
-  });
-  observer.observe(document, { characterData: true, subtree: true });
-}
-resetImageOrientation();
-
-
-const focusTitleBoxOnImageLoad = () => {
-  const titleBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
-
-  document.querySelector('img').addEventListener('load', () => {
-    titleBox.focus();
-  });
-}
-
-
 const customActions = () => {
   const titleBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
 
@@ -223,8 +268,7 @@ const customActions = () => {
       case 'Enter':
         if(e.ctrlKey) {
           e.preventDefault();
-          titleBox.blur();
-          document.querySelector('.btn-outline.mb-2').focus();
+          loseFocus();
         } else {
           e.preventDefault();
           transcribe(true);
@@ -240,6 +284,23 @@ const customActions = () => {
   });
 
 
+  // Binding box custom actions.
+  const bindingBox = document.querySelector('.form-control-select.w-100');
+
+  bindingBox.addEventListener('keydown', (e) => {
+    switch(e.key) {
+      case 'Escape':
+          e.preventDefault();
+          titleBox.focus();
+          break;
+      case 'Enter':
+          e.preventDefault();
+          loseFocus();
+          break;
+    }
+  });
+
+
   // Apply changes made via Surfingkeys VIM mode.
   titleBox.addEventListener('change', (e) => {
     const event = new Event('input', { bubbles: true });
@@ -247,25 +308,15 @@ const customActions = () => {
   });
 
 
-  // Bring focus back to the titlebox whenever you hit 'Esc' from the dropdown menu for selecting a book binding.
-  const bindingBox = document.querySelector('.form-control-select.w-100');
-
-  bindingBox.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape') {
-      e.preventDefault();
-      titleBox.focus();
-    }
-  });
+  // Focus titlebox once image loads.
+  // document.querySelector('img').addEventListener('load', () => {
+  //   titleBox.focus();
+  // });
 }
-
-
-// Click button on page load to hide side panel.
-waitForElement('.navigation-btn.ms-auto', () => { document.querySelector('.navigation-btn.ms-auto').click() });
 
 
 const main = () => {
   rotateImage();
   customActions();
-  focusTitleBoxOnImageLoad();
 }
 waitForElement('.mb-2 > .form-control.form-control-second-primary', main);
