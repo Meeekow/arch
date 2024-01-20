@@ -84,34 +84,6 @@ if ( self.origin === "https://www.messenger.com" ) {
 // };
 
 
-// manga4life.com
-if ( self.origin === "https://www.manga4life.com" || self.origin === "https://www.asurascans.com" ) {
-  mapkey('i', '#1Focus username input box', function() {
-      document.querySelector('input[type=email]').focus();
-  }, {domain: /manga4life\.com/i} );
-
-  mapkey('h', '#1Go to subscription', function() {
-      window.open("https://www.manga4life.com/user/subscription.php", "_self");
-  }, {domain: /manga4life\.com/i} );
-
-  mapkey('zi', '#3Zoom in', function() {
-    RUNTIME('setZoom', {
-      zoomFactor: 0
-    });
-
-    RUNTIME('setZoom', {
-      zoomFactor: 0.5
-    });
-  });
-
-  mapkey('zo', '#3Zoom out', function() {
-    RUNTIME('setZoom', {
-      zoomFactor: 0
-    });
-  });
-};
-
-
 // bookparse
 // remove everything except the ff. to avoid unwanted actions
 unmapAllExcept(['gg', 'j', 'k', 'd', 'u', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse.com\/dashboard\/*\/*/i);
@@ -125,6 +97,17 @@ mapkey('p', 'paste clipboard value and enter insert mode', function() {
     document.querySelector('.mb-2 > .form-control.form-control-second-primary').value = response.data;
   });
   Hints.create(".mb-2 > .form-control.form-control-second-primary", Hints.dispatchMouseClick);
+}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
+
+// reset zoom level to default
+mapkey('n', 'reset zoom level to default', function() {
+  RUNTIME('setZoom', {
+    zoomFactor: 0
+  });
+
+  RUNTIME('setZoom', {
+    zoomFactor: 0.25
+  });
 }, {domain: /bookparse.com\/dashboard\/*\/*/i} );
 
 // show hints for 'Use ASIN button'
