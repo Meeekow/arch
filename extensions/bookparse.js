@@ -35,6 +35,10 @@ const checkRecognitionSoftwareBindings = () => {
     const correctBinding = document.querySelector('.form-control');
     const resultBox = document.querySelectorAll('.sm-card.d-flex');
     if (resultBox) {
+      const url = window.location.href;
+      if (url.indexOf('undecided') > -1) {
+        return;
+      }
       resultBox.forEach((e) => {
         const bindingToCheck = e.querySelector('.d-block:nth-child(3)').firstChild.nextSibling.textContent;
         if (correctBinding.value === 'Paperback' && bindingToCheck === 'Mass Market Paperback') {
