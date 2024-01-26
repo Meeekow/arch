@@ -10,6 +10,7 @@ window.onfocus = () => {
 }
 
 
+// Detect wrong binding from user interface box.
 const detectUnknownBinding = () => {
   const observer = new MutationObserver(function(mutations, me) {
     const cardBody = document.querySelector('.col-md-5.mb-2.react-draggable .card-body');
@@ -29,7 +30,7 @@ const detectUnknownBinding = () => {
 detectUnknownBinding();
 
 
-// Detect wrong binding from recognition software results
+// Detect wrong binding from recognition software results box.
 const checkRecognitionSoftwareBindings = () => {
   const observer = new MutationObserver(function(mutations, me) {
     const correctBinding = document.querySelector('.form-control');
@@ -55,11 +56,15 @@ const checkRecognitionSoftwareBindings = () => {
 checkRecognitionSoftwareBindings();
 
 
-// Detect sales rank
-const checkRecognitionSoftwareSalesRank = () => {
+// Detect sales rank and set margin.
+const highlightSalesRankAndSetMargin = () => {
   const observer = new MutationObserver(function(mutations, me) {
     const targets = document.querySelectorAll('.d-block');
+    const margins = document.querySelectorAll('.sm-card.d-flex');
     if (targets) {
+      margins.forEach((target) => {
+        target.style.margin = '10px';
+      });
       targets.forEach((target) => {
         if (target.textContent.includes('Sales Rank')) {
           target.style.cssText = 'background-color: #023020';
@@ -69,7 +74,7 @@ const checkRecognitionSoftwareSalesRank = () => {
   });
   observer.observe(document, { childList: true, subtree: true });
 }
-checkRecognitionSoftwareSalesRank();
+highlightSalesRankAndSetMargin();
 
 
 const resetImageOrientation = () => {
@@ -85,26 +90,29 @@ const resetImageOrientation = () => {
 resetImageOrientation();
 
 
-const changeWidthAndReposition = () => {
+const changeWidthAndRepositionUserInterface = () => {
   const observer = new MutationObserver(function(mutations, me) {
     const element = document.querySelectorAll('.card')[1];
     if (element) {
-      me.disconnect(); // Once the element has been found, we can stop observing for mutations
-      element.style.width = '500px'; // card width
-      document.querySelector('.col-md-5.mb-2.react-draggable').style.transform = 'translate(615px, -492px)'; // card position
+      me.disconnect();
+      element.style.width = '697px'; // user interface card width
+      document.querySelector('.col-md-5.mb-2.react-draggable > label').style.visibility = "hidden"; // 'Drag Me' label on top of the card
+      document.querySelector('.col-md-5.mb-2.react-draggable').style.transform = 'translate(-65px, -50px)'; // user interface card position
       return;
     }
   });
   observer.observe(document, { childList: true, subtree: true });
 }
-// changeWidthAndReposition();
+changeWidthAndRepositionUserInterface();
 
 
-const waitForElement = (selector, callback) => {
+const waitForElement = (selector, callback, shouldMonitor = false) => {
   const observer = new MutationObserver(function(mutations, me) {
     const element = document.querySelector(selector);
     if (element) {
-      me.disconnect(); // Once the element has been found, we can stop observing for mutations
+      if (!shouldMonitor) {
+        me.disconnect(); // Once the element has been found, we can stop observing for mutations.
+      }
       callback(element);
       return;
     }
@@ -118,9 +126,17 @@ waitForElement('.navigation-btn.ms-auto', () => { document.querySelector('.navig
 
 
 const changeImageSize = (selector) => {
-  selector.style.cssText = 'height: 557px; width: 800px';
+  selector.style.cssText = 'height: 557px; width: 750px';
 }
-waitForElement('img', changeImageSize);
+waitForElement('img', changeImageSize, true);
+
+
+const changeWidthAndRepositionSoftwareResultsInterface = (selector) => {
+  document.querySelector('.mini-navbar.ms-auto').style.transform = 'translate(32px, -10px)'; // 'Not Complete', 'Undecided'
+  document.querySelector('.sm-card > h6').style.visibility = 'hidden'; // 'Found Matches'
+  selector.style.cssText = 'background-color: #0f0f0f; border: none; width: 725px; height: 0px; transform: translate(850px, -714px);';
+}
+waitForElement('.sm-card', changeWidthAndRepositionSoftwareResultsInterface, true);
 
 
 const renderTranscribeButton = (selector) => {
@@ -310,12 +326,6 @@ const customActions = () => {
     const event = new Event('input', { bubbles: true });
     titleBox.dispatchEvent(event);
   });
-
-
-  // Focus titlebox once image loads.
-  // document.querySelector('img').addEventListener('load', () => {
-  //   titleBox.focus();
-  // });
 }
 
 
