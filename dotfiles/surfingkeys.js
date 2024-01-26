@@ -85,6 +85,10 @@ if ( self.origin === "https://www.messenger.com" ) {
 
 
 // bookparse
+if ( self.origin === "https://bookparse.com" ) {
+  settings.scrollStepSize = 50;
+}
+
 // remove everything except the ff. to avoid unwanted actions
 unmapAllExcept(['gg', 'j', 'k', 'd', 'u', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse.com\/dashboard\/*\/*/i);
 
@@ -105,6 +109,13 @@ mapkey('n', 'reset zoom level to default', function() {
     zoomFactor: 0
   });
 
+  RUNTIME('setZoom', {
+    zoomFactor: 0.25
+  });
+}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
+
+// reset zoom level to default
+mapkey('i', 'zoom in', function() {
   RUNTIME('setZoom', {
     zoomFactor: 0.25
   });
