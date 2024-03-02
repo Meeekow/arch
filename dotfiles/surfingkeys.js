@@ -90,17 +90,23 @@ if ( self.origin === "https://bookparse.com" ) {
 }
 
 // remove everything except the ff. to avoid unwanted actions
-unmapAllExcept(['gg', 'j', 'k', 'd', 'u', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse.com\/dashboard\/*\/*/i);
+unmapAllExcept(['gg', 'j', 'k', 'd', 'u', 'cs', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse.com\/dashboard\/*\/*/i);
 
-// rebind close other tabs
+// change scroll target
+map('p', 'cs', /bookparse.com\/dashboard\/*\/*/i); unmap('cs', /bookparse.com\/dashboard\/*\/*/i);
+
+// close other tabs
 map('c', 'gxx', /bookparse.com\/dashboard\/*\/*/i); unmap('gxx', /bookparse.com\/dashboard\/*\/*/i);
 
-// paste clipboard value to title box and enter insert mode
-mapkey('p', 'paste clipboard value and enter insert mode', function() {
-  Clipboard.read( (response) => {
-    document.querySelector('.mb-2 > .form-control.form-control-second-primary').value = response.data;
-  });
-  Hints.create(".mb-2 > .form-control.form-control-second-primary", Hints.dispatchMouseClick);
+// switch between not complete and undecided
+mapkey('b', 'switch between not complete and undecided', function() {
+  const url = location.href;
+  const state = document.querySelectorAll('a.mini-navbar-item');
+  if (url.indexOf('undecided') > -1) {
+    state[0].click();
+  } else {
+    state[1].click();
+  }
 }, {domain: /bookparse.com\/dashboard\/*\/*/i} );
 
 // reset zoom level to default
@@ -108,13 +114,12 @@ mapkey('n', 'reset zoom level to default', function() {
   RUNTIME('setZoom', {
     zoomFactor: 0
   });
-
   RUNTIME('setZoom', {
     zoomFactor: 0.25
   });
 }, {domain: /bookparse.com\/dashboard\/*\/*/i} );
 
-// reset zoom level to default
+// zoom in
 mapkey('i', 'zoom in', function() {
   RUNTIME('setZoom', {
     zoomFactor: 0.25
