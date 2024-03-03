@@ -34,19 +34,21 @@ detectUnknownBinding();
 const checkRecognitionSoftwareBindings = () => {
   const observer = new MutationObserver(function(mutations, me) {
     const correctBinding = document.querySelector('.form-control');
+    const sanitizedCorrectBinding = correctBinding.value.toLowerCase();
     const resultBox = document.querySelectorAll('.sm-card.d-flex');
     if (resultBox) {
-      const url = window.location.href;
-      if (url.indexOf('undecided') > -1) {
-        return;
-      }
+      // const url = window.location.href;
+      // if (url.indexOf('2') > -1 && url.indexOf('undecided') > -1) {
+      //   return;
+      // }
       resultBox.forEach((e) => {
-        const bindingToCheck = e.querySelector('.d-block:nth-child(3)').firstChild.nextSibling.textContent;
-        if (correctBinding.value === 'Paperback' && bindingToCheck === 'Mass Market Paperback') {
+        const bindingToCheck = e.querySelector('.d-block:nth-child(3)').firstChild.nextSibling.textContent.toLowerCase();
+        const sanitizedBindingToCheck = bindingToCheck.toLowerCase();
+        if (sanitizedCorrectBinding === 'paperback' && sanitizedBindingToCheck === 'mass market paperback') {
           return;
         }
-        if (correctBinding.value !== bindingToCheck) {
-          e.style.cssText = 'background-color: #000039';
+        if (sanitizedCorrectBinding !== sanitizedBindingToCheck) {
+          e.style.cssText = 'background-color: #000';
         }
       });
     }
@@ -97,7 +99,7 @@ const changeWidthAndRepositionUserInterface = () => {
       me.disconnect();
       element.style.width = '697px'; // user interface card width
       document.querySelector('.col-md-5.mb-2.react-draggable > label').style.visibility = "hidden"; // 'Drag Me' label on top of the card
-      document.querySelector('.col-md-5.mb-2.react-draggable').style.transform = 'translate(-65px, -50px)'; // user interface card position
+      document.querySelector('.col-md-5.mb-2.react-draggable').style.transform = 'translate(-65px, -25px)'; // user interface card position
       return;
     }
   });
@@ -212,7 +214,6 @@ const transcribe = async (isPartialTextReplace = false) => {
 
   recognition.addEventListener('error', () => {
     recognition.stop();
-    setNativeValue(titleBox, '');
     setTimeout(() => {
       recognition.start();
     }, 100);
