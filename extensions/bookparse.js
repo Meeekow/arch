@@ -38,7 +38,7 @@ const checkRecognitionSoftwareBindings = () => {
     const resultBox = document.querySelectorAll('.sm-card.d-flex');
     if (resultBox) {
       // const url = window.location.href;
-      // if (url.indexOf('2') > -1 && url.indexOf('undecided') > -1) {
+      // if (url.indexOf('undecided') > -1) {
       //   return;
       // }
       resultBox.forEach((e) => {
