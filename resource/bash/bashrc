@@ -1,0 +1,30 @@
+
+# remove dups in bash history
+export HISTCONTROL=ignoreboth:erasedups
+
+# custom export for xmonad-stack install
+#export PATH="${PATH}:$HOME/.local/bin"
+
+# custom aliases
+alias l='ls -aAFhl --color=auto --time-style="+%b %d %I:%M %P"'
+
+alias v='nvim'
+alias nv='sudo nvim'
+
+alias bt='rfkill block bluetooth && rfkill unblock bluetooth && bluetoothctl'
+
+#alias xm='cd .cache/ && export GLOBIGNORE="xmonad" && rm -rf * && unset GLOBIGNORE'
+#alias xx='xmonad --recompile; pkill xmobar; xmonad --restart'
+
+alias cls='history -c && history -w'
+alias uml='sudo reflector --protocol https --sort rate --latest 10 --download-timeout 15 --country "Hong Kong",Singapore --save /etc/pacman.d/mirrorlist'
+alias vlc='vlc --fullscreen'
+
+alias qmkr='cd $HOME/qmk_firmware && qmk flash -kb ferris/sweep -km default -e CONVERT_TO=promicro_rp2040 -bl uf2-split-right'
+alias qmkl='cd $HOME/qmk_firmware && qmk flash -kb ferris/sweep -km default -e CONVERT_TO=promicro_rp2040 -bl uf2-split-left'
+
+salary () {
+  python -c "print ('{:,.2f}'.format($1 * 4 * 40 * 50))"
+}
+export -f salary
+

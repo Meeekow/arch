@@ -1,0 +1,50 @@
+Config {
+       font = "xft:mononoki Nerd Font Mono:style=regular:pixelsize=15, Font Awesome 5 Free Solid:style=solid:pixelsize=15:antialias=true:hinting=true"
+       , borderColor      = "#000000"
+       , border           = NoBorder
+       , bgColor          = "#1c1c1c"
+       , fgColor          = "#ffffff"
+       , alpha            = 255
+       , position         = Top
+       , textOffset       = -1
+       , iconOffset       = -1
+
+       , lowerOnStart     = True
+       , hideOnStart      = False
+       , allDesktops      = True
+       , overrideRedirect = False
+       , pickBroadest     = False
+       , persistent       = True
+       , iconRoot         = "."
+
+       , commands = [
+                    Run Date "<fc=orange>%a • %B %d • %r </fc>" "date" 10
+
+                    , Run Memory ["-t","mem: <usedratio> "
+                    , "--low", "30"
+                    , "--high", "80"
+                    , "--low", "green"
+                    , "--normal", "orange"
+                    , "--high", "red"
+                    , "--suffix", "True"
+                    ] 10
+
+                    , Run MultiCpu ["-t","cpu: <total> "
+                    , "--low", "30"
+                    , "--high", "80"
+                    , "--low", "green"
+                    , "--normal", "orange"
+                    , "--high", "red"
+                    , "--suffix", "True"
+                    ] 10
+
+                    , Run Network "enp34s0" ["-t", "net: <fc=green><rx></fc> : <fc=red><tx></fc>"
+                    , "--suffix", "True"
+                    ] 10
+
+                    , Run XMonadLog
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = " %multicpu% • %memory% • %enp34s0%}%XMonadLog%{%date%"
+}
