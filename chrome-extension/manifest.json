@@ -1,11 +1,18 @@
 {
-    "manifest_version": 3,
-    "name": "Move Tab",
-    "version": "1.0",
-    "permissions": [
-        "tabs"
-    ],
-    "background": {
-        "service_worker": "background.js"
+  "manifest_version": 3,
+  "name": "Move Tab",
+  "version": "1.0",
+  "permissions": [
+    "tabs"
+  ],
+  "action": {},
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.amazon.com/s?k*"],
+      "js": ["content.js"]
     }
+  ]
 }
