@@ -93,28 +93,32 @@ const getBindingFromUrl = () => {
 const detectWrongBinding = () => {
   const correctBinding = getBindingFromUrl();
 
+  const paperbackVariants = ['Mass Market Paperback', 'Perfect Paperback'];
+  const spiralVariants = ['Ring-bound', 'Plastic Comb'];
+
+  const correctBindingStyle = 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important';
+  const wrongBindingStyle = 'background: #FF6D74 !important; font-size: 18px !important; color: #0F1111 !important';
+
   document.querySelectorAll('.a-row.a-size-base.a-color-base:nth-child(1) a.a-size-base.a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-bold').forEach((element) => {
     let listingBinding = element.textContent.trim();
 
     if (correctBinding === 'Paperback' && correctBinding !== listingBinding) {
-      const paperbackVariants = ['Mass Market Paperback', 'Perfect Paperback'];
       if (paperbackVariants.includes(listingBinding)) {
-        return element.setAttribute('style', 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important');
+        return element.setAttribute('style', correctBindingStyle);
       }
     }
 
     if (correctBinding === 'Spiral-bound' && correctBinding !== listingBinding) {
-      const spiralVariants = ['Ring-bound', 'Plastic Comb'];
       if (spiralVariants.includes(listingBinding)) {
-        return element.setAttribute('style', 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important');
+        return element.setAttribute('style', correctBindingStyle);
       }
     }
 
     if (correctBinding !== listingBinding) {
-      return element.setAttribute('style', 'background: #FF6D74 !important; font-size: 18px !important; color: #0F1111 !important');
+      return element.setAttribute('style', wrongBindingStyle);
     }
 
-    element.setAttribute('style', 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important');
+    element.setAttribute('style', correctBindingStyle);
   });
 }
 
