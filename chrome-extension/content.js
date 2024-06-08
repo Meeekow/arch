@@ -176,16 +176,14 @@ const changeWidth = (element) => {
 waitForElement('.sg-col-20-of-24.s-matching-dir.sg-col-16-of-20.sg-col.sg-col-8-of-12.sg-col-12-of-16', changeWidth);
 
 
-document.getElementById('twotabsearchtextbox').addEventListener('input', () => {
-  highlightMatches();
-});
+waitForElement('twotabsearchtextbox', (element) => {
+  element.addEventListener('input', () => { highlightMatches() });
+})
 
 
-document.getElementById('nav-search-bar-form').addEventListener('keydown', (e) => {
-  if (e.code === 'Escape') {
-    document.getElementById('nav-logo-sprites').click(); // simulate a click to the amazon logo at the top left
-  }
-});
+waitForElement('nav-search-bar-form', (element) => {
+  if (element.code === 'Escape') { document.getElementById('nav-logo-sprites').click() };
+})
 
 
 const main = () => {
@@ -196,4 +194,4 @@ const main = () => {
   highlightAuthor();
   detectWrongLang();
 }
-main();
+waitForElement('twotabsearchtextbox', main);
