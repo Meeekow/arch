@@ -47,20 +47,8 @@ const removeGarbageData = () => {
 }
 
 
-const turnIntoOneWord = () => {
-  document.querySelectorAll('.a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal').forEach((e) => {
-    let bookTitle = [];
-    e.querySelectorAll('span.a-size-medium.a-color-base').forEach((el) => {
-      bookTitle.push(el.closest('span').textContent);
-    });
-
-    const result = document.createElement('span');
-    result.classList = 'a-size-medium a-color-base a-text-normal one-word';
-    result.innerHTML = bookTitle.join('').replaceAll(/’|`/g, "\'");
-    e.replaceChildren(result);
-  });
-
-  document.querySelectorAll('.a-row.a-size-base.a-color-secondary > .a-row').forEach((e) => {
+const getBookAuthor = () => {
+  document.querySelectorAll('.a-row.a-size-base.a-color-secondary').forEach((e) => {
     let bookDetails = [];
     for (const child of e.children) {
       bookDetails.push(child.textContent);
@@ -202,7 +190,7 @@ document.getElementById('nav-search-bar-form').addEventListener('keydown', (e) =
 
 const main = () => {
   removeGarbageData();
-  turnIntoOneWord();
+  getBookAuthor();
   detectWrongBinding();
   highlightMatches();
   highlightAuthor();
