@@ -127,18 +127,25 @@ const highlightMatches = () => {
   let searchedQuery = document.getElementById('twotabsearchtextbox');
   searchedQuery.value = searchedQuery.value.replace(/\s\:\s?\w.*$/gi, '');
 
+  const listLayout = document.querySelectorAll('.a-size-medium.a-color-base.a-text-normal');
+  const gridLayout = document.querySelectorAll('.a-size-base-plus.a-color-base.a-text-normal');
+
+  const element = listLayout.length > gridLayout.length ? listLayout : gridLayout;
+
   const completeMatch = searchedQuery.value.trim();
   const completeMatchRegEx = new RegExp(`\\b${completeMatch}\\b`, 'gi');
-  document.querySelectorAll('.a-size-medium.a-color-base.a-text-normal').forEach((e) => {
-    e.innerHTML = e.innerText.replace(completeMatchRegEx, match => `<mark style="background: #B4FF9F !important; font-size: 18px !important">${match}</mark>`);
+  element.forEach((e) => {
+    e.innerHTML = e.innerHTML.replace(completeMatchRegEx, (match) => {
+      return `<mark style="background: #B4FF9F !important; font-size: 18px !important">${match}</mark>`
+    });
   });
 
   const partialMatch = searchedQuery.value.trim().split(' ');
   const partialMatchJoined = partialMatch.join('|');
   const partialMatchRegEx = new RegExp(`(?!<mark[^>]*?>)\\b(${partialMatchJoined})\\b(?![^<]*?</mark>)`, 'gi');
-  document.querySelectorAll('.a-size-medium.a-color-base.a-text-normal').forEach((e) => {
-    e.innerHTML = e.innerHTML.replace(partialMatchRegEx, function(match) {
-      return `<mark style="background: #FFF562 !important; font-size: 18px !important">${match}</mark>`;
+  element.forEach((e) => {
+    e.innerHTML = e.innerHTML.replace(partialMatchRegEx, (match) => {
+      return `<mark style="background: #FFF562 !important; font-size: 18px !important">${match}</mark>`
     });
   });
 }
