@@ -64,17 +64,16 @@ const getBookAuthor = () => {
 
 const getBindingFromUrl = () => {
   const url = location.href;
-  let binding = '';
   if (url.includes('&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656022011')) {
-    binding = 'Paperback';
+    return 'Paperback';
   } else if (url.includes('&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656020011')) {
-    binding = 'Hardcover';
+    return 'Hardcover';
   } else if (url.includes('&rh=n%3A283155%2Cp_n_feature_browse-bin%3A23488071011')) {
-    binding = 'Spiral-bound';
+    return 'Spiral-bound';
   } else if (url.includes('&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656019011')) {
-    binding = 'Board book';
+    return 'Board book';
   }
-  return binding;
+  return '';
 }
 
 
@@ -90,13 +89,13 @@ const detectWrongBinding = () => {
   document.querySelectorAll('.a-row.a-size-base.a-color-base:nth-child(1) a.a-size-base.a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-bold').forEach((element) => {
     let listingBinding = element.textContent.trim();
 
-    if (correctBinding === 'Paperback' && correctBinding !== listingBinding) {
+    if (correctBinding !== listingBinding && correctBinding === 'Paperback') {
       if (paperbackVariants.includes(listingBinding)) {
         return element.setAttribute('style', correctBindingStyle);
       }
     }
 
-    if (correctBinding === 'Spiral-bound' && correctBinding !== listingBinding) {
+    if (correctBinding !== listingBinding && correctBinding === 'Spiral-bound') {
       if (spiralVariants.includes(listingBinding)) {
         return element.setAttribute('style', correctBindingStyle);
       }
@@ -124,7 +123,7 @@ const highlightMatches = () => {
   const completeMatchRegEx = new RegExp(`\\b${completeMatch}\\b`, 'gi');
   element.forEach((e) => {
     e.innerHTML = e.innerHTML.replace(completeMatchRegEx, (match) => {
-      return `<mark style="background: #B4FF9F !important; font-size: 18px !important">${match}</mark>`
+      return `<mark style="background: #B4FF9F !important; font-size: 18px !important">${match}</mark>`;
     });
   });
 
@@ -133,7 +132,7 @@ const highlightMatches = () => {
   const partialMatchRegEx = new RegExp(`(?!<mark[^>]*?>)\\b(${partialMatchJoined})\\b(?![^<]*?</mark>)`, 'gi');
   element.forEach((e) => {
     e.innerHTML = e.innerHTML.replace(partialMatchRegEx, (match) => {
-      return `<mark style="background: #FFF562 !important; font-size: 18px !important">${match}</mark>`
+      return `<mark style="background: #FFF562 !important; font-size: 18px !important">${match}</mark>`;
     });
   });
 }
@@ -161,29 +160,30 @@ const detectWrongLang = () => {
 }
 
 
-const waitForElement = (selector, callback) => {
+const waitForElement = (selector, callback, shouldMonitor = false) => {
   const observer = new MutationObserver(function(mutations, me) {
     const element = document.querySelector(selector);
     if (element) callback(element);
+    if (!shouldMonitor) me.disconnect();
   });
   observer.observe(document, { childList: true, subtree: true });
 }
+
+
+waitForElement('nav-search-bar-form', (element) => {
+  if (element.code === 'Escape') { document.getElementById('nav-logo-sprites').click() };
+})
+
+
+waitForElement('#twotabsearchtextbox', (element) => {
+  element.addEventListener('input', () => { highlightMatches() });
+})
 
 
 const changeWidth = (element) => {
   element.style.cssText = 'width: calc(.85 * (100vw - 28px)) !important';
 }
 waitForElement('.sg-col-20-of-24.s-matching-dir.sg-col-16-of-20.sg-col.sg-col-8-of-12.sg-col-12-of-16', changeWidth);
-
-
-waitForElement('twotabsearchtextbox', (element) => {
-  element.addEventListener('input', () => { highlightMatches() });
-})
-
-
-waitForElement('nav-search-bar-form', (element) => {
-  if (element.code === 'Escape') { document.getElementById('nav-logo-sprites').click() };
-})
 
 
 const main = () => {
@@ -194,4 +194,4 @@ const main = () => {
   highlightAuthor();
   detectWrongLang();
 }
-waitForElement('twotabsearchtextbox', main);
+waitForElement('#nav-logo-sprites', main);
