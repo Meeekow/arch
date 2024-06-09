@@ -47,21 +47,6 @@ const removeGarbageData = () => {
 }
 
 
-const getBookAuthor = () => {
-  document.querySelectorAll('.a-row.a-size-base.a-color-secondary').forEach((e) => {
-    let bookDetails = [];
-    for (const child of e.children) {
-      bookDetails.push(child.textContent);
-    }
-
-    const result = document.createElement('span');
-    result.classList = 'a-size-base meeko';
-    result.innerHTML = bookDetails.join('');
-    e.replaceChildren(result);
-  });
-}
-
-
 const getBindingFromUrl = () => {
   const url = location.href;
   if (url.includes('&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656022011')) {
@@ -138,6 +123,21 @@ const highlightMatches = () => {
 }
 
 
+const getAuthorAndLanguage = () => {
+  document.querySelectorAll('.a-row.a-size-base.a-color-secondary').forEach((e) => {
+    let bookDetails = [];
+    for (const child of e.children) {
+      bookDetails.push(child.textContent);
+    }
+
+    const result = document.createElement('span');
+    result.classList = 'a-size-base meeko';
+    result.innerHTML = bookDetails.join('');
+    e.replaceChildren(result);
+  });
+}
+
+
 const highlightAuthor = () => {
   const pattern = /(?<=by\s)(\w.*?)(?=(?:\s\||$))/;
   document.querySelectorAll('.meeko').forEach((e) => {
@@ -188,9 +188,9 @@ waitForElement('.sg-col-20-of-24.s-matching-dir.sg-col-16-of-20.sg-col.sg-col-8-
 
 const main = () => {
   removeGarbageData();
-  getBookAuthor();
   detectWrongBinding();
   highlightMatches();
+  getAuthorAndLanguage();
   highlightAuthor();
   detectWrongLang();
 }
