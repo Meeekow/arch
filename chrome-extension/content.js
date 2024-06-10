@@ -58,39 +58,29 @@ const getBindingFromUrl = () => {
   } else if (url.includes('&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656019011')) {
     return 'Board book';
   }
-  return '';
 }
 
 
 const detectWrongBinding = () => {
-  const correctBinding = getBindingFromUrl();
-
-  const paperbackVariants = ['Mass Market Paperback', 'Perfect Paperback'];
-  const spiralVariants = ['Ring-bound', 'Plastic Comb'];
-
   const correctBindingStyle = 'background: #5CB8FF !important; font-size: 18px !important; color: #0F1111 !important';
   const wrongBindingStyle = 'background: #FF6D74 !important; font-size: 18px !important; color: #0F1111 !important';
 
+  const validBookBindings = {
+    'Hardcover': ['Hardcover'],
+    'Paperback': ['Paperback', 'Mass Market Paperback', 'Perfect Paperback'],
+    'Spiral-bound': ['Spiral-bound', 'Ring-bound', 'Plastic Comb'],
+    'Board book': ['Board book']
+  }
+
+  const correctBinding = getBindingFromUrl();
+  const result = validBookBindings[correctBinding];
+
   document.querySelectorAll('.a-row.a-size-base.a-color-base:nth-child(1) a.a-size-base.a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-bold').forEach((element) => {
     let listingBinding = element.textContent.trim();
-
-    if (correctBinding !== listingBinding && correctBinding === 'Paperback') {
-      if (paperbackVariants.includes(listingBinding)) {
-        return element.setAttribute('style', correctBindingStyle);
-      }
-    }
-
-    if (correctBinding !== listingBinding && correctBinding === 'Spiral-bound') {
-      if (spiralVariants.includes(listingBinding)) {
-        return element.setAttribute('style', correctBindingStyle);
-      }
-    }
-
-    if (correctBinding !== listingBinding) {
+    if (result === undefined || !result.includes(listingBinding)) {
       return element.setAttribute('style', wrongBindingStyle);
     }
-
-    element.setAttribute('style', correctBindingStyle);
+    return element.setAttribute('style', correctBindingStyle);
   });
 }
 
@@ -172,12 +162,12 @@ const waitForElement = (selector, callback, shouldMonitor = false) => {
 
 waitForElement('nav-search-bar-form', (element) => {
   if (element.code === 'Escape') { document.getElementById('nav-logo-sprites').click() };
-})
+});
 
 
 waitForElement('#twotabsearchtextbox', (element) => {
   element.addEventListener('input', () => { highlightMatches() });
-})
+});
 
 
 const changeWidth = (element) => {
