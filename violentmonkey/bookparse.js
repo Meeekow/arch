@@ -1,7 +1,11 @@
 const loseFocus = () => {
-  document.body.tabIndex = 0;
-  document.body.focus();
-  document.body.tabIndex = -1;
+  const blob = document.body;
+  blob.tabIndex = 0;
+  blob.focus();
+  blob.tabIndex = -1;
+
+  const target = document.querySelector('.form-control.form-control-second-primary');
+  setNativeValue(target, '');
 }
 
 
