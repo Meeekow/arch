@@ -3,14 +3,13 @@ const loseFocus = () => {
   blob.tabIndex = 0;
   blob.focus();
   blob.tabIndex = -1;
-
-  const target = document.querySelector('.form-control.form-control-second-primary');
-  setNativeValue(target, '');
 }
 
 
 window.onfocus = () => {
   loseFocus();
+  const target = document.querySelector('.form-control.form-control-second-primary');
+  setNativeValue(target, '');
 }
 
 
@@ -49,15 +48,18 @@ waitForElement('.form-control', detectUnknownBinding, false, true);
 const detectWrongBinding = (element) => {
   const recognitionSoftwareResults = document.querySelectorAll('.sm-card.d-flex');
   if (element) {
-    const paperbackVariants = ['paperback', 'mass market', 'mass_market', 'mass market paperback'];
+    const validBookBindings = {
+      'hardcover': ['hardcover'],
+      'paperback': ['paperback', 'mass market', 'mass market paperback', 'perfect paperback'],
+      'mass market': ['paperback', 'mass market', 'mass market paperback', 'perfect paperback'],
+      'spiral': ['spiral-bound', 'ring-bound', 'plastic comb'],
+      'board book': ['board book']
+    }
     const correctBinding = element.value.toLowerCase();
+    const result = validBookBindings[correctBinding];
     recognitionSoftwareResults.forEach((e) => {
-      const _bindingToCheck = e.querySelector('.d-block:nth-child(3)').firstChild.nextSibling.textContent.toLowerCase();
-      const bindingToCheck = _bindingToCheck.toLowerCase();
-      if (correctBinding !== bindingToCheck) {
-        if (paperbackVariants.includes(bindingToCheck) && correctBinding !== 'unknown') {
-          return;
-        }
+      const bindingToCheck = e.querySelector('.d-block:nth-child(3)').firstChild.nextSibling.textContent.toLowerCase();
+      if (result === undefined || !result.includes(bindingToCheck)) {
         e.style.cssText = 'background-color: #000';
       }
     })
@@ -93,13 +95,8 @@ const adjustRecognitionSoftwareInterface = (element) => {
       if (target !== null) target.remove();
     });
 
-    element.style.cssText = 'background-color: rgb(15, 15, 15); height: 0px; width: 697px; transform: translate(650px, -630px);'; // Recognition software results card.
-
-    // Show only 5 results from recognition software.
-    const results = document.querySelectorAll('.sm-card ul li');
-    results.forEach((result, index) => {
-      if (index >= 5) result.remove();
-    });
+    // Recognition software results card.
+    element.style.cssText = 'background-color: rgb(15, 15, 15); height: 0px; width: 697px; transform: translate(650px, -630px);';
 
     // Set height for recognition results card.
     const setHeight = document.querySelector('.sm-card > div');
