@@ -47,12 +47,13 @@ waitForElement('.form-control', detectUnknownBinding, false, true);
 // Detect wrong binding from recognition software box.
 const detectWrongBinding = (element) => {
   const recognitionSoftwareResults = document.querySelectorAll('.sm-card.d-flex');
+  const paperbackVariants = ['paperback', 'mass_market', 'mass market paperback', 'perfect paperback'];
   if (element) {
     const validBookBindings = {
       'hardcover': ['hardcover'],
-      'paperback': ['paperback', 'mass market', 'mass market paperback', 'perfect paperback'],
-      'mass market': ['paperback', 'mass market', 'mass market paperback', 'perfect paperback'],
-      'spiral': ['spiral-bound', 'ring-bound', 'plastic comb'],
+      'paperback': paperbackVariants,
+      'mass market': paperbackVariants,
+      'spiral': ['spiral-bound', 'spiral_bound', 'ring-bound', 'plastic comb'],
       'board book': ['board book']
     }
     const correctBinding = element.value.toLowerCase();
@@ -95,8 +96,7 @@ const adjustRecognitionSoftwareInterface = (element) => {
       if (target !== null) target.remove();
     });
 
-    // Recognition software results card.
-    element.style.cssText = 'background-color: rgb(15, 15, 15); height: 0px; width: 697px; transform: translate(650px, -630px);';
+    element.style.cssText = 'background-color: rgb(15, 15, 15); height: 0px; width: 697px; transform: translate(650px, -630px);'; // Recognition software results card.
 
     // Set height for recognition results card.
     const setHeight = document.querySelector('.sm-card > div');
