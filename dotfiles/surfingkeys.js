@@ -90,13 +90,56 @@ if ( self.origin === "https://bookparse.com" ) {
 }
 
 // remove everything except the ff. to avoid unwanted actions
-unmapAllExcept(['gg', 'j', 'k', 'd', 'u', 'cs', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse.com\/dashboard\/*\/*/i);
+unmapAllExcept(['gg', 'j', 'k', 'cs', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse.com\/dashboard\/*\/*/i);
 
 // change scroll target
 map('p', 'cs', /bookparse.com\/dashboard\/*\/*/i); unmap('cs', /bookparse.com\/dashboard\/*\/*/i);
 
 // close other tabs
 map('c', 'gxx', /bookparse.com\/dashboard\/*\/*/i); unmap('gxx', /bookparse.com\/dashboard\/*\/*/i);
+
+// check if element is in viewport
+function inViewport(element) {
+  const { top } = element.getBoundingClientRect();
+  const { clientHeight } = document.documentElement.querySelector('.sm-card');
+
+  if (top > 0 && top < clientHeight) {
+    return true;
+  }
+
+  return false;
+}
+
+// go to next or previous element
+function scrollUpOrDown(action) {
+  const results = document.querySelectorAll('.sm-card.d-flex');
+  let inViewportState = [];
+
+  results.forEach((element) => {
+    const state = inViewport(element);
+    inViewportState.push(state);
+  })
+
+  let index;
+  const _index = action === "down" ? inViewportState.lastIndexOf(true) : inViewportState.indexOf(true);
+
+  if (action === "down" && _index + 1 <= results.length - 1) {
+    index = _index + 1;
+    results[index].scrollIntoView(false);
+  } else if (action === "up" && _index - 1 > -1) {
+    index = _index - 1;
+    results[index].scrollIntoView(false);
+  }
+}
+
+mapkey('d', 'scroll down', function() {
+  scrollUpOrDown("down");
+}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
+
+mapkey('u', 'scroll up', function() {
+  scrollUpOrDown("up");
+}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
+
 
 // switch between not complete and undecided
 mapkey('b', 'switch between not complete and undecided', function() {
@@ -107,12 +150,6 @@ mapkey('b', 'switch between not complete and undecided', function() {
   } else {
     state[1].click();
   }
-}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
-
-// get image source address
-mapkey('l', 'get image address', function() {
-  const address = document.querySelector('img').src;
-  Clipboard.write(address);
 }, {domain: /bookparse.com\/dashboard\/*\/*/i} );
 
 // reset zoom level to default
@@ -224,6 +261,16 @@ map('n', 'W', /amazon\.com/i);
 
 // press 'c' instead of 'x' to close window
 map('c', 'x', /amazon\.com/i);
+
+// unmap so we can rebind this to another scrolling option
+unmap('d', /amazon\.com/i);
+unmap('u', /amazon\.com/i);
+
+// scroll full page down
+map('d', 'P', /amazon\.com/i); unmap('P', /amazon\.com/i);
+
+// scroll full page up
+map('u', 'U', /amazon\.com/i); unmap('U', /amazon\.com/i);
 
 // track clicked ASIN
 let clickedElement = [];
