@@ -114,22 +114,23 @@ function inViewport(element) {
 function scrollUpOrDown(action) {
   const results = document.querySelectorAll('.sm-card.d-flex');
   let inViewportState = [];
-
   results.forEach((element) => {
     const state = inViewport(element);
     inViewportState.push(state);
   })
 
-  let index;
-  const _index = action === "down" ? inViewportState.lastIndexOf(true) : inViewportState.indexOf(true);
+  let index = action === "down" ? inViewportState.lastIndexOf(true)
+                                : inViewportState.indexOf(true);
+  const resultsLength = results.length - 1;
 
-  if (action === "down" && _index + 1 <= results.length - 1) {
-    index = _index + 1;
-    results[index].scrollIntoView(false);
-  } else if (action === "up" && _index - 1 > -1) {
-    index = _index - 1;
-    results[index].scrollIntoView(false);
+  if (index === 0 || index === resultsLength) {
+    return;
+  } else if (action === "down" && index + 1 <= resultsLength) {
+    ++index;
+  } else if (action === "up" && index - 1 > -1) {
+    --index;
   }
+  results[index].scrollIntoView(false);
 }
 
 mapkey('d', 'scroll down', function() {
