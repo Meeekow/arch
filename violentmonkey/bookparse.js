@@ -53,8 +53,8 @@ const detectWrongBinding = (element) => {
       'hardcover': ['hardcover'],
       'paperback': paperbackVariants,
       'mass market': paperbackVariants,
-      'spiral': ['spiral-bound', 'spiral_bound', 'ring-bound', 'plastic comb'],
-      'board book': ['board book']
+      'spiral': ['spiral-bound', 'spiral_bound', 'ring-bound', 'plastic comb', 'plastic_comb'],
+      'board': ['board book', 'board_book']
     }
     const correctBinding = element.value.toLowerCase();
     const result = validBookBindings[correctBinding];
