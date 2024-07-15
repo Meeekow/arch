@@ -42,10 +42,10 @@ settings.modeAfterYank = "Normal";
 settings.smoothScroll = true;
 
 // scroll friction
-settings.scrollFriction = 0;
+settings.scrollFriction = 1;
 
 // scroll amount
-settings.scrollStepSize = 75;
+settings.scrollStepSize = 100;
 
 // cursor location whenever in insert mode
 settings.cursorAtEndOfInput = true;
@@ -228,7 +228,7 @@ mapkey('e', 'get title from recognition softwaren', function() {
   const titleBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
   Hints.create(".sm-card.d-flex", function(e) {
     let title = e.querySelector('.d-block').textContent;
-    title = title.replace('Title: ', '').replace(':', '');
+    title = title.replace(/^Title:\s|[;|:|\-|,]/gi, '');
     titleBox.value = title;
     triggerEvent(titleBox, 'input');
     document.querySelector('.mb-2 > .form-control.form-control-second-primary').focus();
