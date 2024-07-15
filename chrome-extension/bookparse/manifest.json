@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Bookparse",
+  "version": "1.0",
+  "permissions": [
+    "tabs"
+  ],
+  "action": {},
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://bookparse.com/dashboard/*/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
