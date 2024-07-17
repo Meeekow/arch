@@ -101,7 +101,7 @@ map('c', 'gxx', /bookparse.com\/dashboard\/*\/*/i); unmap('gxx', /bookparse.com\
 // check if element is in viewport
 function inViewport(element) {
   const { top } = element.getBoundingClientRect();
-  const { clientHeight } = document.documentElement.querySelector('.sm-card');
+  const { clientHeight } = document.documentElement.querySelector('.sm-card > div');
 
   if (top > 0 && top < clientHeight) {
     return true;
