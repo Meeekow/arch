@@ -1,24 +1,24 @@
-const backgroundJS = (selector, callback, options = { childList: true, subtree: true }) => {
-  const observer = new MutationObserver(function(mutations, me) {
-    mutations.forEach((mutation) => {
-      if (mutation.target.className === 'out-label ms-auto') {
-        const element = document.querySelector(selector);
-        if (element) {
-          callback();
-        }
-      }
-    })
-  })
-  observer.observe(document, options);
-}
-
-
-// Set zoom level to default.
-const resetZoomLevel = () => {
+const setToDefaultState = () => {
   const port = chrome.runtime.connect({name: "zoomState"});
   port.postMessage({message: 'reset-zoom-level'});
+
+  const image = document.querySelector('.card-body');
+  image.style.transform = null;
 }
-backgroundJS('.form-control', resetZoomLevel);
+
+
+const backgroundJS = new MutationObserver(function(mutations, mo) {
+  const targetNode = document.querySelector('.out-label.ms-auto');
+  if (targetNode) {
+    const closureObserver = new MutationObserver(function(mutations) {
+      const isNewID = mutations.some((mutation) => mutation.target.className === 'out-label ms-auto');
+      if (isNewID) setToDefaultState();
+    })
+    closureObserver.observe(targetNode, { childList: true });
+    mo.disconnect();
+  }
+})
+backgroundJS.observe(document, { childList: true, subtree: true });
 
 
 const waitForElement = (selector, callback, isArray = false, shouldMonitor = false, options = { childList: true, subtree: true }) => {
@@ -240,10 +240,50 @@ const customActions = () => {
 }
 
 
-// Hide side panel on page load.
+// Hide side panel when page loads.
 waitForElement('.navigation-btn.ms-auto', (element) => { element.click() }, false, false);
 
 
+// Change image box position and adjust image dimensions.
+const adjustImage = (element) => {
+  element.style.cssText = 'overflow: hidden; transform: translate(-150px, 0px);';
+  element.querySelector('img').style.cssText = 'height: 560px; width: 750px;';
+}
+waitForElement('.col-auto.mb-2', adjustImage, false, true);
+
+
+// Reposition box for 'Not Complete', 'Undecided', 'Not Complete Multi Photo'.
+waitForElement('.mini-navbar.ms-auto', (element) => { element.style.transform = 'translate(76px, 0px)' }, false, false);
+
+
+// Reposition recognition software results interface.
+const adjustRecognitionSoftwareInterface = (element) => {
+  if (element) {
+    const removeThisElements = ['h6', '.col-md-6.mb-4 > .sm-label', '.sm-card > h6'];
+    removeThisElements.forEach((selector) => {
+      const target = document.querySelector(selector);
+      if (target !== null) target.remove();
+    });
+
+    element.style.cssText = 'background-color: rgb(15, 15, 15); position: absolute; width: 697px; transform: translate(650px, -692.5px);'; // Recognition software results card.
+
+    // Set height for recognition results card.
+    const setHeight = document.querySelector('.sm-card > div');
+    if (setHeight !== null) setHeight.style.maxHeight = '450px';
+  }
+}
+waitForElement('.sm-card', adjustRecognitionSoftwareInterface, false, true);
+
+
+// Reposition and adjust user interface box width.
+const adjustUserInterface = (element) => {
+  document.querySelector('.col-md-5.mb-2.react-draggable').style.cssText = 'position: absolute; width: 720px; right: -10px; bottom: 0px; z-index: 1; transform: translate(-37.5px, -50px);'; // User interface card position.
+  document.querySelector('.col-md-5.mb-2.react-draggable > label').style.visibility = 'hidden'; // 'Drag Me' label on top of the card.
+}
+waitForElement('.col-md-5.mb-2.react-draggable > .card > .card-body', adjustUserInterface, false, false);
+
+
+// Run custom QOL event listeners.
 const main = () => {
   rotateImage();
   customActions();
@@ -251,6 +291,8 @@ const main = () => {
 waitForElement('.mb-2 > .form-control.form-control-second-primary', main, false, false);
 
 
+// Ensure input box for book titles is not in focus.
+// Ensure input box for ASIN has no value.
 window.onfocus = () => {
   loseFocus();
   const target = document.querySelector('.form-control.form-control-second-primary');
