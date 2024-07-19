@@ -296,5 +296,5 @@ waitForElement('.mb-2 > .form-control.form-control-second-primary', main, false,
 window.onfocus = () => {
   loseFocus();
   const target = document.querySelector('.form-control.form-control-second-primary');
-  setNativeValue(target, '');
+  if (target.value !== '') setNativeValue(target, '');
 }
