@@ -1,24 +1,30 @@
-const setToDefaultState = () => {
+const resetToDefaultState = () => {
+  // Communicate to background service worker.
   const port = chrome.runtime.connect({name: "zoomState"});
   port.postMessage({message: 'reset-zoom-level'});
 
+  // Ensure image is always in default orientation.
   const image = document.querySelector('.card-body');
   image.style.transform = null;
 }
 
-
-const backgroundJS = new MutationObserver(function(mutations, mo) {
-  const targetNode = document.querySelector('.out-label.ms-auto');
-  if (targetNode) {
-    const closureObserver = new MutationObserver(function(mutations) {
-      const isNewID = mutations.some((mutation) => mutation.target.className === 'out-label ms-auto');
-      if (isNewID) setToDefaultState();
-    })
-    closureObserver.observe(targetNode, { childList: true });
-    mo.disconnect();
-  }
-})
-backgroundJS.observe(document, { childList: true, subtree: true });
+const backgroundJS = (selector, callback) => {
+  const outerObserver = new MutationObserver(function(mutations, mo) {
+    const targetNode = document.querySelector(selector);
+    if (targetNode) {
+      const innerObserver = new MutationObserver(function(mutations) {
+        for (const mutation of mutations) {
+          if (mutation.addedNodes.length === 0) return;
+          if (mutation.addedNodes[0].nodeName === '#text') callback();
+        }
+      })
+      innerObserver.observe(targetNode, { childList: true });
+      mo.disconnect();
+    }
+  })
+  outerObserver.observe(document, { childList: true, subtree: true });
+}
+backgroundJS('.out-label.ms-auto', resetToDefaultState);
 
 
 const waitForElement = (selector, callback, isArray = false, shouldMonitor = false, options = { childList: true, subtree: true }) => {
@@ -273,6 +279,60 @@ const adjustRecognitionSoftwareInterface = (element) => {
   }
 }
 waitForElement('.sm-card', adjustRecognitionSoftwareInterface, false, true);
+
+
+// Detect wrong binding from user interface box.
+const detectUnknownBinding = (element) => {
+  const cardBody = document.querySelector('.col-md-5.mb-2.react-draggable .card-body');
+  const binding = document.querySelector('.form-control');
+  if (binding) {
+    binding.value !== 'Unknown' ? cardBody.removeAttribute('style') : cardBody.style.cssText = 'background-color: #E74C3C';
+  }
+}
+waitForElement('.form-control', detectUnknownBinding, false, true);
+
+
+// Detect wrong binding from recognition software box.
+const detectWrongBinding = (element) => {
+  const recognitionSoftwareResults = document.querySelectorAll('.sm-card.d-flex');
+  const paperbackVariants = ['paperback', 'mass_market', 'mass market paperback', 'perfect paperback'];
+  if (element) {
+    const validBookBindings = {
+      'hardcover': ['hardcover'],
+      'paperback': paperbackVariants,
+      'mass market': paperbackVariants,
+      'spiral': ['spiral-bound', 'spiral_bound', 'ring-bound', 'ring_bound', 'plastic comb', 'plastic_comb'],
+      'board': ['board book', 'board_book']
+    }
+    const correctBinding = element.value.toLowerCase();
+    const result = validBookBindings[correctBinding];
+    recognitionSoftwareResults.forEach((e) => {
+      const bindingToCheck = e.querySelector('.d-block:nth-child(3)').firstChild.nextSibling.textContent.toLowerCase();
+      if (result === undefined || !result.includes(bindingToCheck)) {
+        e.style.cssText = 'background-color: #000';
+      }
+    })
+  }
+}
+waitForElement('.form-control', detectWrongBinding, false, true);
+
+
+// See if there is sales rank and highlight.
+// Set margin for recognition software results for consistency.
+const highlightSalesRank = (element) => {
+  const targets = document.querySelectorAll('.d-block');
+  if (targets) {
+    element.forEach((target) => {
+      target.style.margin = '0px 10px 10px';
+    });
+    targets.forEach((target) => {
+      if (target.textContent.includes('Sales Rank')) {
+        target.style.cssText = 'background-color: #023020';
+      }
+    });
+  }
+}
+waitForElement('.sm-card.d-flex', highlightSalesRank, true, true);
 
 
 // Reposition and adjust user interface box width.
