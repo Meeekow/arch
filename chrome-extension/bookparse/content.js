@@ -14,8 +14,8 @@ const backgroundJS = (selector, callback) => {
     if (targetNode) {
       const innerObserver = new MutationObserver(function(mutations) {
         for (const mutation of mutations) {
-          if (mutation.addedNodes.length === 0) return;
-          if (mutation.addedNodes[0].nodeName === '#text') callback();
+          if (mutation.addedNodes.length === 0) { return };
+          if (mutation.addedNodes[0].nodeName === '#text') { callback() };
         }
       })
       innerObserver.observe(targetNode, { childList: true });
@@ -28,10 +28,10 @@ backgroundJS('.out-label.ms-auto', resetToDefaultState);
 
 
 const waitForElement = (selector, callback, isArray = false, shouldMonitor = false, options = { childList: true, subtree: true }) => {
-  const observer = new MutationObserver(function(mutations, me) {
+  const observer = new MutationObserver(function(mutations, mo) {
     const element = isArray ? document.querySelectorAll(selector) : document.querySelector(selector);
     if (element) {
-      if (!shouldMonitor) me.disconnect();
+      if (!shouldMonitor) { mo.disconnect() };
       callback(element);
     }
   });
@@ -55,7 +55,7 @@ const setNativeValue = (element, value) => {
   event.simulated = true;
   // React 16
   let tracker = element._valueTracker;
-  if (tracker) tracker.setValue(lastValue);
+  if (tracker) { tracker.setValue(lastValue) };
   element.dispatchEvent(event);
 }
 
@@ -268,14 +268,14 @@ const adjustRecognitionSoftwareInterface = (element) => {
     const removeThisElements = ['h6', '.col-md-6.mb-4 > .sm-label', '.sm-card > h6'];
     removeThisElements.forEach((selector) => {
       const target = document.querySelector(selector);
-      if (target !== null) target.remove();
+      if (target !== null) { target.remove() };
     });
 
     element.style.cssText = 'background-color: rgb(15, 15, 15); position: absolute; width: 697px; transform: translate(650px, -692.5px);'; // Recognition software results card.
 
     // Set height for recognition results card.
     const setHeight = document.querySelector('.sm-card > div');
-    if (setHeight !== null) setHeight.style.maxHeight = '450px';
+    if (setHeight !== null) { setHeight.style.maxHeight = '450px' };
   }
 }
 waitForElement('.sm-card', adjustRecognitionSoftwareInterface, false, true);
@@ -356,5 +356,5 @@ waitForElement('.mb-2 > .form-control.form-control-second-primary', main, false,
 window.onfocus = () => {
   loseFocus();
   const target = document.querySelector('.form-control.form-control-second-primary');
-  if (target.value !== '') setNativeValue(target, '');
+  if (target.value !== '') { setNativeValue(target, '') };
 }
