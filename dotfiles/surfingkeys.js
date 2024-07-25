@@ -228,7 +228,7 @@ mapkey('e', 'get title from recognition softwaren', function() {
   const titleBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
   Hints.create(".sm-card.d-flex", function(e) {
     let title = e.querySelector('.d-block').textContent;
-    title = title.replace(/^Title:\s|[;|:||,]/gi, '');
+    title = title.replace(/^Title:\s|[;|:||,]/gi, '').replace(/&/gi, 'and');
     titleBox.value = title;
     triggerEvent(titleBox, 'input');
     document.querySelector('.mb-2 > .form-control.form-control-second-primary').focus();
