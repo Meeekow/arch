@@ -307,9 +307,13 @@ const detectWrongBinding = (element) => {
     const correctBinding = element.value.toLowerCase();
     const result = validBookBindings[correctBinding];
     recognitionSoftwareResults.forEach((e) => {
+      const setResultsFontColor = e.querySelectorAll('span.d-block > span');
+      setResultsFontColor.forEach((e) => {
+        e.style.color = '#FEE715FF';
+      })
       const bindingToCheck = e.querySelector('.d-block:nth-child(3)').firstChild.nextSibling.textContent.toLowerCase();
       if (result === undefined || !result.includes(bindingToCheck)) {
-        e.style.cssText = 'background-color: #000';
+        e.style.backgroundColor = '#0A3061';
       }
     })
   }
@@ -327,7 +331,7 @@ const highlightSalesRank = (element) => {
     });
     targets.forEach((target) => {
       if (target.textContent.includes('Sales Rank')) {
-        target.style.cssText = 'background-color: #023020';
+        target.style.cssText = 'background-color: #DE3163';
       }
     });
   }
