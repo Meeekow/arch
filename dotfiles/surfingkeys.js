@@ -90,13 +90,13 @@ if ( self.origin === "https://bookparse.com" ) {
 }
 
 // remove everything except the ff. to avoid unwanted actions
-unmapAllExcept(['gg', 'j', 'k', 'cs', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse.com\/dashboard\/*\/*/i);
+unmapAllExcept(['gg', 'j', 'k', 'cs', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse.com\/dashboard\/.\/bookidentification.*/i);
 
 // change scroll target
-map('p', 'cs', /bookparse.com\/dashboard\/*\/*/i); unmap('cs', /bookparse.com\/dashboard\/*\/*/i);
+map('p', 'cs', /bookparse.com\/dashboard\/.\/bookidentification.*/i); unmap('cs', /bookparse.com\/dashboard\/.\/bookidentification.*/i);
 
 // close other tabs
-map('c', 'gxx', /bookparse.com\/dashboard\/*\/*/i); unmap('gxx', /bookparse.com\/dashboard\/*\/*/i);
+map('c', 'gxx', /bookparse.com\/dashboard\/.\/bookidentification.*/i); unmap('gxx', /bookparse.com\/dashboard\/.\/bookidentification.*/i);
 
 // check if element is in viewport
 function inViewport(element) {
@@ -119,6 +119,7 @@ function scrollUpOrDown(action) {
     inViewportState.push(state);
   })
 
+  const isAlignToTop = action === "down" ? false : true;
   let index = action === "down" ? inViewportState.lastIndexOf(true)
                                 : inViewportState.indexOf(true);
   const resultsLength = results.length - 1;
@@ -130,16 +131,16 @@ function scrollUpOrDown(action) {
   } else if (action === "up" && index - 1 > -1) {
     --index;
   }
-  results[index].scrollIntoView(false);
+  results[index].scrollIntoView(isAlignToTop);
 }
 
 mapkey('d', 'scroll down', function() {
   scrollUpOrDown("down");
-}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 mapkey('u', 'scroll up', function() {
   scrollUpOrDown("up");
-}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 
 // switch between not complete and undecided
@@ -151,7 +152,7 @@ mapkey('b', 'switch between not complete and undecided', function() {
   } else {
     state[1].click();
   }
-}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // reset zoom level to default
 mapkey('n', 'reset zoom level to default', function() {
@@ -161,19 +162,19 @@ mapkey('n', 'reset zoom level to default', function() {
   RUNTIME('setZoom', {
     zoomFactor: 0.25
   });
-}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // zoom in
 mapkey('i', 'zoom in', function() {
   RUNTIME('setZoom', {
     zoomFactor: 0.25
   });
-}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // show hints for 'Use ASIN button'
 mapkey('r', 'show hints for Use ASIN button', function() {
   Hints.create(".btn.btn-primary", Hints.dispatchMouseClick);
-}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // focus input box for book details like title, etc.
 mapkey('t', 'focus title input box', function() {
@@ -181,13 +182,13 @@ mapkey('t', 'focus title input box', function() {
   // Hints.create(".form-nice-control.link-title-input", function(element) {
   //   Front.showEditor(element);
   // });
-}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // dictate book title
 mapkey('s', 'dictate book title', function() {
   const button = document.querySelector('#start-dictation-microphone');
   button.click();
-}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // click undecided button and toggle hints for dropdown
 mapkey('h', 'click undecided button and toggle hints for dropdown', function() {
@@ -202,7 +203,7 @@ mapkey('h', 'click undecided button and toggle hints for dropdown', function() {
     document.querySelector('.btn.mb-2').click();
     setTimeout(clickReasonButton, 100)
   }
-}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // ASIN box
 mapkey('a', 'paste clipboard content, hit submit button', function() {
@@ -217,10 +218,10 @@ mapkey('a', 'paste clipboard content, hit submit button', function() {
   triggerEvent(el, 'input');
   Hints.create('.btn-second-primary', Hints.dispatchMouseClick);
   Clipboard.write(' ');
-}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // get title from recognition software and focus titlebox
-mapkey('e', 'get title from recognition softwaren', function() {
+mapkey('e', 'get title from recognition software', function() {
   const triggerEvent = ( obj, event ) => {
     const evt = new Event( event, {target: obj, bubbles: true} );
     return obj ? obj.dispatchEvent(evt) : false;
@@ -233,7 +234,22 @@ mapkey('e', 'get title from recognition softwaren', function() {
     triggerEvent(titleBox, 'input');
     document.querySelector('.mb-2 > .form-control.form-control-second-primary').focus();
   }, Hints.dispatchMouseClick);
-}, {domain: /bookparse.com\/dashboard\/*\/*/i} );
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
+
+
+// QA
+// remove everything except the ff. to avoid unwanted actions
+unmapAllExcept(['gg', 'd', 'u', 'j', 'k', 'gxx', '<Esc>'], /bookparse.com\/dashboard\/2\/catalog\/bookparse/i);
+
+// get ASIN and search it in Amazon.com
+mapkey('o', 'get ASIN and search it in Amazon.com', function() {
+    Hints.create(".box-row", function(e) {
+    const imageToCheck = e.querySelector('.align-middle:nth-child(2) > img').src;
+    const asinToCheck = e.querySelector('.align-middle:nth-child(5)').textContent;
+    window.open(`${imageToCheck}`, '_blank');
+    window.open(`https://www.amazon.com/s?k=${asinToCheck}`, '_blank');
+  }, Hints.dispatchMouseClick);
+}, {domain: /bookparse.com\/dashboard\/2\/catalog\/bookparse/i} );
 
 
 // lens.google.com
