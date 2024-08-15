@@ -84,9 +84,9 @@ user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", 
 
 // Network Settings
 // enable custom DNS over HTTPS address
-user_pref("network.trr.mode", 2);
+user_pref("network.trr.mode", 0);
 // custom address to point DNS over HTTPS
-user_pref("network.trr.uri", "127.0.0.1");
+//user_pref("network.trr.uri", "127.0.0.1");
 // custom address to point DNS over HTTPS
 //user_pref("network.trr.custom_uri", "127.0.0.1");
 
@@ -123,6 +123,7 @@ user_pref("privacy.donottrackheader.enabled", true);
 user_pref("signon.rememberSignons", false);
 user_pref("signon.autofillForms", false);
 user_pref("signon.generation.enabled", false);
+user_pref("signon.firefoxRelay.feature", "disabled");
 // Set time range from 'Last Hour' to 'Everything' in 'Clear History'
 user_pref("privacy.sanitize.timeSpan", 0);
 // Check all the boxes by default in 'Clear History'
@@ -133,6 +134,17 @@ user_pref("privacy.cpd.history", true);
 user_pref("privacy.cpd.offlineApps", true);
 user_pref("privacy.cpd.sessions", true);
 user_pref("privacy.cpd.siteSettings", true);
+// Clear history when Firefox closes
+user_pref("privacy.sanitize.sanitizeOnShutdown", true);
+// Clear history when Firefox closes options
+user_pref("privacy.clearOnShutdown.cache", true);     // [DEFAULT: true]
+user_pref("privacy.clearOnShutdown_v2.cache", true);  // [FF128+] [DEFAULT: true]
+user_pref("privacy.clearOnShutdown.downloads", true); // [DEFAULT: true]
+user_pref("privacy.clearOnShutdown.formdata", true);  // [DEFAULT: true]
+user_pref("privacy.clearOnShutdown.history", true);   // [DEFAULT: true]
+user_pref("privacy.clearOnShutdown_v2.historyFormDataAndDownloads", true); // [FF128+] [DEFAULT: true]
+user_pref("privacy.clearOnShutdown.siteSettings", true); // [DEFAULT: false]
+user_pref("privacy.clearOnShutdown_v2.siteSettings", true); // [FF128+] [DEFAULT: false]
 // Address Bar
 user_pref("browser.urlbar.suggest.bookmark", false);
 user_pref("browser.urlbar.suggest.engines", false);
