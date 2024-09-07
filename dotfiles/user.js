@@ -120,8 +120,8 @@ user_pref("browser.contentblocking.category", "standard");
 // Send websites a "Do Not Track" signal
 user_pref("privacy.donottrackheader.enabled", true);
 // Logins and Passwords
-user_pref("signon.rememberSignons", false);
-user_pref("signon.autofillForms", false);
+user_pref("signon.rememberSignons", true);
+user_pref("signon.autofillForms", true);
 user_pref("signon.generation.enabled", false);
 user_pref("signon.firefoxRelay.feature", "disabled");
 // Set time range from 'Last Hour' to 'Everything' in 'Clear History'
