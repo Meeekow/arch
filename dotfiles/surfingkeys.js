@@ -24,7 +24,7 @@ const {
 
 
 // hints will be limited to this characters
-Hints.setCharacters("rtshae");
+// Hints.setCharacters("rtshae");
 
 // align hints to left instead of center
 settings.hintAlign = "left";
@@ -90,7 +90,7 @@ if ( self.origin === "https://bookparse.com" ) {
 }
 
 // remove everything except the ff. to avoid unwanted actions
-unmapAllExcept(['gg', 'j', 'k', 'cs', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse.com\/dashboard\/.\/bookidentification.*/i);
+unmapAllExcept(['j', 'k', 'cs', 'gg', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse.com\/dashboard\/.\/bookidentification.*/i);
 
 // change scroll target
 map('p', 'cs', /bookparse.com\/dashboard\/.\/bookidentification.*/i); unmap('cs', /bookparse.com\/dashboard\/.\/bookidentification.*/i);
@@ -222,18 +222,26 @@ mapkey('a', 'paste clipboard content, hit submit button', function() {
 
 // get title from recognition software and focus titlebox
 mapkey('e', 'get title from recognition software', function() {
+  const bookDetails = document.querySelectorAll('.sm-card.d-flex');
+  const titleBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
   const triggerEvent = ( obj, event ) => {
     const evt = new Event( event, {target: obj, bubbles: true} );
     return obj ? obj.dispatchEvent(evt) : false;
   }
-  const titleBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
-  Hints.create(".sm-card.d-flex", function(e) {
-    let title = e.querySelector('.d-block').textContent;
+  function f(e) {
+    let title = this.querySelector('.d-block').textContent;
     title = title.replace(/^Title:\s|[;|:||,]/gi, '').replace(/&/gi, 'and');
     titleBox.value = title;
     triggerEvent(titleBox, 'input');
-    document.querySelector('.mb-2 > .form-control.form-control-second-primary').focus();
-  }, Hints.dispatchMouseClick);
+    titleBox.focus();
+    bookDetails.forEach((e) => {
+      e.removeEventListener('click', f);
+    })
+  }
+  bookDetails.forEach((e) => {
+    e.addEventListener('click', f);
+  })
+  Hints.create(".sm-card.d-flex", Hints.dispatchMouseClick);
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 
@@ -290,23 +298,25 @@ map('d', 'P', /amazon\.com/i); unmap('P', /amazon\.com/i);
 map('u', 'U', /amazon\.com/i); unmap('U', /amazon\.com/i);
 
 // track clicked ASIN
-let clickedElement = [];
+let clickedElement;
 // yank ASIN value
 mapkey('h', 'Yank ASIN Value', function() {
-  Hints.create(".xtaqv-copy", (element) => {
-    // copy ASIN
-    Clipboard.write(element.textContent);
-
-    // remove style on all other ASIN boxes
-    // only one highlighted ASIN box at any given time
-    clickedElement.forEach( element => { element.removeAttribute('style') } );
-
-    // apply style to ASIN box that we 'clicked'
-    element.closest('.xtaqv-root').setAttribute('style', 'background-color: #BFE6B1 !important');
-
-    // track ASIN box so we can remove applied style later
-    clickedElement.push(element.closest('.xtaqv-root'));
-  }, Hints.dispatchMouseClick);
+  const ASIN = document.querySelectorAll('.xtaqv-copy');
+  function f(e) {
+    if (clickedElement !== undefined) {
+      clickedElement.removeAttribute('style');
+    }
+    const elementToStyle = this.closest('.xtaqv-root');
+    clickedElement = elementToStyle;
+    elementToStyle.setAttribute('style', 'background-color: #BFE6B1 !important');
+    ASIN.forEach((e) => {
+      e.removeEventListener('click', f);
+    })
+  }
+  ASIN.forEach((e) => {
+    e.addEventListener('click', f);
+  })
+  Hints.create(".xtaqv-copy", Hints.dispatchMouseClick);
 }, {domain: /amazon\.com/i} );
 
 // enter insert mode
