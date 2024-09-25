@@ -154,6 +154,20 @@ mapkey('b', 'switch between not complete and undecided', function() {
   }
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
+// enter assigned ASIN is book is valuable
+mapkey('l', 'enter assigned ASIN is book is valuable', function() {
+  const ASIN = '0600621987';
+  const triggerEvent = ( obj, event ) => {
+    const evt = new Event( event, {target: obj, bubbles: true} );
+    return obj ? obj.dispatchEvent(evt) : false;
+  }
+  const el = document.querySelector('.form-control.form-control-second-primary');
+  el.value = ASIN;
+  triggerEvent(el, 'input');
+  Hints.create('.btn-second-primary', Hints.dispatchMouseClick);
+  Clipboard.write(' ');
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
+
 // reset zoom level to default
 mapkey('n', 'reset zoom level to default', function() {
   RUNTIME('setZoom', {
@@ -245,6 +259,46 @@ mapkey('e', 'get title from recognition software', function() {
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 
+// Ebay
+if ( self.origin === 'https://www.ebay.com' ) {
+  window.onfocus = () => {
+    let title = document.querySelector('.gh-tb.ui-autocomplete-input');
+    const searchButton = document.querySelector('.btn.btn-prim.gh-spr');
+    Clipboard.read(function(response) {
+      const t = title.value;
+      const r = response.data;
+      if (r.length !== 10 && t !== r) {
+        title.value = r;
+        searchButton.click();
+      }
+    });
+  }
+}
+mapkey('i', 'focus search bar', function() {
+    Hints.create('.gh-tb.ui-autocomplete-input', Hints.dispatchMouseClick);
+}, {domain: /ebay\.com/i} );
+
+
+// Worthpoint
+if ( self.origin === 'https://www.worthpoint.com' ) {
+  window.onfocus = () => {
+    let title = document.querySelector('#queryText_d');
+    const searchButton = document.querySelector('.wpButton.yellowBtn');
+    Clipboard.read(function(response) {
+      const t = title.value;
+      const r = response.data;
+      if (r.length !== 10 && t !== r) {
+        title.value = r;
+        searchButton.click();
+      }
+    });
+  }
+}
+mapkey('i', 'focus search bar', function() {
+    Hints.create('#queryText_d', Hints.dispatchMouseClick);
+}, {domain: /worthpoint\.com/i} );
+
+
 // QA
 // remove everything except the ff. to avoid unwanted actions
 unmapAllExcept(['gg', 'd', 'u', 'j', 'k', 'gxx', '<Esc>'], /bookparse.com\/dashboard\/2\/catalog\/bookparse/i);
@@ -278,6 +332,11 @@ mapkey('h', 'yank text detected by lens', function() {
 
 
 // amazon
+if ( self.origin === "https://www.amazon.com" ) {
+  Hints.create("#twotabsearchtextbox", function(element) {
+    Clipboard.write(element.value);
+  });
+}
 // avoid accidental reloads
 unmap('r', /amazon\.com/i);
 
