@@ -3,7 +3,8 @@
   "name": "Move Tab",
   "version": "1.0",
   "permissions": [
-    "tabs"
+    "tabs",
+    "windows"
   ],
   "action": {},
   "background": {
