@@ -274,6 +274,15 @@ if ( self.origin === 'https://www.ebay.com' ) {
     });
   }
 }
+
+unmapAllExcept(['P', 'U', 'j', 'k', 'gg', '<Esc>'], /ebay\.com/i);
+
+// scroll full page down
+map('d', 'P', /ebay\.com/i); unmap('P', /ebay\.com/i);
+
+// scroll full page up
+map('u', 'U', /ebay\.com/i); unmap('U', /ebay\.com/i);
+
 mapkey('i', 'focus search bar', function() {
     Hints.create('.gh-tb.ui-autocomplete-input', Hints.dispatchMouseClick);
 }, {domain: /ebay\.com/i} );
@@ -294,6 +303,15 @@ if ( self.origin === 'https://www.worthpoint.com' ) {
     });
   }
 }
+
+unmapAllExcept(['P', 'U', 'j', 'k', 'gg', '<Esc>'], /worthpoint\.com/i);
+
+// scroll full page down
+map('d', 'P', /worthpoint\.com/i); unmap('P', /worthpoint\.com/i);
+
+// scroll full page up
+map('u', 'U', /worthpoint\.com/i); unmap('U', /worthpoint\.com/i);
+
 mapkey('i', 'focus search bar', function() {
     Hints.create('#queryText_d', Hints.dispatchMouseClick);
 }, {domain: /worthpoint\.com/i} );
