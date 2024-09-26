@@ -3,6 +3,8 @@
   "name": "Move Tab",
   "version": "1.0",
   "permissions": [
+    "activeTab",
+    "scripting",
     "tabs",
     "windows"
   ],

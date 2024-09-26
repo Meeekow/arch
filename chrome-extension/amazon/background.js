@@ -1,3 +1,4 @@
+// Move amazon to its own window.
 chrome.tabs.onCreated.addListener(async function () {
   const queryOptions = await { active: true, currentWindow: true };
   await chrome.tabs.query(queryOptions, async function (tabs) {
@@ -11,6 +12,7 @@ chrome.tabs.onCreated.addListener(async function () {
 })
 
 
+// Close all existing tabs and open chrome page to clear cookies and data.
 chrome.action.onClicked.addListener(async function () {
   await chrome.tabs.create({
     url: 'chrome://settings/privacy'
@@ -26,16 +28,24 @@ chrome.action.onClicked.addListener(async function () {
 })
 
 
+let navigateToBookparse = false;
+// Catch copy event in content script and determine if
+// we need to go to worthpoint/ebay or bookparse tab
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+  if (message.copiedText) {
+    navigateToBookparse = true;
+  }
+});
+
+
+// Switch to worthpoint/ebay once amazon website is closed.
 chrome.windows.onRemoved.addListener(function(windowid) {
-  chrome.tabs.query({ currentWindow: false }, function(tabs) {
-    const indexToFind = 0;
-    const targetTab = tabs.find(tab => tab.index === indexToFind);
-    if (targetTab) {
-      chrome.windows.update(targetTab.windowId, { focused: true }, function() {
-        chrome.tabs.update(targetTab.id, { active: true });
-      })
-    } else {
-      console.log("Tab with the given index not found!");
-    }
+  chrome.tabs.query({}, function(tabs) {
+    const urlToFind = navigateToBookparse ? 'bookparse.com' : 'worthpoint.com';
+    const targetTab = tabs.find(tab => tab.url.includes(urlToFind));
+    chrome.windows.update(targetTab.windowId, { focused: true }, function() {
+      chrome.tabs.update(targetTab.id, { active: true });
+    })
+    navigateToBookparse = false;
   })
 })
