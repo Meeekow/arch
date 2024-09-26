@@ -43,9 +43,11 @@ chrome.windows.onRemoved.addListener(function(windowid) {
   chrome.tabs.query({}, function(tabs) {
     const urlToFind = navigateToBookparse ? 'bookparse.com' : 'worthpoint.com';
     const targetTab = tabs.find(tab => tab.url.includes(urlToFind));
-    chrome.windows.update(targetTab.windowId, { focused: true }, function() {
-      chrome.tabs.update(targetTab.id, { active: true });
-    })
-    navigateToBookparse = false;
+    if (targetTab) {
+      chrome.windows.update(targetTab.windowId, { focused: true }, function() {
+        chrome.tabs.update(targetTab.id, { active: true });
+      })
+      navigateToBookparse = false;
+    }
   })
 })
