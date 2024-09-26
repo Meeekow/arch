@@ -16,6 +16,15 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     // Respond back to the content script
     sendResponse({ reply: "focusing-bookparse" });
   }
+
+  if (message.command === "switch-tab") {
+    chrome.tabs.query({ currentWindow: true, active: false }, function(tabs) {
+      chrome.tabs.update(tabs[0].id, { active: true });
+    })
+
+    sendResponse({ reply: "switching-tab" });
+  }
+  
   // Return true to keep the message channel open for an asynchronous response
   return true;
 });
