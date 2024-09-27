@@ -1,9 +1,16 @@
-document.addEventListener('keydown', function(e) {
-  if (e.target.nodeName === 'BODY' && e.key === 'c') {
-    chrome.runtime.sendMessage({ command: "focus-bookparse" }, function() {});
-  }
+function command(instruction) {
+  chrome.runtime.sendMessage({ message: instruction }, function() {});
+}
 
-  if (e.target.nodeName === 'BODY' && e.key === 's') {
-    chrome.runtime.sendMessage({ command: "switch-tab" }, function() {});
+
+document.addEventListener('keydown', function(e) {
+  if (e.target.nodeName === 'BODY') {
+    switch(e.key) {
+      case 'c':
+        command('focus-bookparse');
+        break;
+      case 's':
+        command('switch-tab');
+    }
   }
 })
