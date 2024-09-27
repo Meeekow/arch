@@ -4,13 +4,12 @@ function command(instruction) {
 
 
 document.addEventListener('keydown', function(e) {
+  const hotkeys = {
+    'c': 'focus-bookparse',
+    's': 'switch-tab'
+  }
+
   if (e.target.nodeName === 'BODY') {
-    switch(e.key) {
-      case 'c':
-        command('focus-bookparse');
-        break;
-      case 's':
-        command('switch-tab');
-    }
+    command(hotkeys[e.key]);
   }
 })
