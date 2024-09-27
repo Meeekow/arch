@@ -259,15 +259,17 @@ mapkey('e', 'get title from recognition software', function() {
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 
-// Ebay
-if ( self.origin === 'https://www.ebay.com' ) {
+// Worthpoint || Ebay
+if ( self.origin === 'https://www.worthpoint.com' || self.origin === 'https://www.ebay.com' ) {
+  settings.scrollStepSize = 150;
+
   window.onfocus = () => {
-    let title = document.querySelector('.gh-tb.ui-autocomplete-input');
-    const searchButton = document.querySelector('.btn.btn-prim.gh-spr');
+    let title = document.querySelector('#queryText_d') || document.querySelector('.gh-tb.ui-autocomplete-input');
+    const searchButton = document.querySelector('.wpButton.yellowBtn') || document.querySelector('.btn.btn-prim.gh-spr');
     Clipboard.read(function(response) {
       const t = title.value;
       const r = response.data;
-      if (r.length !== 10 && t !== r) {
+      if (t !== r) {
         title.value = r;
         searchButton.click();
       }
@@ -275,42 +277,18 @@ if ( self.origin === 'https://www.ebay.com' ) {
   }
 }
 
-unmapAllExcept(['P', 'U', 'j', 'k', 'gg', '<Esc>'], /ebay\.com/i);
+
+unmapAllExcept(['P', 'U', 'j', 'k', 'gg', '<Esc>'], /ebay\.com|worthpoint\.com/i);
 
 // scroll full page down
-map('d', 'P', /ebay\.com/i); unmap('P', /ebay\.com/i);
+map('d', 'P', /ebay\.com|worthpoint\.com/i); unmap('P', /ebay\.com|worthpoint\.com/i);
 
 // scroll full page up
-map('u', 'U', /ebay\.com/i); unmap('U', /ebay\.com/i);
+map('u', 'U', /ebay\.com|worthpoint\.com/i); unmap('U', /ebay\.com|worthpoint\.com/i);
 
 mapkey('i', 'focus search bar', function() {
-    Hints.create('.gh-tb.ui-autocomplete-input', Hints.dispatchMouseClick);
+  Hints.create('.gh-tb.ui-autocomplete-input', Hints.dispatchMouseClick);
 }, {domain: /ebay\.com/i} );
-
-
-// Worthpoint
-if ( self.origin === 'https://www.worthpoint.com' ) {
-  window.onfocus = () => {
-    let title = document.querySelector('#queryText_d');
-    const searchButton = document.querySelector('.wpButton.yellowBtn');
-    Clipboard.read(function(response) {
-      const t = title.value;
-      const r = response.data;
-      if (r.length !== 10 && t !== r) {
-        title.value = r;
-        searchButton.click();
-      }
-    });
-  }
-}
-
-unmapAllExcept(['P', 'U', 'j', 'k', 'gg', '<Esc>'], /worthpoint\.com/i);
-
-// scroll full page down
-map('d', 'P', /worthpoint\.com/i); unmap('P', /worthpoint\.com/i);
-
-// scroll full page up
-map('u', 'U', /worthpoint\.com/i); unmap('U', /worthpoint\.com/i);
 
 mapkey('i', 'focus search bar', function() {
     Hints.create('#queryText_d', Hints.dispatchMouseClick);
