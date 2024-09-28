@@ -163,9 +163,7 @@ const linkBuilder = () => {
       break;
   }
 
-  if (title) {
-    window.open(`https://www.amazon.com/s?k=${title}${_binding}`, '_blank');
-  }
+  return [`https://www.amazon.com/s?k=${title}${_binding}`, _title_input.value];
 }
 
 
@@ -192,6 +190,10 @@ const rotateImage = () => {
 }
 
 
+const command = (object) => {
+  chrome.runtime.sendMessage({ message: object.instruction, url: object.link, search: object.query }, function() {});
+}
+
 const customActions = () => {
   let titleInputBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
   // Apply changes made via Surfingkeys VIM mode.
@@ -204,7 +206,9 @@ const customActions = () => {
     switch(e.key) {
       case 'Escape':
         e.preventDefault();
-        linkBuilder();
+        const parameters = linkBuilder();
+        command({ instruction: 'new-amazon-url', link: parameters[0]});
+        command({ instruction: 'search-query', query: parameters[1]});
         break;
       case 'Enter':
         if (!e.ctrlKey) {

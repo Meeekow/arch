@@ -3,8 +3,11 @@
   "name": "Bookparse",
   "version": "1.0",
   "permissions": [
-    "tabs"
+    "tabs",
+    "scripting",
+    "windows"
   ],
+  "host_permissions": ["<all_urls>"],
   "action": {},
   "background": {
     "service_worker": "background.js"

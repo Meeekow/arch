@@ -1,3 +1,4 @@
+// Reset zoom level after processing a book.
 chrome.runtime.onConnect.addListener(function(port) {
   port.onMessage.addListener(function(message) {
     chrome.tabs.query({ active: true }, function(tabs) {
@@ -5,4 +6,52 @@ chrome.runtime.onConnect.addListener(function(port) {
       chrome.tabs.setZoom(tabId, 0);
     })
   })
+})
+
+
+function unifiedSearch(query) {
+  let title = document.querySelector('#queryText_body') || document.querySelector('#queryText_d') || document.querySelector('.gh-tb.ui-autocomplete-input');
+  const searchButton = document.querySelector('.searchBar-hp__btn.wpButton.yellowBtn') || document.querySelector('.wpButton.yellowBtn') || document.querySelector('.btn.btn-prim.gh-spr');
+  title.value = query;
+  searchButton.click();
+}
+
+
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+  // For amazon, we have to do it this way since we need
+  // the correct binding to be queried too.
+  if (message.message === "new-amazon-url") {
+    chrome.tabs.query({ currentWindow: false }, function(tabs) {
+      const urlToFind = 'amazon.com';
+      const targetTab = tabs.find(tab => tab.url.includes(urlToFind));
+      if (targetTab) {
+        chrome.windows.update(targetTab.windowId, { focused: true }, function() {
+          chrome.tabs.update(targetTab.id, { url: message.url, active: true });
+        })
+      } else {
+        console.log("Amazon tab not found!");
+      }
+    })
+    sendResponse({ reply: "sending-new-amazon-url" });
+  }
+
+  // Update ebay and worthpoint to match what
+  // is being searched on amazon.
+  if (message.message === "search-query") {
+    chrome.tabs.query({ currentWindow: false }, function(tabs) {
+      for (const link of tabs) {
+        if (!link.url.includes('amazon.com')) {
+          chrome.scripting.executeScript({
+            target: { tabId: link.id },
+            args: [message.search],
+            func: unifiedSearch
+          })
+        }
+      }
+    })
+    sendResponse({ reply: "sending-new-query" });
+  }
+
+  // Return true to keep the message channel open for an asynchronous response
+  return true;
 })
