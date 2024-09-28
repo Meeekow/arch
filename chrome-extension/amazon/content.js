@@ -187,16 +187,16 @@ const main = () => {
 waitForElement('#nav-logo-sprites', main);
 
 
-let copyCount = 0;
+// let copyCount = 0;
 // Listen for the copy event on the document
-document.addEventListener('copy', function(event) {
-  copyCount++;
+// document.addEventListener('copy', function(event) {
+//   copyCount++;
 
-  // Get the copied text from the clipboard
-  const selectedText = document.getSelection().toString();
+//   Get the copied text from the clipboard
+//   const selectedText = document.getSelection().toString();
 
-  if (copyCount >= 2) {
-    // You could also send this data to the background script or popup
-    chrome.runtime.sendMessage({ copiedText: selectedText });
-  }
-});
+//   if (copyCount >= 2) {
+//     You could also send this data to the background script or popup
+//     chrome.runtime.sendMessage({ copiedText: selectedText });
+//   }
+// });
