@@ -260,24 +260,6 @@ mapkey('e', 'get title from recognition software', function() {
 
 
 // Worthpoint || Ebay
-if ( self.origin === 'https://www.worthpoint.com' || self.origin === 'https://www.ebay.com' ) {
-  settings.scrollStepSize = 150;
-
-  window.onfocus = () => {
-    let title = document.querySelector('#queryText_d') || document.querySelector('.gh-tb.ui-autocomplete-input');
-    const searchButton = document.querySelector('.wpButton.yellowBtn') || document.querySelector('.btn.btn-prim.gh-spr');
-    Clipboard.read(function(response) {
-      const t = title.value;
-      const r = response.data;
-      if (t !== r) {
-        title.value = r;
-        searchButton.click();
-      }
-    });
-  }
-}
-
-
 unmapAllExcept(['P', 'U', 'j', 'k', 'gg', '<Esc>'], /ebay\.com|worthpoint\.com/i);
 
 // scroll full page down
@@ -328,11 +310,6 @@ mapkey('h', 'yank text detected by lens', function() {
 
 
 // amazon
-if ( self.origin === "https://www.amazon.com" ) {
-  Hints.create("#twotabsearchtextbox", function(element) {
-    Clipboard.write(element.value);
-  });
-}
 // avoid accidental reloads
 unmap('r', /amazon\.com/i);
 
