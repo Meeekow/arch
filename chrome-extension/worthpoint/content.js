@@ -6,7 +6,8 @@ function command(instruction) {
 document.addEventListener('keydown', function(e) {
   const hotkeys = {
     'c': 'focus-bookparse',
-    's': 'switch-tab'
+    't': 'switch-tab-left',
+    's': 'switch-tab-right'
   }
 
   if (e.target.nodeName === 'BODY') {

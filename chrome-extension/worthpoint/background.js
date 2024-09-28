@@ -14,12 +14,38 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     sendResponse({ reply: "focusing-bookparse" });
   }
 
-  if (message.message === "switch-tab") {
-    chrome.tabs.query({ currentWindow: true, active: false }, function(tabs) {
-      chrome.tabs.update(tabs[0].id, { active: true });
+  if (message.message === "switch-tab-left") {
+    chrome.tabs.query({ currentWindow: true }, function(tabs) {
+      for (let i = 0, l = tabs.length - 1; i <= l; i++) {
+        if (tabs[i].active) {
+          if (tabs[i].index === 0) {
+            chrome.tabs.update(tabs[l].id, { active: true });
+          } else {
+            chrome.tabs.update(tabs[i-1].id, { active: true });
+          }
+        }
+      }
     })
-    sendResponse({ reply: "switching-tab" });
+    sendResponse({ reply: "switching-tab-left" });
   }
+
+  if (message.message === "switch-tab-right") {
+    chrome.tabs.query({ currentWindow: true }, function(tabs) {
+      chrome.tabs.query({ currentWindow: true }, function(tabs) {
+      for (let i = 0, l = tabs.length - 1; i <= l; i++) {
+        if (tabs[i].active) {
+          if (tabs[i].index === l) {
+            chrome.tabs.update(tabs[0].id, { active: true });
+          } else {
+            chrome.tabs.update(tabs[i+1].id, { active: true });
+          }
+        }
+      }
+    })
+    })
+    sendResponse({ reply: "switching-tab-right" });
+  }
+
   // Return true to keep the message channel open for an asynchronous response
   return true;
 })
