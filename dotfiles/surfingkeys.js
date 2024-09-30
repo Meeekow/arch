@@ -78,12 +78,6 @@ if ( self.origin === "https://www.messenger.com" ) {
 };
 
 
-// reddit
-// if ( self.origin === "https://www.reddit.com" ) {
-//   location.href=location.href.replace("www.reddit", "old.reddit");
-// };
-
-
 // bookparse
 if ( self.origin === "https://bookparse.com" ) {
   settings.scrollStepSize = 50;
@@ -94,9 +88,6 @@ unmapAllExcept(['j', 'k', 'cs', 'gg', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse.co
 
 // change scroll target
 map('p', 'cs', /bookparse.com\/dashboard\/.\/bookidentification.*/i); unmap('cs', /bookparse.com\/dashboard\/.\/bookidentification.*/i);
-
-// close other tabs
-map('c', 'gxx', /bookparse.com\/dashboard\/.\/bookidentification.*/i); unmap('gxx', /bookparse.com\/dashboard\/.\/bookidentification.*/i);
 
 // check if element is in viewport
 function inViewport(element) {
@@ -260,7 +251,7 @@ mapkey('e', 'get title from recognition software', function() {
 
 
 // Worthpoint || Ebay
-unmapAllExcept(['P', 'U', 'j', 'k', 'gg', '<Esc>'], /ebay\.com|worthpoint\.com/i);
+unmapAllExcept(['F', 'P', 'U', 'j', 'k', 'gg', '<Esc>'], /ebay\.com|worthpoint\.com/i);
 
 // scroll full page down
 map('d', 'P', /ebay\.com|worthpoint\.com/i); unmap('P', /ebay\.com|worthpoint\.com/i);
@@ -277,51 +268,8 @@ mapkey('i', 'focus search bar', function() {
 }, {domain: /worthpoint\.com/i} );
 
 
-// QA
-// remove everything except the ff. to avoid unwanted actions
-unmapAllExcept(['gg', 'd', 'u', 'j', 'k', 'gxx', '<Esc>'], /bookparse.com\/dashboard\/2\/catalog\/bookparse/i);
-
-// get ASIN and search it in Amazon.com
-mapkey('o', 'get ASIN and search it in Amazon.com', function() {
-    Hints.create(".box-row", function(e) {
-    const imageToCheck = e.querySelector('.align-middle:nth-child(2) > img').src;
-    const asinToCheck = e.querySelector('.align-middle:nth-child(5)').textContent;
-    window.open(`${imageToCheck}`, '_blank');
-    window.open(`https://www.amazon.com/s?k=${asinToCheck}`, '_blank');
-  }, Hints.dispatchMouseClick);
-}, {domain: /bookparse.com\/dashboard\/2\/catalog\/bookparse/i} );
-
-
-// lens.google.com
-// avoid accidental reloads
-unmap('r', /lens.google\.com/i);
-
-// press 'c' instead of 'x' to close window
-map('c', 'x', /lens.google\.com/i);
-
-// remap highlight whole element
-map('t', 'zv', /lens.google\.com/i);
-
-// yank text detected by lens
-mapkey('h', 'yank text detected by lens', function() {
-  let result = document.querySelector('.DeMn2d') || document.querySelector('.piBj5') || document.querySelector('.wCgoWb');
-  Clipboard.write(result.textContent);
-}, {domain: /lens.google\.com/i} );
-
-
 // amazon
-// avoid accidental reloads
-unmap('r', /amazon\.com/i);
-
-// press 'n' instead of 'W' to open focused tab to a new window
-map('n', 'W', /amazon\.com/i);
-
-// press 'c' instead of 'x' to close window
-map('c', 'x', /amazon\.com/i);
-
-// unmap so we can rebind this to another scrolling option
-unmap('d', /amazon\.com/i);
-unmap('u', /amazon\.com/i);
+unmapAllExcept(['F', 'P', 'U', 'j', 'k', 'gg', '<Esc>'], /amazon\.com/i);
 
 // scroll full page down
 map('d', 'P', /amazon\.com/i); unmap('P', /amazon\.com/i);
@@ -356,52 +304,9 @@ mapkey('i', 'Focus search box', function() {
   Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
 }, {domain: /amazon\.com/i} );
 
-// clear input box and set value to "blank" and enter insert mode
-mapkey('gc', 'Set input value to blank', function() {
-  document.querySelector('#twotabsearchtextbox').value="";
-  Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
-}, {domain: /amazon\.com/i} );
-
-// clear input box and set value to "hardcover" and enter insert mode
-mapkey('gh', 'Set input value to hardcover', function() {
-  document.querySelector('#twotabsearchtextbox').value="hardcover ";
-  Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
-}, {domain: /amazon\.com/i} );
-
-// clear input box and set value to "paperback" and enter insert mode
-mapkey('gp', 'Set input value to paperback', function() {
-  document.querySelector('#twotabsearchtextbox').value="paperback ";
-  Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
-}, {domain: /amazon\.com/i} );
-
-// clear input box and set value to "spiral bound" and enter insert mode
-mapkey('gs', 'Set input value to spiral', function() {
-  document.querySelector('#twotabsearchtextbox').value="spiral ";
-  Hints.create("#twotabsearchtextbox", Hints.dispatchMouseClick);
-}, {domain: /amazon\.com/i} );
-
 // yank values from input box without pressing hints key
 mapkey('yi', 'Yank text from search box', function() {
   Hints.create("#twotabsearchtextbox", function(element) {
     Clipboard.write(element.value);
   });
 }, {domain: /amazon\.com/i} );
-
-// yank values from input box without pressing hints key
-mapkey('sa', 'Site specific search', function() {
-  window.close();
-  window.open(`https://www.google.com/search?q=site:amazon.com+"${document.getElementById('twotabsearchtextbox').value}"`);
-}, {domain: /amazon\.com/i} );
-
-
-// bookrun
-if ( self.origin === 'https://www.google.com' ) {
-  mapkey('<Space>', 'press verify/next', function() {
-    Hints.create('.rc-button-default.goog-inline-block', Hints.dispatchMouseClick);
-  });
-}
-
-
-// add amazon search aliases
-// addSearchAlias('h', 'amazon hardcover', 'https://www.amazon.com/s?k={0}&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656020011');
-// addSearchAlias('p', 'amazon paperback', 'https://www.amazon.com/s?k={0}&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656022011');
