@@ -52,6 +52,17 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     sendResponse({ reply: "sending-new-query" });
   }
 
+  // Switch focus to amazon/worthpoint/ebay window.
+  if (message.message === "alt-tab") {
+    chrome.tabs.query({ currentWindow: false }, function(tabs) {
+      const id = tabs[0].windowId;
+      if (id) {
+        chrome.windows.update(id, { focused: true }, function() {});
+      }
+    })
+    sendResponse({ reply: "alt-tabbing" });
+  }
+
   // Return true to keep the message channel open for an asynchronous response
   return true;
 })

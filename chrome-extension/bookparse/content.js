@@ -172,6 +172,9 @@ const rotateImage = () => {
     if (e.target.nodeName === 'BODY') {
       const image = document.querySelector('.card-body');
       switch(e.key) {
+        case 'c':
+          command({ instruction: 'alt-tab' });
+          break;
         case 'ArrowUp':
           image.style.transform = 'rotate(0deg)';
           break;
@@ -194,6 +197,14 @@ const command = (object) => {
   chrome.runtime.sendMessage({ message: object.instruction, url: object.link, search: object.query }, function() {});
 }
 
+
+const unifiedSearch = () => {
+  const parameters = linkBuilder();
+  command({ instruction: 'new-amazon-url', link: parameters[0]});
+  command({ instruction: 'search-query', query: parameters[1]});
+}
+
+
 const customActions = () => {
   let titleInputBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
   // Apply changes made via Surfingkeys VIM mode.
@@ -206,9 +217,9 @@ const customActions = () => {
     switch(e.key) {
       case 'Escape':
         e.preventDefault();
-        const parameters = linkBuilder();
-        command({ instruction: 'new-amazon-url', link: parameters[0]});
-        command({ instruction: 'search-query', query: parameters[1]});
+        if (titleInputBox.value !== '') {
+          unifiedSearch();
+        }
         break;
       case 'Enter':
         if (!e.ctrlKey) {
@@ -234,8 +245,7 @@ const customActions = () => {
     switch(e.key) {
       case 'Escape':
         e.preventDefault();
-        linkBuilder();
-        loseFocus();
+        unifiedSearch();
         break;
       case 'Tab':
         e.preventDefault();
