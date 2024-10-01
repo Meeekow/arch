@@ -14,3 +14,17 @@ document.addEventListener('keydown', function(e) {
     command(hotkeys[e.key]);
   }
 })
+
+
+function removeElements() {
+  const selectors = [
+    '.related-landing-page.has-3-items',
+    '.footer-wrapper.container-fluid'
+  ];
+
+  for (const item of selectors) {
+    const element = document.querySelector(selector);
+    if (element) { element.remove() };
+  }
+}
+removeElements();
