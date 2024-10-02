@@ -173,7 +173,7 @@ const rotateImage = () => {
       const image = document.querySelector('.card-body');
       switch(e.key) {
         case 'c':
-          command({ instruction: 'alt-tab' });
+          if (!e.ctrlKey) {command({ instruction: 'alt-tab' })};
           break;
         case 'ArrowUp':
           image.style.transform = 'rotate(0deg)';
