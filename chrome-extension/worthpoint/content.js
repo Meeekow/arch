@@ -10,7 +10,7 @@ document.addEventListener('keydown', function(e) {
     's': 'switch-tab-right'
   }
 
-  if (e.target.nodeName === 'BODY') {
+  if (e.target.nodeName === 'BODY' && !e.ctrlKey) {
     command(hotkeys[e.key]);
   }
 })
@@ -22,7 +22,7 @@ function removeElements() {
     '.footer-wrapper.container-fluid'
   ];
 
-  for (const item of selectors) {
+  for (const selector of selectors) {
     const element = document.querySelector(selector);
     if (element) { element.remove() };
   }
