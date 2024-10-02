@@ -21,7 +21,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   // For amazon, we have to do it this way since we need
   // the correct binding to be queried too.
   if (message.message === "new-amazon-url") {
-    chrome.tabs.query({ currentWindow: false }, function(tabs) {
+    chrome.tabs.query({}, function(tabs) {
       const urlToFind = 'amazon.com';
       const targetTab = tabs.find(tab => tab.url.includes(urlToFind));
       if (targetTab) {
@@ -38,9 +38,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   // Update ebay and worthpoint to match what
   // is being searched on amazon.
   if (message.message === "search-query") {
-    chrome.tabs.query({ currentWindow: false }, function(tabs) {
+    chrome.tabs.query({}, function(tabs) {
       for (const link of tabs) {
-        if (!link.url.includes('amazon.com')) {
+        if (link.url.includes('worthpoint.com') || link.url.includes('ebay.com')) {
           chrome.scripting.executeScript({
             target: { tabId: link.id },
             args: [message.search],
