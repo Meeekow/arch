@@ -63,6 +63,27 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     sendResponse({ reply: "alt-tabbing" });
   }
 
+  // Reset zoom level.
+  if (message.message === "reset-zoom-level") {
+    chrome.tabs.query({ active: true }, function(tabs) {
+      tabId = tabs[0].id;
+      chrome.tabs.setZoom(tabId, 0);
+    })
+    sendResponse({ reply: "resetting-zoom-level" });
+  }
+
+  // Zoom in.
+  if (message.message === "zoom-in") {
+    chrome.tabs.query({ active: true }, function(tabs) {
+      const tab = tabs[0];
+      chrome.tabs.getZoom(tab.id, function(zoomFactor) {
+        chrome.tabs.setZoom(tab.id, Number(zoomFactor) + 0.05);
+      });
+
+    })
+    sendResponse({ reply: "zooming-in" });
+  }
+
   // Return true to keep the message channel open for an asynchronous response
   return true;
 })

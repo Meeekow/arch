@@ -175,6 +175,12 @@ const rotateImage = () => {
         case 'c':
           if (!e.ctrlKey) {command({ instruction: 'alt-tab' })};
           break;
+        case 'n':
+          if (!e.ctrlKey) {command({ instruction: 'reset-zoom-level' })};
+          break;
+        case 'i':
+          if (!e.ctrlKey) {command({ instruction: 'zoom-in' })};
+          break;
         case 'ArrowUp':
           image.style.transform = 'rotate(0deg)';
           break;
