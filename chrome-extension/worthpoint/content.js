@@ -16,7 +16,7 @@ document.addEventListener('keydown', function(e) {
 })
 
 
-function removeElements() {
+function removeFooterElements() {
   const selectors = [
     '.related-landing-page.has-3-items',
     '.footer-wrapper.container-fluid'
@@ -27,4 +27,16 @@ function removeElements() {
     if (element) { element.remove() };
   }
 }
-removeElements();
+removeFooterElements();
+
+
+// Make sure 'Sold' criteria is always selected.
+function showOnlySold() {
+  const sold = document.querySelector('[name=LH_Sold]');
+  if (sold) {
+    if (sold.value === 0) {
+      sold.querySelector('.checkbox__control').click();
+    }
+  }
+}
+showOnlySold();
