@@ -167,35 +167,15 @@ const linkBuilder = () => {
 }
 
 
-const rotateImage = () => {
-  document.addEventListener('keydown', (e) => {
-    if (e.target.nodeName === 'BODY') {
-      const image = document.querySelector('.card-body');
-      switch(e.key) {
-        case 'c':
-          if (!e.ctrlKey) {command({ instruction: 'alt-tab' })};
-          break;
-        case 'n':
-          if (!e.ctrlKey) {command({ instruction: 'reset-zoom-level' })};
-          break;
-        case 'i':
-          if (!e.ctrlKey) {command({ instruction: 'zoom-in' })};
-          break;
-        case 'ArrowUp':
-          image.style.transform = 'rotate(0deg)';
-          break;
-        case 'ArrowRight':
-          image.style.transform = 'rotate(90deg)';
-          break;
-        case 'ArrowDown':
-          image.style.transform = 'rotate(180deg)';
-          break;
-        case 'ArrowLeft':
-          image.style.transform = 'rotate(270deg)';
-          break;
-      }
-    }
-  });
+const rotateImage = (key) => {
+  const image = document.querySelector('.card-body');
+  const direction = {
+    'ArrowUp': 'rotate(0deg)',
+    'ArrowDown': 'rotate(180deg)',
+    'ArrowLeft': 'rotate(270deg)',
+    'ArrowRight': 'rotate(90deg)'
+  }
+  image.style.transform = direction[key];
 }
 
 
@@ -211,7 +191,25 @@ const unifiedSearch = () => {
 }
 
 
+const customHotkeys = (key) => {
+  const hotkeys = {
+    'c': 'alt-tab',
+    'n': 'reset-zoom-level',
+    'i': 'zoom-in'
+  }
+  command({ instruction: hotkeys[key] });
+}
+
+
 const customActions = () => {
+  // Custom actions when nothing is focused.
+  document.addEventListener('keydown', (e) => {
+    if (e.target.nodeName === 'BODY' && !e.ctrlKey) {
+      customHotkeys(e.key);
+      rotateImage(e.key);
+    }
+  });
+
   let titleInputBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
   // Apply changes made via Surfingkeys VIM mode.
   titleInputBox.addEventListener('change', (e) => {
@@ -381,5 +379,7 @@ waitForElement('.mb-2 > .form-control.form-control-second-primary', main, false,
 window.onfocus = () => {
   loseFocus();
   const target = document.querySelector('.form-control.form-control-second-primary');
-  if (target.value !== '') { setNativeValue(target, '') };
+  if (target && target.value !== null) {
+    if (target.value !== '') { setNativeValue(target, '') };
+  }
 }
