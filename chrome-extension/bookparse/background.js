@@ -77,7 +77,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     chrome.tabs.query({ active: true }, function(tabs) {
       const tab = tabs[0];
       chrome.tabs.getZoom(tab.id, function(zoomFactor) {
-        chrome.tabs.setZoom(tab.id, Number(zoomFactor) + 0.05);
+        chrome.tabs.setZoom(tab.id, Number(zoomFactor) + 0.125);
       });
 
     })
