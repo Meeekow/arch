@@ -24,7 +24,7 @@ const {
 
 
 // hints will be limited to this characters
-// Hints.setCharacters("rtshae");
+Hints.setCharacters("rtshae");
 
 // align hints to left instead of center
 settings.hintAlign = "left";
@@ -80,6 +80,7 @@ if ( self.origin === "https://www.messenger.com" ) {
 
 // bookparse
 if ( self.origin === "https://bookparse.com" ) {
+  Hints.setCharacters("tshae");
   settings.scrollStepSize = 50;
 }
 
@@ -88,6 +89,12 @@ unmapAllExcept(['j', 'k', 'cs', 'gg', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse.co
 
 // change scroll target
 map('p', 'cs', /bookparse.com\/dashboard\/.\/bookidentification.*/i); unmap('cs', /bookparse.com\/dashboard\/.\/bookidentification.*/i);
+
+// trigger event so that new value would reflect
+function triggerEvent(obj, event) {
+  const evt = new Event(event, {target: obj, bubbles: true});
+  return obj ? obj.dispatchEvent(evt) : false;
+}
 
 // check if element is in viewport
 function inViewport(element) {
@@ -133,7 +140,6 @@ mapkey('u', 'scroll up', function() {
   scrollUpOrDown("up");
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
-
 // switch between not complete and undecided
 mapkey('b', 'switch between not complete and undecided', function() {
   const url = location.href;
@@ -146,12 +152,8 @@ mapkey('b', 'switch between not complete and undecided', function() {
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // enter assigned ASIN is book is valuable
-mapkey('l', 'enter assigned ASIN is book is valuable', function() {
+mapkey('l', 'valuable book', function() {
   const ASIN = '0600621987';
-  const triggerEvent = ( obj, event ) => {
-    const evt = new Event( event, {target: obj, bubbles: true} );
-    return obj ? obj.dispatchEvent(evt) : false;
-  }
   const el = document.querySelector('.form-control.form-control-second-primary');
   el.value = ASIN;
   triggerEvent(el, 'input');
@@ -159,21 +161,14 @@ mapkey('l', 'enter assigned ASIN is book is valuable', function() {
   Clipboard.write(' ');
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
-// reset zoom level to default
-mapkey('n', 'reset zoom level to default', function() {
-  RUNTIME('setZoom', {
-    zoomFactor: 0
-  });
-  RUNTIME('setZoom', {
-    zoomFactor: 0.25
-  });
-}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
-
-// zoom in
-mapkey('i', 'zoom in', function() {
-  RUNTIME('setZoom', {
-    zoomFactor: 0.25
-  });
+// enter assigned ASIN is book is valuable
+mapkey('w', 'medium valuable', function() {
+  const ASIN = 'B0006XVY3S';
+  const el = document.querySelector('.form-control.form-control-second-primary');
+  el.value = ASIN;
+  triggerEvent(el, 'input');
+  Hints.create('.btn-second-primary', Hints.dispatchMouseClick);
+  Clipboard.write(' ');
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // show hints for 'Use ASIN button'
@@ -212,10 +207,6 @@ mapkey('h', 'click undecided button and toggle hints for dropdown', function() {
 
 // ASIN box
 mapkey('a', 'paste clipboard content, hit submit button', function() {
-  const triggerEvent = ( obj, event ) => {
-    const evt = new Event( event, {target: obj, bubbles: true} );
-    return obj ? obj.dispatchEvent(evt) : false;
-  }
   const el = document.querySelector('.form-control.form-control-second-primary');
   if (el.value.length === 0) {
     Clipboard.read( (response) => { el.value = response.data });
@@ -227,26 +218,14 @@ mapkey('a', 'paste clipboard content, hit submit button', function() {
 
 // get title from recognition software and focus titlebox
 mapkey('e', 'get title from recognition software', function() {
-  const bookDetails = document.querySelectorAll('.sm-card.d-flex');
   const titleBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
-  const triggerEvent = ( obj, event ) => {
-    const evt = new Event( event, {target: obj, bubbles: true} );
-    return obj ? obj.dispatchEvent(evt) : false;
-  }
-  function f(e) {
-    let title = this.querySelector('.d-block').textContent;
+  Hints.create(".sm-card.d-flex", function(element) {
+    let title = element.querySelector('.d-block').textContent;
     title = title.replace(/^Title:\s|[;|:||,]/gi, '').replace(/&/gi, 'and');
     titleBox.value = title;
     triggerEvent(titleBox, 'input');
     titleBox.focus();
-    bookDetails.forEach((e) => {
-      e.removeEventListener('click', f);
-    })
-  }
-  bookDetails.forEach((e) => {
-    e.addEventListener('click', f);
-  })
-  Hints.create(".sm-card.d-flex", Hints.dispatchMouseClick);
+  });
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 
@@ -281,22 +260,15 @@ map('u', 'U', /amazon\.com/i); unmap('U', /amazon\.com/i);
 let clickedElement;
 // yank ASIN value
 mapkey('h', 'Yank ASIN Value', function() {
-  const ASIN = document.querySelectorAll('.xtaqv-copy');
-  function f(e) {
+  Hints.create(".xtaqv-copy", function(element) {
     if (clickedElement !== undefined) {
       clickedElement.removeAttribute('style');
     }
-    const elementToStyle = this.closest('.xtaqv-root');
+    const elementToStyle = element.closest('.xtaqv-root');
     clickedElement = elementToStyle;
     elementToStyle.setAttribute('style', 'background-color: #BFE6B1 !important');
-    ASIN.forEach((e) => {
-      e.removeEventListener('click', f);
-    })
-  }
-  ASIN.forEach((e) => {
-    e.addEventListener('click', f);
-  })
-  Hints.create(".xtaqv-copy", Hints.dispatchMouseClick);
+    Clipboard.write(element.textContent);
+  });
 }, {domain: /amazon\.com/i} );
 
 // enter insert mode
