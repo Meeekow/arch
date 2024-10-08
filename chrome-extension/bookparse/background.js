@@ -1,14 +1,3 @@
-// Reset zoom level after processing a book.
-chrome.runtime.onConnect.addListener(function(port) {
-  port.onMessage.addListener(function(message) {
-    chrome.tabs.query({ active: true }, function(tabs) {
-      tabId = tabs[0].id;
-      chrome.tabs.setZoom(tabId, 0);
-    })
-  })
-})
-
-
 function unifiedSearch(query) {
   let title = document.querySelector('#queryText_body') || document.querySelector('#queryText_d') || document.querySelector('.gh-tb.ui-autocomplete-input');
   const searchButton = document.querySelector('.searchBar-hp__btn.wpButton.yellowBtn') || document.querySelector('.wpButton.yellowBtn') || document.querySelector('.btn.btn-prim.gh-spr');

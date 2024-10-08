@@ -1,7 +1,6 @@
 const resetToDefaultState = () => {
-  // Communicate to background service worker.
-  const port = chrome.runtime.connect({name: "zoomState"});
-  port.postMessage({message: 'reset-zoom-level'});
+  // Reset to default zoom level.
+  chrome.runtime.sendMessage({message: 'reset-zoom-level'}, function() {});
 
   // Ensure image is always in default orientation.
   const image = document.querySelector('.card-body');
@@ -167,18 +166,6 @@ const linkBuilder = () => {
 }
 
 
-const rotateImage = (key) => {
-  const image = document.querySelector('.card-body');
-  const direction = {
-    'ArrowUp': 'rotate(0deg)',
-    'ArrowDown': 'rotate(180deg)',
-    'ArrowLeft': 'rotate(270deg)',
-    'ArrowRight': 'rotate(90deg)'
-  }
-  image.style.transform = direction[key];
-}
-
-
 const command = (object) => {
   chrome.runtime.sendMessage({ message: object.instruction, url: object.link, search: object.query }, function() {});
 }
@@ -194,22 +181,38 @@ const unifiedSearch = () => {
 const customHotkeys = (key) => {
   const hotkeys = {
     'c': 'alt-tab',
-    'n': 'reset-zoom-level',
-    'i': 'zoom-in'
+    'i': 'zoom-in',
+    'n': 'reset-zoom-level'
   }
   command({ instruction: hotkeys[key] });
 }
 
 
+const rotateImage = (key) => {
+  const image = document.querySelector('.card-body');
+  const direction = {
+    'ArrowUp': 'rotate(0deg)',
+    'ArrowRight': 'rotate(90deg)',
+    'ArrowDown': 'rotate(180deg)',
+    'ArrowLeft': 'rotate(270deg)'
+  }
+  image.style.transform = direction[key];
+}
+
+
 const customActions = () => {
+  const hotkeys = ['c', 'i', 'n'];
+  const arrowKeys = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'];
   // Custom actions when nothing is focused.
   document.addEventListener('keydown', (e) => {
     if (e.target.nodeName === 'BODY' && !e.ctrlKey) {
-      const k = e.keyCode;
-      if (k >= 37 && k <= 40) {
-        return rotateImage(e.key);
+      const k = e.key;
+      if (hotkeys.includes(k)) {
+        customHotkeys(k);
+      } else if (arrowKeys.includes(k)) {
+        e.preventDefault();
+        rotateImage(k);
       }
-      return customHotkeys(e.key);
     }
   });
 
@@ -370,11 +373,7 @@ waitForElement('.col-md-5.mb-2.react-draggable > .card > .card-body', adjustUser
 
 
 // Run custom QOL event listeners.
-const main = () => {
-  rotateImage();
-  customActions();
-}
-waitForElement('.mb-2 > .form-control.form-control-second-primary', main, false, false);
+waitForElement('.mb-2 > .form-control.form-control-second-primary', customActions, false, false);
 
 
 // Ensure input box for book titles is not in focus.
