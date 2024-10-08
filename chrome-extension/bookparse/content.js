@@ -205,8 +205,11 @@ const customActions = () => {
   // Custom actions when nothing is focused.
   document.addEventListener('keydown', (e) => {
     if (e.target.nodeName === 'BODY' && !e.ctrlKey) {
-      customHotkeys(e.key);
-      rotateImage(e.key);
+      const k = e.keyCode;
+      if (k >= 37 && k <= 40) {
+        return rotateImage(e.key);
+      }
+      return customHotkeys(e.key);
     }
   });
 
@@ -379,7 +382,9 @@ waitForElement('.mb-2 > .form-control.form-control-second-primary', main, false,
 window.onfocus = () => {
   loseFocus();
   const target = document.querySelector('.form-control.form-control-second-primary');
-  if (target && target.value !== null) {
-    if (target.value !== '') { setNativeValue(target, '') };
+  if (target) {
+    if (target.value !== '') {
+      setNativeValue(target, '');
+    }
   }
 }
