@@ -5,6 +5,9 @@ const resetToDefaultState = () => {
   // Ensure image is always in default orientation.
   const image = document.querySelector('.card-body');
   image.style.transform = null;
+
+  // Ensure user interface is always at the same position.
+  adjustUserInterface();
 }
 
 const backgroundJS = (selector, callback) => {
