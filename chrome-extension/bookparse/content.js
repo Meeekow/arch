@@ -234,20 +234,17 @@ const customActions = () => {
           unifiedSearch();
         }
         break;
-      case 'Enter':
-        if (!e.ctrlKey) {
-          e.preventDefault();
-          startListening(true)
-        } else {
-          e.preventDefault();
-          loseFocus();
-        }
+      case ',':
+        e.preventDefault();
+        loseFocus();
         break;
-      case 's':
-        if (e.ctrlKey) {
-          e.preventDefault();
-          startListening();
-        }
+      case 'Enter':
+        e.preventDefault();
+        startListening(true);
+        break;
+      case '.':
+        e.preventDefault();
+        startListening();
         break;
     }
   });
@@ -385,8 +382,6 @@ window.onfocus = () => {
   loseFocus();
   const target = document.querySelector('.form-control.form-control-second-primary');
   if (target) {
-    if (target.value !== '') {
-      setNativeValue(target, '');
-    }
+    if (target.value !== '') { setNativeValue(target, '') };
   }
 }
