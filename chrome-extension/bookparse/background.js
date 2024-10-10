@@ -44,9 +44,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   // Switch focus to amazon/worthpoint/ebay window.
   if (message.message === "alt-tab") {
     chrome.tabs.query({ currentWindow: false }, function(tabs) {
-      const id = tabs[0].windowId;
-      if (id) {
-        chrome.windows.update(id, { focused: true }, function() {});
+      if (tabs.length > 0) {
+        const windowId = tabs[0].windowId;
+        if (windowId) {
+          chrome.windows.update(windowId, { focused: true }, function() {});
+        }
       }
     })
     sendResponse({ reply: "alt-tabbing" });
@@ -55,7 +57,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   // Reset zoom level.
   if (message.message === "reset-zoom-level") {
     chrome.tabs.query({ active: true }, function(tabs) {
-      tabId = tabs[0].id;
+      const tabId = tabs[0].id;
       chrome.tabs.setZoom(tabId, 0);
     })
     sendResponse({ reply: "resetting-zoom-level" });
@@ -64,11 +66,14 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   // Zoom in.
   if (message.message === "zoom-in") {
     chrome.tabs.query({ active: true }, function(tabs) {
-      const tab = tabs[0];
-      chrome.tabs.getZoom(tab.id, function(zoomFactor) {
-        chrome.tabs.setZoom(tab.id, Number(zoomFactor) + 0.125);
-      });
-
+      const tabId = tabs[0].id;
+      chrome.tabs.getZoom(tabId, function(zoomFactor) {
+        if (zoomFactor > 1.25) {
+          chrome.tabs.setZoom(tabId, Number(zoomFactor) + 0.10);
+        } else {
+          chrome.tabs.setZoom(tabId, Number(zoomFactor) + 0.25);
+        }
+      })
     })
     sendResponse({ reply: "zooming-in" });
   }
