@@ -232,6 +232,8 @@ mapkey('e', 'get title from recognition software', function() {
 // Worthpoint || Ebay
 unmapAllExcept(['F', 'P', 'U', 'j', 'k', 'gg', '<Esc>'], /ebay\.com|worthpoint\.com/i);
 
+map('f', 'F', /ebay\.com|worthpoint\.com/i); unmap('F', /ebay\.com|worthpoint\.com/i);
+
 // scroll full page down
 map('d', 'P', /ebay\.com|worthpoint\.com/i); unmap('P', /ebay\.com|worthpoint\.com/i);
 
@@ -249,6 +251,8 @@ mapkey('i', 'focus search bar', function() {
 
 // amazon
 unmapAllExcept(['F', 'P', 'U', 'j', 'k', 'gg', '<Esc>'], /amazon\.com/i);
+
+map('f', 'F', /amazon\.com/i); unmap('F', /amazon\.com/i);
 
 // scroll full page down
 map('d', 'P', /amazon\.com/i); unmap('P', /amazon\.com/i);
