@@ -19,7 +19,8 @@ document.addEventListener('keydown', function(e) {
 function removeFooterElements() {
   const selectors = [
     '.related-landing-page.has-3-items',
-    '.footer-wrapper.container-fluid'
+    '.footer-wrapper.container-fluid',
+    '.container.banner-bottom'
   ];
 
   for (const selector of selectors) {

@@ -9,6 +9,9 @@ const garbageSelectors = [
   '.a-row.a-size-small.a-color-secondary', // Free with Kindle / Join Now
   '.a-row.a-size-base.a-color-secondary .a-color-base', // Available Instantly
   '.a-row.a-size-base.a-color-secondary .a-color-secondary', // Release Date?
+  '.a-cardui', // Books related to your search
+  '[data-cy="title-recipe"] > .a-row.a-spacing-micro', // Sponsored
+  '.a-section.s-pc-attribute-pill-text.s-margin-bottom-none.s-margin-bottom-none.aok-block.s-pc-certification-faceout' // Small Business
 ]
 
 
