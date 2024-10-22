@@ -228,6 +228,11 @@ mapkey('e', 'get title from recognition software', function() {
   });
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
+// click asin link that opens in new tab
+mapkey('f', 'dictate book title', function() {
+  Hints.create("a.link.d-block", Hints.dispatchMouseClick);
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
+
 
 // Worthpoint || Ebay
 unmapAllExcept(['F', 'P', 'U', 'j', 'k', 'gg', '<Esc>'], /ebay\.com|worthpoint\.com/i);
