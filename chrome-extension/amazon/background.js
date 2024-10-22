@@ -1,15 +1,19 @@
 // Move amazon to its own window.
-// chrome.tabs.onCreated.addListener(async function () {
-//   const queryOptions = await { active: true, currentWindow: true };
-//   await chrome.tabs.query(queryOptions, async function (tabs) {
-//     const { id, url, pendingUrl } = await tabs[0];
-//     if (url === "" && pendingUrl.includes('amazon.com')) {
-//       await chrome.windows.create({
-//         tabId: id
-//       })
-//     }
-//   })
-// })
+chrome.tabs.onCreated.addListener(async function () {
+  const queryOptions = await { active: true, currentWindow: true };
+  await chrome.tabs.query(queryOptions, async function (tabs) {
+    const { id, url, pendingUrl } = await tabs[0];
+    if (url === "" && pendingUrl.includes('amazon.com')) {
+      chrome.tabs.query({ currentWindow: false }, function(windows) {
+        const targetWindowId = windows[0].windowId;
+        chrome.tabs.move(id, { windowId: targetWindowId, index: -1 }, function() {});
+        chrome.windows.update(targetWindowId, { focused: true }, function() {
+          chrome.tabs.update(id, { active: true });
+        })
+      })
+    }
+  })
+})
 
 
 // Close all existing tabs and open chrome page to clear cookies and data.
