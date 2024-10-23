@@ -5,11 +5,13 @@ chrome.tabs.onCreated.addListener(async function () {
     const { id, url, pendingUrl } = await tabs[0];
     if (url === "" && pendingUrl.includes('amazon.com')) {
       chrome.tabs.query({ currentWindow: false }, function(windows) {
-        const targetWindowId = windows[0].windowId;
-        chrome.tabs.move(id, { windowId: targetWindowId, index: -1 }, function() {});
-        chrome.windows.update(targetWindowId, { focused: true }, function() {
-          chrome.tabs.update(id, { active: true });
-        })
+        if (windows.length === 3) {
+          const targetWindowId = windows[0].windowId;
+          chrome.tabs.move(id, { windowId: targetWindowId, index: -1 }, function() {});
+          chrome.windows.update(targetWindowId, { focused: true }, function() {
+            chrome.tabs.update(id, { active: true });
+          })
+        }
       })
     }
   })
