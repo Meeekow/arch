@@ -1,4 +1,5 @@
-// Move amazon to its own window.
+let refocusBookparseWindow = false;
+// Move newly opened amazon.com tab to amazon/worthpoint/ebay window.
 chrome.tabs.onCreated.addListener(async function () {
   const queryOptions = await { active: true, currentWindow: true };
   await chrome.tabs.query(queryOptions, async function (tabs) {
@@ -10,11 +11,27 @@ chrome.tabs.onCreated.addListener(async function () {
           chrome.tabs.move(id, { windowId: targetWindowId, index: -1 }, function() {});
           chrome.windows.update(targetWindowId, { focused: true }, function() {
             chrome.tabs.update(id, { active: true });
+            refocusBookparseWindow = true;
           })
         }
       })
     }
   })
+})
+
+
+// Refocus bookparse.com window.
+chrome.tabs.onRemoved.addListener(function() {
+  if (refocusBookparseWindow) {
+    chrome.tabs.query({ currentWindow: false }, function(tabs) {
+      if (tabs.length === 1) {
+        chrome.windows.update(tabs[0].windowId, { focused: true }, function() {
+          chrome.tabs.update(tabs[0].id, { active: true });
+          refocusBookparseWindow = false;
+        })
+      }
+    })
+  }
 })
 
 
@@ -33,27 +50,3 @@ chrome.action.onClicked.addListener(async function () {
   })
 })
 
-
-// let navigateToBookparse = false;
-// Catch copy event in content script and determine if
-// we need to go to worthpoint/ebay or bookparse tab
-// chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-//   if (message.copiedText) {
-//     navigateToBookparse = true;
-//   }
-// });
-
-
-// Switch to worthpoint/ebay once amazon website is closed.
-// chrome.windows.onRemoved.addListener(function(windowid) {
-//   chrome.tabs.query({}, function(tabs) {
-//     const urlToFind = navigateToBookparse ? 'bookparse.com' : 'worthpoint.com';
-//     const targetTab = tabs.find(tab => tab.url.includes(urlToFind));
-//     if (targetTab) {
-//       chrome.windows.update(targetTab.windowId, { focused: true }, function() {
-//         chrome.tabs.update(targetTab.id, { active: true });
-//       })
-//       navigateToBookparse = false;
-//     }
-//   })
-// })
