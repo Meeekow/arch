@@ -5,23 +5,23 @@ git config --global user.email "mynameismeeko@gmail.com"
 git config --global user.name "Meeko"
 
 # mount hdd to copy over some files
-sudo mount /dev/sdc1 /run/media/
+# sudo mount /dev/sdc1 /run/media/
 
 # copy fonts
-sudo mkdir -p /usr/share/fonts/mononoki/
-sudo cp /run/media/fonts/* /usr/share/fonts/mononoki/
+# sudo mkdir -p /usr/share/fonts/mononoki/
+# sudo cp /run/media/fonts/* /usr/share/fonts/mononoki/
 
 # copy wallpaper
 #mkdir -p ~/meeko/{docs,movies,tv-series,wallpapers}
 #cp /run/media/wallpapers/* ~/meeko/wallpapers/
 
 # unmount hdd after copying over some files
-sudo umount /dev/sdc1
+# sudo umount /dev/sdc1
 
 # fix volume issue with pulseaudio
 # https://askubuntu.com/questions/1187401/how-can-i-stop-firefox-from-dropping-volume-on-new-media
-sudo sed -i '61s/;\s//' /etc/pulse/daemon.conf
-sudo sed -i '61s/no/yes/' /etc/pulse/daemon.conf
+# sudo sed -i '61s/;\s//' /etc/pulse/daemon.conf
+# sudo sed -i '61s/no/yes/' /etc/pulse/daemon.conf
 
 # delete the ff. 5 lines if using btrfs instead of ext4
 # configure mount options
@@ -31,16 +31,16 @@ sudo sed -i '9s/relatime/noatime/' /etc/fstab
 sudo tune2fs -O fast_commit /dev/sda2
 
 # configure openresolv
-sudo sed -i -e '$aname_servers="::1 127.0.0.1"' /etc/resolvconf.conf
-sudo sed -i -e '$aresolv_conf_options="trust-ad"' /etc/resolvconf.conf
+# sudo sed -i -e '$aname_servers="::1 127.0.0.1"' /etc/resolvconf.conf
+# sudo sed -i -e '$aresolv_conf_options="trust-ad"' /etc/resolvconf.conf
 
 # configure dnsmasq
-sudo sed -i -e '1s/^/server=8.8.8.8\n/' /etc/dnsmasq.conf
-sudo sed -i -e '2s/^/server=8.8.4.4\n/' /etc/dnsmasq.conf
-sudo sed -i -e '23s/.//' /etc/dnsmasq.conf
-sudo sed -i -e '60s/.//' /etc/dnsmasq.conf
+# sudo sed -i -e '1s/^/server=8.8.8.8\n/' /etc/dnsmasq.conf
+# sudo sed -i -e '2s/^/server=8.8.4.4\n/' /etc/dnsmasq.conf
+# sudo sed -i -e '23s/.//' /etc/dnsmasq.conf
+# sudo sed -i -e '60s/.//' /etc/dnsmasq.conf
 #sudo sed -i -e '123s/#listen-address=/listen-address=::1.127.0.0.1/' /etc/dnsmasq.conf
-sudo sed -i -e '577s/#cache-size=150/cache-size=1000/' /etc/dnsmasq.conf
+# sudo sed -i -e '577s/#cache-size=150/cache-size=1000/' /etc/dnsmasq.conf
 # uncomment the ff. 2 lines if ipv6 is needed
 #sudo sed -i -e '3s/^/server=2606:4700:4700::1111\n/' /etc/dnsmasq.conf
 #sudo sed -i -e '4s/^/server=2606:4700:4700::1001\n/' /etc/dnsmasq.conf
@@ -102,10 +102,13 @@ sed -i '36s/".*"/"black"/' ~/.config/synth-shell/synth-shell-prompt.config
 sed -i '37s/".*"/"85"/' ~/.config/synth-shell/synth-shell-prompt.config
 
 # copy custom bashrc settings to current ~/.bashrc
-cat ~/arch/resource/bash/bashrc >> ~/.bashrc
+# cat ~/arch/resource/bash/bashrc >> ~/.bashrc
 
 # remove synth-shell repo
 rm -rf ~/synth-shell/
+
+# move to center shortcut - Gnome DE
+gsettings set org.gnome.desktop.wm.keybindings move-to-center "['<Super>Space']"
 
 # possible hotfix for slow umount/eject for usb drives
 # after copying a big file
