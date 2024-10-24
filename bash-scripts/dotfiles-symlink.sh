@@ -6,8 +6,12 @@ ln -s ~/arch/dotfiles/kitty.conf ~/.config/kitty/
 mkdir -p ~/.config/nvim/
 ln -s ~/arch/dotfiles/init.vim ~/.config/nvim/
 
-mkdir -p ~/.config/vlc/
-ln -s ~/arch/dotfiles/vlcrc ~/.config/vlc/
+# firefox
+ln -s ~/arch/dotfiles/user.js ~/.mozilla/firefox/*.default-release/
+
+# mpv
+cp -r /usr/share/doc/mpv/ ~/.config/
+ln -s ~/arch/dotfiles/mpv.conf ~/.config/mpv/
 
 #mkdir -p ~/.config/xmobar/
 #ln -s ~/arch/dotfiles/xmobarrc ~/.config/xmobar/
