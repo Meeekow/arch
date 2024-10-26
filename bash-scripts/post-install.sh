@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 
+# install other packages that was not included during install
+sudo pacman -S --needed --noconfirm chromium less
+
 # add git credentials
 git config --global user.email "mynameismeeko@gmail.com"
 git config --global user.name "Meeko"
