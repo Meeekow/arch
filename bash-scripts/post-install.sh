@@ -50,5 +50,5 @@ rm -rf ~/synth-shell/
 # cat ~/arch/resource/bash/bashrc >> ~/.bashrc
 
 # move to center shortcut - Gnome DE
-gsettings set org.gnome.desktop.wm.keybindings move-to-center "['<Super>Space']"
+# gsettings set org.gnome.desktop.wm.keybindings move-to-center "['<Super>Space']"
 
