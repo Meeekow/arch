@@ -10,8 +10,8 @@ ln -s ~/arch/dotfiles/init.vim ~/.config/nvim/
 ln -s ~/arch/dotfiles/user.js ~/.mozilla/firefox/*.default-release/
 
 # mpv
-cp -r /usr/share/doc/mpv/ ~/.config/
-ln -s ~/arch/dotfiles/mpv.conf ~/.config/mpv/
+# cp -r /usr/share/doc/mpv/ ~/.config/
+# ln -s ~/arch/dotfiles/mpv.conf ~/.config/mpv/
 
 #mkdir -p ~/.config/xmobar/
 #ln -s ~/arch/dotfiles/xmobarrc ~/.config/xmobar/
