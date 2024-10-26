@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Mount point for NTFS drive.
-sudo mkdir -p /home/media/
+sudo mkdir -p /home/jellyfin/
 
 # Jellyfin
 sudo pacman -S --needed --noconfirm jellyfin-server jellyfin-web tailscale ntfs-3g

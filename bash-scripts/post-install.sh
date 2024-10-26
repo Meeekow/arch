@@ -2,7 +2,7 @@
 
 
 # install other packages that was not included during install
-sudo pacman -S --needed --noconfirm chromium less
+sudo pacman -S --needed --noconfirm chromium less qbittorrent
 
 # add git credentials
 git config --global user.email "mynameismeeko@gmail.com"
