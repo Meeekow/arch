@@ -4,6 +4,14 @@
 # install other packages that was not included during install
 sudo pacman -S --needed --noconfirm chromium less qbittorrent
 
+# install paru
+cd ~ && git clone https://aur.archlinux.org/paru-bin.git
+cd ~/paru-bin/ && makepkg -rsi --noconfirm
+cd ~ && rm -Rf ~/paru-bin/
+
+# install protonvpn
+paru -S --needed proton-vpn-gtk-app
+
 # add git credentials
 git config --global user.email "mynameismeeko@gmail.com"
 git config --global user.name "Meeko"
