@@ -11,6 +11,7 @@ ln -s ~/arch/dotfiles/user.js ~/.mozilla/firefox/*.default-release/
 
 # mpv
 # cp -r /usr/share/doc/mpv/ ~/.config/
+# rm -rf ~/.config/mpv/mpv.conf
 # ln -s ~/arch/dotfiles/mpv.conf ~/.config/mpv/
 
 #mkdir -p ~/.config/xmobar/
