@@ -17,3 +17,6 @@ sudo systemctl enable tailscaled.service
 
 # Start Tailscale service.
 sudo systemctl start tailscaled.service
+
+# Install using paru/yay.
+# paru -S --needed jellyfin-media-player
