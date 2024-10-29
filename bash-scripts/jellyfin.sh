@@ -1,16 +1,20 @@
 #!/usr/bin/env bash
 
+# Install needed packages.
+sudo pacman -S --needed --noconfirm docker docker-compose tailscale ntfs-3g
+
+# Enable/start docker.service
+sudo systemctl enable docker.socket
+sudo systemctl start docker.socket
+
 # Mount point for NTFS drive.
-sudo mkdir -p /home/jellyfin/
+sudo mkdir -p /media/jellyfin{cache,config,mnt}
 
-# Jellyfin
-sudo pacman -S --needed --noconfirm jellyfin-server jellyfin-web tailscale ntfs-3g
+# Copy docker-compose.yml.
+sudo cp /home/rara/arch/resource/docker/docker-compose.yml /media/jellyfin
 
-# Enable Jellyfin at boot.
-sudo systemctl enable jellyfin.service
-
-# Start Jellyfin service.
-sudo systemctl start jellyfin.service
+# Pull image for Jellyfin.
+sudo docker pull jellyfin/jellyfin
 
 # Enable Tailscale at boot.
 sudo systemctl enable tailscaled.service
