@@ -8,7 +8,7 @@ sudo systemctl enable docker.socket
 sudo systemctl start docker.socket
 
 # Mount point for NTFS drive.
-sudo mkdir -p /media/jellyfin{cache,config,mnt}
+sudo mkdir -p /media/jellyfin/{cache,config,mnt}
 
 # Copy docker-compose.yml.
 sudo cp /home/rara/arch/resource/docker/docker-compose.yml /media/jellyfin
