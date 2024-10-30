@@ -63,3 +63,7 @@ rm -rf ~/synth-shell/
 # move to center shortcut - Gnome DE
 # gsettings set org.gnome.desktop.wm.keybindings move-to-center "['<Super>Space']"
 
+# adjust/control volume
+# https://askubuntu.com/questions/97936/terminal-command-to-set-audio-volume
+pactl set-sink-volume @DEFAULT_SINK@ 50%
+
