@@ -20,7 +20,7 @@ git config --global user.name "Meeko"
 # configure mount options
 sudo sed -i '6s/relatime/noatime,commit=120/' /etc/fstab
 #sudo sed -i '9s/relatime/noatime,commit=120/' /etc/fstab
-sudo sed -i '9s/relatime/noatime/' /etc/fstab
+sudo sed -i '12s/relatime/noatime/' /etc/fstab
 sudo tune2fs -O fast_commit /dev/sda2
 
 # configure NetworkManager
