@@ -57,13 +57,16 @@ sed -i '37s/".*"/"85"/' ~/.config/synth-shell/synth-shell-prompt.config
 # remove synth-shell repo
 rm -rf ~/synth-shell/
 
-# copy custom bashrc settings to current ~/.bashrc
-# cat ~/arch/resource/bash/bashrc >> ~/.bashrc
-
 # move to center shortcut - Gnome DE
 # gsettings set org.gnome.desktop.wm.keybindings move-to-center "['<Super>Space']"
 
+# copy custom bashrc settings to current ~/.bashrc
+# cat ~/arch/resource/bash/bashrc >> ~/.bashrc
+
+# update git config
+# sed -i "7s/github.com/$(sed -n '2p' /media/jellyfin/mnt/t.txt)@github.com/" /home/rara/arch/.git/config
+
 # adjust/control volume
 # https://askubuntu.com/questions/97936/terminal-command-to-set-audio-volume
-pactl set-sink-volume @DEFAULT_SINK@ 50%
+# pactl set-sink-volume @DEFAULT_SINK@ 50%
 
