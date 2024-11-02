@@ -85,7 +85,7 @@ const startListening = async (isPartialTextReplace = false) => {
 
   recognition.addEventListener('audiostart', () => {
     transcribeButton.innerText = 'Transcribing';
-    transcribeButton.style.cssText = 'width: 100px; position: relative; left: 42%; top: 8px; transform: translateX(-50%); background-color: #FAA0A0; border-style: none;';
+    transcribeButton.style.cssText = 'width: 105px; position: relative; left: 42%; top: 8px; transform: translateX(-50%); background-color: #FAA0A0; border-style: none;';
   });
 
   recognition.addEventListener('audioend', () => {
@@ -276,15 +276,12 @@ waitForElement('.navigation-btn.ms-auto', (element) => { element.click() }, fals
 
 // Change image box position and adjust image dimensions.
 const adjustImage = (element) => {
-  element.style.cssText = 'overflow: hidden; transform: translate(50px, 16.5px);';
-  element.querySelector('img').style.cssText = 'height: 560px; width: 750px;';
-  document.querySelector('.table-responsive').style.transform = 'translate(62px, 25px)';
+  element.style.cssText = 'position: absolute; overflow: hidden; transform: translate(12.5px, -20px);';
+  element.querySelector('img').style.cssText = 'height: 550px; width: 750px;';
+  document.querySelector('.col-md-6.mb-4').style.cssText = 'position: absolute; transform: translate(850px, 0px);';
+  document.querySelector('.mini-navbar.ms-auto').style.cssText = 'position: absolute; list-style: none; padding: 0px; transform: translate(1125px, 995px);';
 }
 waitForElement('.col-auto.mb-2', adjustImage, false, true);
-
-
-// Reposition box for 'Not Complete', 'Undecided', 'Not Complete Multi Photo'.
-waitForElement('.mini-navbar.ms-auto', (element) => { element.style.transform = 'translate(-130px, 0px)' }, false, false);
 
 
 // Reposition recognition software results interface.
@@ -295,12 +292,10 @@ const adjustRecognitionSoftwareInterface = (element) => {
       const target = document.querySelector(selector);
       if (target !== null) { target.remove() };
     });
-
-    element.style.cssText = 'background-color: rgb(15, 15, 15); position: absolute; width: 696px; transform: translate(874px, -675.5px);'; // Recognition software results card.
-
+    element.style.cssText = 'background-color: rgb(15, 15, 15);'; // Recognition software results card.
     // Set height for recognition results card.
     const setHeight = document.querySelector('.sm-card > div');
-    if (setHeight !== null) { setHeight.style.maxHeight = '450px' };
+    if (setHeight !== null) { setHeight.style.maxHeight = '850px' };
   }
 }
 waitForElement('.sm-card', adjustRecognitionSoftwareInterface, false, true);
@@ -366,7 +361,7 @@ waitForElement('.sm-card.d-flex', highlightSalesRank, true, true);
 
 // Reposition and adjust user interface box width.
 const adjustUserInterface = (element) => {
-  document.querySelector('.col-md-5.mb-2.react-draggable').style.cssText = 'position: absolute; width: 720px; right: -10px; bottom: 0px; z-index: 1; transform: translate(-37.5px, -20px);'; // User interface card position.
+  document.querySelector('.col-md-5.mb-2.react-draggable').style.cssText = 'position: absolute; width: 810px; transform: translate(11px, 540px);';
   document.querySelector('.col-md-5.mb-2.react-draggable > label').style.visibility = 'hidden'; // 'Drag Me' label on top of the card.
 }
 waitForElement('.col-md-5.mb-2.react-draggable > .card > .card-body', adjustUserInterface, false, false);
