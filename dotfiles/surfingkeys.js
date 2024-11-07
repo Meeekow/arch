@@ -157,7 +157,7 @@ mapkey('l', 'valuable book', function() {
   const el = document.querySelector('.form-control.form-control-second-primary');
   el.value = ASIN;
   triggerEvent(el, 'input');
-  Hints.create('.btn-second-primary', Hints.dispatchMouseClick);
+  document.querySelector('.btn-second-primary').click();
   Clipboard.write(' ');
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
@@ -167,7 +167,7 @@ mapkey('w', 'medium valuable', function() {
   const el = document.querySelector('.form-control.form-control-second-primary');
   el.value = ASIN;
   triggerEvent(el, 'input');
-  Hints.create('.btn-second-primary', Hints.dispatchMouseClick);
+  document.querySelector('.btn-second-primary').click();
   Clipboard.write(' ');
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
@@ -179,9 +179,6 @@ mapkey('r', 'show hints for Use ASIN button', function() {
 // focus input box for book details like title, etc.
 mapkey('t', 'focus title input box', function() {
   Hints.create(".mb-2 > .form-control.form-control-second-primary", Hints.dispatchMouseClick);
-  // Hints.create(".form-nice-control.link-title-input", function(element) {
-  //   Front.showEditor(element);
-  // });
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // dictate book title
@@ -212,7 +209,7 @@ mapkey('a', 'paste clipboard content, hit submit button', function() {
     Clipboard.read( (response) => { el.value = response.data });
   }
   triggerEvent(el, 'input');
-  Hints.create('.btn-second-primary', Hints.dispatchMouseClick);
+  document.querySelector('.btn-second-primary').click();
   Clipboard.write(' ');
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
