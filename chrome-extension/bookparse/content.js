@@ -361,8 +361,11 @@ waitForElement('.sm-card.d-flex', highlightSalesRank, true, true);
 
 // Reposition and adjust user interface box width.
 const adjustUserInterface = (element) => {
-  document.querySelector('.col-md-5.mb-2.react-draggable').style.cssText = 'position: absolute; width: 810px; transform: translate(11px, 540px);';
+  const title = document.querySelectorAll('.sm-label')[5];
+  if (title) { title.remove() };
+  document.querySelector('.col-md-5.mb-2.react-draggable').style.cssText = 'position: absolute; width: 810px; transform: translate(11px, 573px);';
   document.querySelector('.col-md-5.mb-2.react-draggable > label').style.visibility = 'hidden'; // 'Drag Me' label on top of the card.
+  document.querySelectorAll('.form-control.form-control-second-primary')[1].style.cssText = "position: absolute; transform: translate(-16px, -325px);";
 }
 waitForElement('.col-md-5.mb-2.react-draggable > .card > .card-body', adjustUserInterface, false, false);
 
