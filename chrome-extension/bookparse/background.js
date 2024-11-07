@@ -68,11 +68,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     chrome.tabs.query({ active: true }, function(tabs) {
       const tabId = tabs[0].id;
       chrome.tabs.getZoom(tabId, function(zoomFactor) {
-        if (zoomFactor > 1.25) {
-          chrome.tabs.setZoom(tabId, Number(zoomFactor) + 0.10);
-        } else {
-          chrome.tabs.setZoom(tabId, Number(zoomFactor) + 0.25);
-        }
+        chrome.tabs.setZoom(tabId, 2);
       })
     })
     sendResponse({ reply: "zooming-in" });
