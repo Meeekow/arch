@@ -11,7 +11,7 @@ sudo systemctl start docker.socket
 sudo mkdir -p /media/jellyfin/{cache,config,mnt}
 
 # Copy docker-compose.yml.
-sudo ln -s /home/rara/arch/resource/docker/docker-compose.yml /media/jellyfin
+sudo ln -s $HOME/arch/resource/docker/docker-compose.yml /media/jellyfin
 
 # Pull image for Jellyfin.
 sudo docker pull jellyfin/jellyfin

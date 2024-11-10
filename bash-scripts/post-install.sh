@@ -57,6 +57,9 @@ sed -i '37s/".*"/"85"/' ~/.config/synth-shell/synth-shell-prompt.config
 # remove synth-shell repo
 rm -rf ~/synth-shell/
 
+# execute next script
+sh $HOME/arch/bash-scripts/jellyfin.sh
+
 # move to center shortcut - Gnome DE
 # gsettings set org.gnome.desktop.wm.keybindings move-to-center "['<Super>Space']"
 
