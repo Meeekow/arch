@@ -48,6 +48,9 @@ user_pref("ui.key.menuAccessKeyFocuses", false);
 user_pref("browser.link.open_newwindow", 2);
 // Confirm before quitting with Ctrl+Q
 user_pref("browser.warnOnQuitShortcut", false);
+// Show an image preview when you hover on a tab
+user_pref("browser.tabs.hoverPreview.showThumbnails", false);
+
 
 /* Language ***/
 // Check spelling as you type
@@ -69,6 +72,12 @@ user_pref("media.eme.enabled", true);
 user_pref("media.gmp-widevinecdm.visible", true);
 user_pref("media.gmp-widevinecdm.enabled", true);
 ***/
+
+// Performance
+// Use recommended performance settings
+user_pref("browser.preferences.defaultPerformanceSettings.enabled", false);
+// Use hardware acceleration when available
+user_pref("layers.acceleration.disabled", true);
 
 // Browsing
 // Disable always show scrollbars
@@ -109,15 +118,20 @@ user_pref("browser.newtabpage.activity-stream.section.highlights.includeVisited"
 
 
 /* Search ***/
-// Search Suggestions
+// Show search suggestions
 user_pref("browser.search.suggest.enabled", false);
+// Show trending search suggestions
+user_pref("browser.urlbar.suggest.trending", false);
+// Show recent searches
 user_pref("browser.urlbar.showSearchSuggestionsFirst", false);
 
 
 /* Privacy & Security ***/
 // Enhanced Tracking Protection
 user_pref("browser.contentblocking.category", "standard");
-// Send websites a "Do Not Track" signal
+// Tell websites not to sell or share my data
+user_pref("privacy.globalprivacycontrol.enabled", true);
+// Send websites a "Do Not Track" request
 user_pref("privacy.donottrackheader.enabled", true);
 // Logins and Passwords
 user_pref("signon.rememberSignons", true);
