@@ -1,13 +1,13 @@
 #!/bin/bash
 
-mkdir -p ~/.config/kitty/
-ln -s ~/arch/dotfiles/kitty.conf ~/.config/kitty/
+mkdir -p $HOME/.config/kitty/
+ln -s $HOME/arch/dotfiles/kitty.conf $HOME/.config/kitty/
 
-mkdir -p ~/.config/nvim/
-ln -s ~/arch/dotfiles/init.vim ~/.config/nvim/
+mkdir -p $HOME/.config/nvim/
+ln -s $HOME/arch/dotfiles/init.vim $HOME/.config/nvim/
 
 # firefox
-ln -s ~/arch/dotfiles/user.js ~/.mozilla/firefox/*.default-release/
+ln -s $HOME/arch/dotfiles/user.js $HOME/.mozilla/firefox/*.default-release/
 
 # execute next script
 sh $HOME/arch/bash-scripts/post-install.sh
