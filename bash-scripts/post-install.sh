@@ -41,7 +41,9 @@ sudo systemctl enable --now tailscaled
 # connect to tailscale network
 # tailscale up --accept-dns=false
 
-
+# https://discussion.fedoraproject.org/t/latest-gnome-apps-not-working-in-fedora-41-using-wayland/134807/14
+# hotfix for stutter and jitter
+# echo export GSK_RENDERER=gl | sudo tee /etc/profile.d/gtk_renderer.sh > /dev/null
 # ARCH LINUX
 # install other packages that was not included during install
 # sudo pacman -S --needed --noconfirm chromium less qbittorrent wireguard-tools systemd-resolvconf
