@@ -1,27 +1,65 @@
 #!/usr/bin/env bash
 
 
-# install other packages that was not included during install
-sudo pacman -S --needed --noconfirm chromium less qbittorrent wireguard-tools systemd-resolvconf
-
-# enable setting dns config
-sudo systemctl enable --now systemd-resolved
-
-# install paru
-cd ~ && git clone https://aur.archlinux.org/paru-bin.git
-cd ~/paru-bin/ && makepkg -rsi --noconfirm
-cd ~ && rm -Rf ~/paru-bin/
-
 # add git credentials
 git config --global user.email "mynameismeeko@gmail.com"
 git config --global user.name "Meeko"
 
+
+# FEDORA
+# reboot after updating
+sudo dnf update -y
+
+# install nvidia proprietary driver
+sudo dnf install akmod-nvidia
+sudo dnf install xorg-x11-drv-nvidia-cuda
+# wait for 5 mins and see if akmod compiles
+# reboot if it compiles
+modinfo -F version nvidia
+
+#after reboot install packages
+sudo dnf install google-chrome-stable kitty neovim qbittorrent qbittorrent xclip
+
+# install docker and docker compose
+sudo dnf -y install dnf-plugins-core
+sudo dnf-3 config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# enable docker
+sudo systemctl enable --now docker
+
+# reload daemons
+systemctl daemon-reload
+
+# install tailscale
+sudo dnf config-manager --add-repo https://pkgs.tailscale.com/stable/fedora/tailscale.repo
+sudo dnf install tailscale
+
+# enable tailscale
+sudo systemctl enable --now tailscaled
+
+# connect to tailscale network
+# tailscale up --accept-dns=false
+
+
+# ARCH LINUX
+# install other packages that was not included during install
+# sudo pacman -S --needed --noconfirm chromium less qbittorrent wireguard-tools systemd-resolvconf
+
+# enable setting dns config
+# sudo systemctl enable --now systemd-resolved
+
+# install paru
+# cd ~ && git clone https://aur.archlinux.org/paru-bin.git
+# cd ~/paru-bin/ && makepkg -rsi --noconfirm
+# cd ~ && rm -Rf ~/paru-bin/
+
 # delete the ff. 5 lines if using btrfs instead of ext4
 # configure mount options
-sudo sed -i '6s/relatime/noatime,commit=120/' /etc/fstab
-#sudo sed -i '9s/relatime/noatime,commit=120/' /etc/fstab
-sudo sed -i '12s/relatime/noatime/' /etc/fstab
-sudo tune2fs -O fast_commit /dev/sda2
+# sudo sed -i '6s/relatime/noatime,commit=120/' /etc/fstab
+# sudo sed -i '9s/relatime/noatime,commit=120/' /etc/fstab
+# sudo sed -i '12s/relatime/noatime/' /etc/fstab
+# sudo tune2fs -O fast_commit /dev/sda2
 
 # configure NetworkManager
 sudo touch /etc/NetworkManager/conf.d/rc-manager.conf
@@ -29,8 +67,8 @@ echo "[main]" | sudo tee -a /etc/NetworkManager/conf.d/rc-manager.conf > /dev/nu
 echo "rc-manager=resolvconf" | sudo tee -a /etc/NetworkManager/conf.d/rc-manager.conf > /dev/null
 
 # set pacman hook for systemd-boot
-sudo mkdir -p /etc/pacman.d/hooks/
-sudo cp ~/arch/resource/systemd/100-systemd-boot.hook /etc/pacman.d/hooks/
+# sudo mkdir -p /etc/pacman.d/hooks/
+# sudo cp ~/arch/resource/systemd/100-systemd-boot.hook /etc/pacman.d/hooks/
 
 # install vim-plug
 cd ~/
@@ -58,7 +96,7 @@ sed -i '37s/".*"/"85"/' ~/.config/synth-shell/synth-shell-prompt.config
 rm -rf ~/synth-shell/
 
 # execute next script
-sh $HOME/arch/bash-scripts/jellyfin.sh
+# sh $HOME/arch/bash-scripts/jellyfin.sh
 
 # move to center shortcut - Gnome DE
 # gsettings set org.gnome.desktop.wm.keybindings move-to-center "['<Super>Space']"
