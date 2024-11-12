@@ -17,8 +17,11 @@ sudo dnf install xorg-x11-drv-nvidia-cuda
 # reboot if it compiles
 modinfo -F version nvidia
 
+# install media codecs
+sudo dnf group install multimedia
+
 #after reboot install packages
-sudo dnf install google-chrome-stable kitty neovim qbittorrent qbittorrent xclip
+sudo dnf install google-chrome-stable kitty neovim qbittorrent wireguard-tools
 
 # install docker and docker compose
 sudo dnf -y install dnf-plugins-core
@@ -32,7 +35,7 @@ sudo systemctl enable --now docker
 systemctl daemon-reload
 
 # install tailscale
-sudo dnf config-manager --add-repo https://pkgs.tailscale.com/stable/fedora/tailscale.repo
+# sudo dnf config-manager --add-repo https://pkgs.tailscale.com/stable/fedora/tailscale.repo
 sudo dnf install tailscale
 
 # enable tailscale
