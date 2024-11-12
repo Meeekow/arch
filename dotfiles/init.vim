@@ -30,7 +30,7 @@ set number
 set relativenumber
 set title
 set scrolloff=15
-set clipboard=unnamed,unnamedplus
+set clipboard=unnamedplus
 set guicursor=a:blinkon50
 set noswapfile
 set nobackup
