@@ -6,7 +6,7 @@ git config --global user.email "mynameismeeko@gmail.com"
 git config --global user.name "Meeko"
 
 # install other packages that was not included during install
-sudo pacman -S --needed --noconfirm chromium less qbittorrent wireguard-tools systemd-resolvconf
+sudo pacman -S --needed --noconfirm chromium less power-profiles-daemon qbittorrent systemd-resolvconf wireguard-tools
 
 # enable setting dns config
 sudo systemctl enable --now systemd-resolved
