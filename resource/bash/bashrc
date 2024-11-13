@@ -23,11 +23,14 @@ alias vlc='vlc --fullscreen'
 alias qmkr='cd $HOME/qmk_firmware && qmk flash -kb ferris/sweep -km default -e CONVERT_TO=promicro_rp2040 -bl uf2-split-right'
 alias qmkl='cd $HOME/qmk_firmware && qmk flash -kb ferris/sweep -km default -e CONVERT_TO=promicro_rp2040 -bl uf2-split-left'
 
-alias jfo='sudo mount /dev/sdc2 /media/jellyfin/mnt && cd /media/jellyfin/ && sudo docker compose up -d'
-alias jfx='cd /media/jellyfin/ && sudo docker compose down && cd && sudo umount /dev/sdc2'
+alias jfu='sudo mount /dev/sdc2 /media/jellyfin/mnt && cd /media/jellyfin/ && sudo docker compose up -d'
+alias jfd='cd /media/jellyfin/ && sudo docker compose down && sudo umount /dev/sdc2'
 
 alias wgu='sudo wg-quick up us'
 alias wgd='sudo wg-quick down us'
+
+alias tsu='sudo tailscale up'
+alias tsd='sudo tailscale down'
 
 salary () {
   python -c "print ('{:,.2f}'.format($1 * 4 * 40 * 50))"
