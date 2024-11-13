@@ -49,6 +49,52 @@ const loseFocus = () => {
 }
 
 
+const findVisibleButton = () => {
+  let callback = (entries, observer) => {
+    entries.forEach((entry) => {
+      const target = entry.target;
+      if (entry.isIntersecting){
+        target.classList.add('buttonVisible');
+      } else {
+        target.classList.remove('buttonVisible');
+      }
+    })
+  }
+
+  let observer = new IntersectionObserver(callback, {
+    threshold: [1]
+  })
+
+  const buttons = document.querySelectorAll('.btn.btn-primary');
+  for (const b of buttons) {
+    observer.observe(b);
+  }
+}
+
+
+const findVisibleCard = () => {
+  let callback = (entries, observer) => {
+    entries.forEach((entry) => {
+      const target = entry.target;
+      if (entry.isIntersecting){
+        target.querySelector('button').classList.add('cardVisible');
+      } else {
+        target.querySelector('button').classList.remove('cardVisible');
+      }
+    })
+  }
+
+  let observer = new IntersectionObserver(callback, {
+    threshold: [0.5]
+  })
+
+  const cards = document.querySelectorAll('.sm-card.d-flex');
+  for (const c of cards) {
+    observer.observe(c);
+  }
+}
+
+
 const setNativeValue = (element, value) => {
   let lastValue = element.value;
   element.value = value;
@@ -355,6 +401,8 @@ const highlightSalesRank = (element) => {
       }
     });
   }
+  findVisibleButton();
+  findVisibleCard();
 }
 waitForElement('.sm-card.d-flex', highlightSalesRank, true, true);
 
