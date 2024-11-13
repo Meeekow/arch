@@ -42,7 +42,7 @@ settings.modeAfterYank = "Normal";
 settings.smoothScroll = true;
 
 // scroll friction
-settings.scrollFriction = 1;
+settings.scrollFriction = 0;
 
 // scroll amount
 settings.scrollStepSize = 100;
@@ -173,9 +173,9 @@ mapkey('w', 'medium valuable', function() {
 
 // show hints for 'Use ASIN button'
 mapkey('r', 'show hints for Use ASIN button', function() {
-  Hints.create(".btn.btn-primary", function(element) {
+  Hints.create('.buttonVisible.cardVisible', function(element) {
     element.click();
-  });
+  })
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // focus input box for book details like title, etc.
