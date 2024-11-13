@@ -68,8 +68,8 @@ sed -i '37s/".*"/"85"/' ~/.config/synth-shell/synth-shell-prompt.config
 # remove synth-shell repo
 rm -rf ~/synth-shell/
 
-# move to center shortcut - Gnome DE
-# gsettings set org.gnome.desktop.wm.keybindings move-to-center "['<Super>Space']"
+# update git config
+# sed -i "7s/github.com/$(sed -n '2p' /media/jellyfin/mnt/t.txt)@github.com/" /home/rara/arch/.git/config
 
 # adjust/control volume
 # pactl set-sink-volume @DEFAULT_SINK@ 50%
