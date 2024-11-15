@@ -96,40 +96,41 @@ function triggerEvent(obj, event) {
   return obj ? obj.dispatchEvent(evt) : false;
 }
 
-// check if element is in viewport
-function inViewport(element) {
-  const { top } = element.getBoundingClientRect();
-  const { clientHeight } = document.documentElement.querySelector('.sm-card > div');
-
-  if (top > 0 && top < clientHeight) {
-    return true;
-  }
-
-  return false;
-}
-
-// go to next or previous element
+// scroll to next/previous element
 function scrollUpOrDown(action) {
-  const results = document.querySelectorAll('.sm-card.d-flex');
-  let inViewportState = [];
-  results.forEach((element) => {
-    const state = inViewport(element);
-    inViewportState.push(state);
+  const cards = document.querySelectorAll('.sm-card.d-flex');
+  const callback = ((entries, io) => {
+    let state = [];
+
+    entries.forEach((entry) => {
+      state.push(entry.isIntersecting)
+      io.disconnect();
+    })
+
+    const resultsLength = state.length - 1;
+
+    let index = action === 'down' ? state.lastIndexOf(true)
+                                  : state.indexOf(true);
+
+    const isAlignToTop = action === 'down' ? false : true;
+
+    if (index === 0 || index === resultsLength) {
+      cards[index].scrollIntoView(isAlignToTop);
+    } else if (action === "down" && index + 1 <= resultsLength) {
+      ++index;
+    } else if (action === "up" && index - 1 > -1) {
+      --index;
+    }
+
+    cards[index].scrollIntoView(isAlignToTop);
   })
 
-  const isAlignToTop = action === "down" ? false : true;
-  let index = action === "down" ? inViewportState.lastIndexOf(true)
-                                : inViewportState.indexOf(true);
-  const resultsLength = results.length - 1;
+  const options = ({threshold: 0.50});
+  const observer = new IntersectionObserver(callback, options);
 
-  if (index === 0 || index === resultsLength) {
-    return;
-  } else if (action === "down" && index + 1 <= resultsLength) {
-    ++index;
-  } else if (action === "up" && index - 1 > -1) {
-    --index;
-  }
-  results[index].scrollIntoView(isAlignToTop);
+  cards.forEach((c) => {
+    observer.observe(c);
+  })
 }
 
 mapkey('d', 'scroll down', function() {
@@ -143,31 +144,30 @@ mapkey('u', 'scroll up', function() {
 // switch between not complete and undecided
 mapkey('b', 'switch between not complete and undecided', function() {
   const url = location.href;
-  const state = document.querySelectorAll('a.mini-navbar-item');
-  if (url.indexOf('undecided') > -1) {
-    state[0].click();
-  } else {
-    state[1].click();
-  }
+  const taskButton = document.querySelectorAll('a.mini-navbar-item');
+  url.indexOf('undecided') > -1 ? taskButton[0].click()
+                                : taskButton[1].click();
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // enter assigned ASIN is book is valuable
 mapkey('l', 'valuable book', function() {
   const ASIN = '0600621987';
-  const el = document.querySelector('.form-control.form-control-second-primary');
-  el.value = ASIN;
-  triggerEvent(el, 'input');
-  document.querySelector('.btn-second-primary').click();
+  const isbnBox = document.querySelector('.form-control.form-control-second-primary');
+  const submitButton = document.querySelector('.btn-second-primary');
+  isbnBox.value = ASIN;
+  triggerEvent(isbnBox, 'input');
+  submitButton.click();
   Clipboard.write(' ');
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // enter assigned ASIN is book is valuable
 mapkey('w', 'medium valuable', function() {
   const ASIN = 'B0006XVY3S';
-  const el = document.querySelector('.form-control.form-control-second-primary');
-  el.value = ASIN;
-  triggerEvent(el, 'input');
-  document.querySelector('.btn-second-primary').click();
+  const isbnBox = document.querySelector('.form-control.form-control-second-primary');
+  const submitButton = document.querySelector('.btn-second-primary');
+  isbnBox.value = ASIN;
+  triggerEvent(isbnBox, 'input');
+  submitButton.click();
   Clipboard.write(' ');
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
@@ -178,40 +178,35 @@ mapkey('r', 'show hints for Use ASIN button', function() {
   })
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
-// focus input box for book details like title, etc.
-mapkey('t', 'focus title input box', function() {
-  Hints.create(".mb-2 > .form-control.form-control-second-primary", Hints.dispatchMouseClick);
+// focus book title input box
+mapkey('t', 'focus book title input box', function() {
+  const bookTitleBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
+  bookTitleBox.focus();
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // dictate book title
 mapkey('s', 'dictate book title', function() {
-  const button = document.querySelector('#start-dictation-microphone');
-  button.click();
+  const startDictateButton = document.querySelector('#start-dictation-microphone');
+  startDictateButton.click();
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
-// click undecided button and toggle hints for dropdown
-mapkey('h', 'click undecided button and toggle hints for dropdown', function() {
-  const url = window.location.href;
-  const clickReasonButton = () => {
-    document.querySelector('.dropdown-body li > button').click();
-  }
-  if (url.indexOf('notcomplete') > -1) { // 'Not Complete' tab.
-    document.querySelector('.btn-outline.mb-2').click();
-    setTimeout(clickReasonButton, 100);
-  } else { // 'Undecided' tab.
-    document.querySelector('.btn.mb-2').click();
-    setTimeout(clickReasonButton, 100)
-  }
+// click reject and reason button
+mapkey('h', 'click reject and reason button', function() {
+  const rejectButton = document.querySelector('.btn.mb-2') || document.querySelector('.btn-outline.mb-2');
+  const rejectReasonButton = document.querySelector('.dropdown-body li > button');
+  rejectButton.click();
+  rejectReasonButton.click();
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // ASIN box
 mapkey('a', 'paste clipboard content, hit submit button', function() {
-  const el = document.querySelector('.form-control.form-control-second-primary');
-  if (el.value.length === 0) {
-    Clipboard.read( (response) => { el.value = response.data });
+  const isbnBox = document.querySelector('.form-control.form-control-second-primary');
+  const submitButton = document.querySelector('.btn-second-primary');
+  if (isbnBox.value.length === 0) {
+    Clipboard.read( (response) => { isbnBox.value = response.data });
   }
-  triggerEvent(el, 'input');
-  document.querySelector('.btn-second-primary').click();
+  triggerEvent(isbnBox, 'input');
+  submitButton.click();
   Clipboard.write(' ');
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
@@ -228,7 +223,7 @@ mapkey('e', 'get title from recognition software', function() {
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // click asin link that opens in new tab
-mapkey('f', 'dictate book title', function() {
+mapkey('f', 'click asin link that opens in new tab', function() {
   Hints.create("a.link.d-block", Hints.dispatchMouseClick);
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
