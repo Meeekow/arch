@@ -26,8 +26,8 @@ alias qmkl='cd $HOME/qmk_firmware && qmk flash -kb ferris/sweep -km default -e C
 alias jfu='sudo mount /dev/sdc2 /media/jellyfin/mnt && cd /media/jellyfin/ && sudo docker compose up -d'
 alias jfd='cd /media/jellyfin/ && sudo docker compose down && sudo umount /dev/sdc2'
 
-alias wgu='sudo wg-quick up us'
-alias wgd='sudo wg-quick down us'
+alias wgu='sudo wg-quick up $1'
+alias wgd='sudo wg-quick down $1'
 
 alias tsu='sudo tailscale up'
 alias tsd='sudo tailscale down'
