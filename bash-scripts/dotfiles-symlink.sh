@@ -10,5 +10,5 @@ ln -s $HOME/arch/dotfiles/init.vim $HOME/.config/nvim/
 ln -s $HOME/arch/dotfiles/user.js $HOME/.mozilla/firefox/*.default-release/
 
 # execute next script
-sh $HOME/arch/bash-scripts/post-install.sh
+bash $HOME/arch/bash-scripts/post-install.sh
 
