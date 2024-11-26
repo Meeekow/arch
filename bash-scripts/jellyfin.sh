@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 
 # Install needed packages.
-sudo pacman -S --needed --noconfirm docker docker-compose tailscale ntfs-3g
+sudo pacman -S --needed --noconfirm docker docker-compose nvidia-container-toolkit tailscale ntfs-3g
 
 # Enable/start docker.service
 sudo systemctl enable docker.socket
 sudo systemctl start docker.socket
+
+# Configure the container runtime by using the nvidia-ctk command
+sudo nvidia-ctk runtime configure --runtime=docker
+sudo systemctl restart docker
 
 # Mount point for NTFS drive.
 sudo mkdir -p /media/jellyfin/{cache,config,mnt}
