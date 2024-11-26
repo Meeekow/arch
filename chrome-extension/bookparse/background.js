@@ -56,7 +56,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
   // Reset zoom level.
   if (message.message === "reset-zoom-level") {
-    chrome.tabs.query({ active: true }, function(tabs) {
+    chrome.tabs.query({}, function(tabs) {
       const tabId = tabs[0].id;
       chrome.tabs.setZoom(tabId, 0);
     })
