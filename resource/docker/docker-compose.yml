@@ -1,19 +1,22 @@
 services:
   jellyfin:
-    image: jellyfin/jellyfin
+    image: jellyfin/jellyfin:latest
     container_name: jellyfin
     network_mode: 'host'
     volumes:
       - /media/jellyfin/config:/config
       - /media/jellyfin/cache:/cache
-      - type: bind
-        source: /media/jellyfin/mnt/media/Movies
-        target: /movies
-      - type: bind
-        source: /media/jellyfin/mnt/media/Shows
-        target: /shows
-        read_only: true
+      - /media/jellyfin/mnt/media/Movies:/movies:ro
+      - /media/jellyfin/mnt/media/Shows:/shows:ro
     restart: 'unless-stopped'
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
     environment:
       - JELLYFIN_PublishedServerUrl=http://example.com
     extra_hosts:
