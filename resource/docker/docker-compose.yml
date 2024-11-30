@@ -6,8 +6,8 @@ services:
     volumes:
       - /media/jellyfin/config:/config
       - /media/jellyfin/cache:/cache
-      - /media/jellyfin/mnt/media/Movies:/movies:ro
-      - /media/jellyfin/mnt/media/Shows:/shows:ro
+      - /media/jellyfin/mnt/media/movies:/movies:ro
+      - /media/jellyfin/mnt/media/shows:/shows:ro
     restart: 'unless-stopped'
     runtime: nvidia
     deploy:
