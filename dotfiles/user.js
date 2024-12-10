@@ -45,7 +45,7 @@ user_pref("ui.key.menuAccessKeyFocuses", false);
 
 /* General ***/
 // Open links in tabs instead of new windows
-user_pref("browser.link.open_newwindow", 2);
+user_pref("browser.link.open_newwindow", 3);
 // Confirm before quitting with Ctrl+Q
 user_pref("browser.warnOnQuitShortcut", false);
 // Show an image preview when you hover on a tab
