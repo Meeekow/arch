@@ -194,9 +194,6 @@ const linkBuilder = () => {
   let _binding = '';
 
   switch(selected_b) {
-    case 'Paperback':
-      _binding = '&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656022011';
-      break;
     case 'Hardcover':
       _binding = '&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656020011';
       break;
@@ -207,7 +204,7 @@ const linkBuilder = () => {
       _binding = '&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656019011';
       break;
     default:
-      _binding = '';
+      _binding = '&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656022011'; // Default 'Paperback' so we don't have to set if it is 'Unknown' on UI.
       break;
   }
 
