@@ -1,0 +1,20 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    network_mode: 'host'
+    volumes:
+      - /home/rara/jellyfin/config:/config
+      - /home/rara/jellyfin/cache:/cache
+      - /home/rara/jellyfin/mnt/media/movies:/movies:ro
+      - /home/rara/jellyfin/mnt/media/shows:/shows:ro
+    restart: 'unless-stopped'
+    group_add:
+      - '993'
+    environment:
+      - JELLYFIN_PublishedServerUrl=http://example.com
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    devices:
+      - /dev/dri:/dev/dri
+
