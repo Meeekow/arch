@@ -10,7 +10,7 @@ services:
       - /home/rara/jellyfin/mnt/media/shows:/shows:ro
     restart: 'unless-stopped'
     group_add:
-      - '993'
+      - '993' # getent group render | cut -d: -f3
     environment:
       - JELLYFIN_PublishedServerUrl=http://example.com
     extra_hosts:
