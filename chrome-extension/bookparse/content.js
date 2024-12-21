@@ -274,6 +274,7 @@ const customActions = () => {
       case 'Escape':
         e.preventDefault();
         if (titleInputBox.value !== '') {
+          customHotkeys('n');
           unifiedSearch();
         }
         break;
