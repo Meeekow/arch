@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 mkdir -p $HOME/.config/kitty/
 ln -s $HOME/arch/dotfiles/kitty.conf $HOME/.config/kitty/

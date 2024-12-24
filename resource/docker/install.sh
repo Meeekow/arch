@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # https://docs.docker.com/engine/install/ubuntu/
 
 # Uninstall old versions

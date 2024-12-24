@@ -1,4 +1,4 @@
-#!bin/bash
+#!/usr/bin/env bash
 
 # Install Pi-hole
 curl -sSL https://install.pi-hole.net | bash
