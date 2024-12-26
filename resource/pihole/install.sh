@@ -10,7 +10,7 @@ pihole -a -p mm
 sudo apt install unbound
 
 # Copy unbound.conf for pihole
-sudo cp $USER/arch/resource/pihole/pi-hole.conf /etc/unbound/unbound.conf.d/
+sudo cp $HOME/arch/resource/pihole/pi-hole.conf /etc/unbound/unbound.conf.d/
 
 # Restart
 sudo service unbound restart
