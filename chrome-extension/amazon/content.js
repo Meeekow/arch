@@ -174,7 +174,7 @@ waitForElement('#twotabsearchtextbox', (element) => {
 
 
 const changeWidth = (element) => {
-  element.style.cssText = 'width: calc(.85 * (100vw - 28px)) !important';
+  element.style.cssText = 'width: calc(.90 * (100vw - 28px)) !important';
 }
 waitForElement('.sg-col-20-of-24.s-matching-dir.sg-col-16-of-20.sg-col.sg-col-8-of-12.sg-col-12-of-16', changeWidth);
 
