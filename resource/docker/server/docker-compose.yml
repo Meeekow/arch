@@ -4,10 +4,10 @@ services:
     container_name: jellyfin
     network_mode: 'host'
     volumes:
-      - /home/rara/jellyfin/config:/config
-      - /home/rara/jellyfin/cache:/cache
-      - /home/rara/jellyfin/mnt/media/movies:/movies:ro
-      - /home/rara/jellyfin/mnt/media/shows:/shows:ro
+      - /media/jellyfin/config:/config
+      - /media/jellyfin/cache:/cache
+      - /media/jellyfin/mnt/media/movies:/movies:ro
+      - /media/jellyfin/mnt/media/shows:/shows:ro
     restart: 'unless-stopped'
     group_add:
       - '993' # getent group render | cut -d: -f3
