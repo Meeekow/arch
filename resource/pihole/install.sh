@@ -7,7 +7,7 @@ curl -sSL https://install.pi-hole.net | bash
 pihole -a -p mm
 
 # Install Unbound
-sudo apt install unbound
+sudo apt install unbound -y
 
 # Copy unbound.conf for pihole
 sudo cp $HOME/arch/resource/pihole/pi-hole.conf /etc/unbound/unbound.conf.d/

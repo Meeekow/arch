@@ -5,7 +5,7 @@
 for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
 
 # Prerequisites
-sudo apt install gnome-terminal
+sudo apt install gnome-terminal -y
 
 # Install using the apt repository
 # Execute line by line
@@ -24,27 +24,17 @@ echo \
 sudo apt-get update
 
 # Install the Docker packages
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
 # Make directory for jellyfin via docker
 mkdir -p /media/jellyfin/{cache,config,mnt}
 
 # Copy docker-compose.yml from personal repository
-cd /media/jellyfin/
-sudo cp $HOME/arch/resource/docker/server/docker-compose.yml .
-
-# Post-installation
-# Create the docker group
-sudo groupadd docker
+sudo cp $HOME/arch/resource/docker/server/docker-compose.yml /media/jellyfin/
 
 # Add your user to the docker group
 sudo usermod -aG docker $USER
 
-# Install dependencies for Intel GPU
-# https://jellyfin.org/docs/general/administration/hardware-acceleration/intel
-sudo apt update && sudo apt install -y jellyfin-ffmpeg7
-
-# Add the jellyfin user to the render group, then restart jellyfin service
-sudo usermod -aG render jellyfin
-sudo systemctl restart jellyfin
+# Add the jellyfin user to the render group
+sudo usermod -aG render $USER
 
