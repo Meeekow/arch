@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install Tailscale
-curl -fsSL https://tailscale.com/install.sh | sh
+sudo curl -fsSL https://tailscale.com/install.sh | sh
 
 # Enable IP forwarding
 echo 'net.ipv4.ip_forward = 1' | sudo tee -a /etc/sysctl.conf

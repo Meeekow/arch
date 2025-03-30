@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 # Install Pi-hole
-curl -sSL https://install.pi-hole.net | bash
+sudo curl -sSL https://install.pi-hole.net | bash
 
 # Change generated password by the installer
-pihole -a -p mm
+pihole setpassword mm
 
 # Install Unbound
 sudo apt install unbound -y
