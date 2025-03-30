@@ -1,3 +1,10 @@
+# Set PiHole password inside the container.
+# sudo docker exec -it pihole pihole -a -p password
+
+# Point PiHole Upstream DNS to use Unbound instead.
+# cd unbound/
+# sudo sed -i 's/interface: 0.0.0.0@53/interface: 0.0.0.0@5335/g' unbound.conf
+
 services:
   pihole:
     container_name: pihole
@@ -8,7 +15,7 @@ services:
       - "67:67/udp"
       - "8080:80/tcp"
     environment:
-      WEBPASSWORD_FILE: mm
+      TZ: 'Manila/Asia'
       PIHOLE_DNS_: unbound#5335
     volumes:
       - './pihole/:/etc/pihole/'
@@ -26,4 +33,3 @@ services:
       - './unbound/:/opt/unbound/etc/unbound/'
     restart: unless-stopped
 
-#In your unbound.conf file, you need to change the port unbound listens on to 5335, just mapping those ports in the docker compose isn't enough. Do this via interface: 0.0.0.0@5335
