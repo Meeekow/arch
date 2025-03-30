@@ -1,0 +1,29 @@
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:2024.07.0
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "8080:80/tcp"
+    environment:
+      WEBPASSWORD_FILE: mm
+      PIHOLE_DNS_: unbound#5335
+    volumes:
+      - './pihole/:/etc/pihole/'
+      - './dnsmasq/:/etc/dnsmasq.d/'
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+  unbound:
+    container_name: unbound
+    image: mvance/unbound:latest
+    ports:
+      - "5335:5335/tcp"
+      - "5335:5335/udp"
+    volumes:
+      - './unbound/:/opt/unbound/etc/unbound/'
+    restart: unless-stopped
+
+#In your unbound.conf file, you need to change the port unbound listens on to 5335, just mapping those ports in the docker compose isn't enough. Do this via interface: 0.0.0.0@5335
