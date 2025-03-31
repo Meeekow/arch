@@ -4,7 +4,7 @@
 sudo apt update && sudo apt upgrade -y
 
 # Additional packages.
-sudo apt install curl git netplan.io ntfs-3g openvswitch-switch powertop -y
+sudo apt install curl git neovim netplan.io ntfs-3g openvswitch-switch powertop -y
 
 # Reboot.
 sudo systemctl reboot
@@ -36,8 +36,9 @@ cd $HOME/pihole/
 cp $HOME/arch/resource/docker/pihole/docker-compose.yml .
 
 # Install Tailscale directly to OS.
-chmod +x $HOME/arch/resource/tailscale/install.sh
-./home/$HOME/arch/resource/tailscale/install.sh
+cd $HOME/arch/resource/tailscale/
+chmod +x install.sh
+./install.sh
 
 # Install Jellyfin.
 mkdir -p "$HOME/jellyfin/"
