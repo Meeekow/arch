@@ -1,13 +1,13 @@
 #!/bin/bash
 
+# Check /etc/apt/sources.list
+sudo vi /etc/apt/sources.list
+
 # Make sure all packages are up to date.
 sudo apt update && sudo apt upgrade -y
 
 # Additional packages.
 sudo apt install curl git neovim netplan.io ntfs-3g openvswitch-switch powertop -y
-
-# Reboot.
-sudo systemctl reboot
 
 # Clone github repository.
 git clone https://github.com/meeekow/arch
@@ -30,6 +30,9 @@ cd $HOME/arch/resource/docker/
 chmod +x install.sh
 ./install.sh
 
+# Add user so we don't have to sudo everytime.
+sudo usermod -aG docker $USER
+
 # Install Pihole and Unbound via Docker.
 mkdir -p "$HOME/pihole/"
 cd $HOME/pihole/
@@ -44,6 +47,9 @@ chmod +x install.sh
 mkdir -p "$HOME/jellyfin/"
 cd $HOME/jellyfin/
 cp $HOME/arch/resource/docker/jellyfin/docker-compose.yml .
+
+# Add user so we can use iGPU to render.
+sudo usermod -aG render $USER
 
 # Install Qbittorrent-nox directly to OS.
 sudo apt install qbittorrent-nox -y
