@@ -13,7 +13,7 @@ services:
         reservations:
           memory: 256M
     ports:
-      - "8080:80/tcp" # web ui -> http://localhost:8080/admin
+      - "8081:80/tcp" # web ui -> using port 8081 to avoid conflict with qbittorent-nox
       - "53:53/tcp" # DNS tcp port is used as fallback for longer dns messages
       - "53:53/udp" # DNS port
     # RECOMMENDED: Uncomment and adapt if you want to persist pihole configurations after restart

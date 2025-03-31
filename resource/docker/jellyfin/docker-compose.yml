@@ -4,13 +4,13 @@ services:
     container_name: jellyfin
     network_mode: 'host'
     volumes:
-      - /media/jellyfin/config:/config
-      - /media/jellyfin/cache:/cache
-      - /media/jellyfin/mnt/media/movies:/movies:ro
-      - /media/jellyfin/mnt/media/shows:/shows:ro
+      - ./config:/config
+      - ./cache:/cache
+      - ./mnt/media/movies:/movies:ro
+      - ./mnt/media/shows:/shows:ro
     restart: 'unless-stopped'
     group_add:
-      - '993' # getent group render | cut -d: -f3
+      - '105' # getent group render | cut -d: -f3
     environment:
       - JELLYFIN_PublishedServerUrl=http://example.com
     extra_hosts:

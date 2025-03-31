@@ -16,7 +16,7 @@ git clone https://github.com/meeekow/arch
 sudo cp $USER/arch/resource/netplan/50-cloud-init.yaml /etc/netplan/
 
 # Add read, write permission.
-sudo chown 600 /etc/netplan/50-cloud-init.yaml
+sudo chmod 600 /etc/netplan/50-cloud-init.yaml
 
 # Restart network.
 sudo systemctl restart systemd-networkd.service
@@ -26,8 +26,9 @@ sudo netplan try
 sudo netplan apply
 
 # Install Docker Engine.
-chmod +x $HOME/arch/resource/docker/install.sh
-./$HOME/arch/resource/docker/install.sh
+cd $HOME/arch/resource/docker/
+chmod +x install.sh
+./install.sh
 
 # Install Pihole and Unbound via Docker.
 mkdir -p "$HOME/pihole/"
