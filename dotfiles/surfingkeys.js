@@ -222,7 +222,7 @@ mapkey('a', 'paste clipboard content, hit submit button', function() {
 // get title from recognition software and focus titlebox
 mapkey('e', 'get title from recognition software', function() {
   const bookTitleBox = document.querySelector('.custom-input.w-full');
-  Hints.create(".css-2dg54o", function(element) {
+  Hints.create(".cardVisible.buttonVisible", function(element) {
     let _title = element.querySelector('.new-sm-label.new-mb-1');
     let title = _title.textContent;
     title = title.replace(/^Title:\s|[;|:||,]/gi, '').replace(/&/gi, 'and');

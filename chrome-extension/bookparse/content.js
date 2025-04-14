@@ -50,8 +50,6 @@ const findVisibleButton = () => {
   }
 }
 
-
-/*
 const findVisibleCard = () => {
   let callback = (entries, observer) => {
     entries.forEach((entry) => {
@@ -65,7 +63,7 @@ const findVisibleCard = () => {
   }
 
   let observer = new IntersectionObserver(callback, {
-    threshold: [1]
+    threshold: [0.5]
   })
 
   const cards = document.querySelectorAll('.css-2dg54o');
@@ -73,7 +71,6 @@ const findVisibleCard = () => {
     observer.observe(c);
   }
 }
-*/
 
 const replaceSelectedText = (replacementText, wordSelectionStart, wordSelectionEnd) => {
   const titleInputBox = document.querySelector('.custom-input.w-full');
@@ -283,7 +280,7 @@ const adjustRecognitionSoftware = () => {
   card.style.cssText = "position: relative; width: 900px; max-height: 900px; transform: translate(0px, -160px);";
 
   findVisibleButton();
-  //findVisibleCard();
+  findVisibleCard();
 }
 waitForElement('.new-sm-label.css-1up6yon', adjustRecognitionSoftware, false, true);
 
