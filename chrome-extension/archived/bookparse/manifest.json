@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Bookparse",
+  "version": "1.0",
+  "permissions": [
+    "tabs",
+    "scripting",
+    "windows"
+  ],
+  "host_permissions": [
+    "https://www.amazon.com/",
+    "https://www.worthpoint.com/",
+    "https://www.ebay.com/"
+  ],
+  "action": {},
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://bookparse.com/dashboard/*/*"],
+      "include_globs": ["https://bookparse.com/dashboard/*/bookidentification#*"],
+      "js": ["content.js"]
+    }
+  ]
+}
