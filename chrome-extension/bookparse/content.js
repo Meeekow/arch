@@ -1,34 +1,3 @@
-const resetToDefaultState = () => {
-  // Reset to default zoom level.
-  chrome.runtime.sendMessage({message: 'reset-zoom-level'}, function() {});
-
-  // Ensure image is always in default orientation.
-  const image = document.querySelector('.card-body');
-  image.style.transform = null;
-
-  // Ensure user interface is always at the same position.
-  adjustUserInterface();
-}
-
-const backgroundJS = (selector, callback) => {
-  const outerObserver = new MutationObserver(function(mutations, mo) {
-    const targetNode = document.querySelector(selector);
-    if (targetNode) {
-      const innerObserver = new MutationObserver(function(mutations) {
-        for (const mutation of mutations) {
-          if (mutation.addedNodes.length === 0) { return };
-          if (mutation.addedNodes[0].nodeName === '#text') { callback() };
-        }
-      })
-      innerObserver.observe(targetNode, { childList: true });
-      mo.disconnect();
-    }
-  })
-  outerObserver.observe(document, { childList: true, subtree: true });
-}
-backgroundJS('.out-label.ms-auto', resetToDefaultState);
-
-
 const waitForElement = (selector, callback, isArray = false, shouldMonitor = false, options = { childList: true, subtree: true }) => {
   const observer = new MutationObserver(function(mutations, mo) {
     const element = isArray ? document.querySelectorAll(selector) : document.querySelector(selector);
@@ -40,7 +9,6 @@ const waitForElement = (selector, callback, isArray = false, shouldMonitor = fal
   observer.observe(document, options);
 }
 
-
 const loseFocus = () => {
   const blob = document.body;
   blob.tabIndex = 0;
@@ -48,6 +16,17 @@ const loseFocus = () => {
   blob.tabIndex = -1;
 }
 
+const setNativeValue = (element, value) => {
+  let lastValue = element.value;
+  element.value = value;
+  let event = new Event('input', { target: element, bubbles: true });
+  // React 15
+  event.simulated = true;
+  // React 16
+  let tracker = element._valueTracker;
+  if (tracker) { tracker.setValue(lastValue) };
+  element.dispatchEvent(event);
+}
 
 const findVisibleButton = () => {
   let callback = (entries, observer) => {
@@ -65,13 +44,14 @@ const findVisibleButton = () => {
     threshold: [1]
   })
 
-  const buttons = document.querySelectorAll('.btn.btn-primary');
+  const buttons = document.querySelectorAll('.css-gywnln');
   for (const b of buttons) {
     observer.observe(b);
   }
 }
 
 
+/*
 const findVisibleCard = () => {
   let callback = (entries, observer) => {
     entries.forEach((entry) => {
@@ -85,40 +65,26 @@ const findVisibleCard = () => {
   }
 
   let observer = new IntersectionObserver(callback, {
-    threshold: [0.5]
+    threshold: [1]
   })
 
-  const cards = document.querySelectorAll('.sm-card.d-flex');
+  const cards = document.querySelectorAll('.css-2dg54o');
   for (const c of cards) {
     observer.observe(c);
   }
 }
-
-
-const setNativeValue = (element, value) => {
-  let lastValue = element.value;
-  element.value = value;
-  let event = new Event('input', { target: element, bubbles: true });
-  // React 15
-  event.simulated = true;
-  // React 16
-  let tracker = element._valueTracker;
-  if (tracker) { tracker.setValue(lastValue) };
-  element.dispatchEvent(event);
-}
-
+*/
 
 const replaceSelectedText = (replacementText, wordSelectionStart, wordSelectionEnd) => {
-  const titleInputBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
+  const titleInputBox = document.querySelector('.custom-input.w-full');
   let result = `${wordSelectionStart} ${replacementText} ${wordSelectionEnd}`;
   result = result.replace(/^\s+/g, '').replace(/\s+/g, ' ').replace(/\s+$/g, '');
   setNativeValue(titleInputBox, result);
 }
 
-
 let recognition;
 const startListening = async (isPartialTextReplace = false) => {
-  const titleInputBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
+  const titleInputBox = document.querySelector('.custom-input.w-full');
   const transcribeButton = document.querySelector('#start-dictation-microphone');
 
   const wordSelectionStart = titleInputBox.value.slice(0, titleInputBox.selectionStart);
@@ -131,12 +97,12 @@ const startListening = async (isPartialTextReplace = false) => {
 
   recognition.addEventListener('audiostart', () => {
     transcribeButton.innerText = 'Transcribing';
-    transcribeButton.style.cssText = 'width: 105px; position: relative; left: 42%; top: 8px; transform: translateX(-50%); background-color: #FAA0A0; border-style: none;';
+    transcribeButton.style.cssText = 'width: 110px; position: relative; left: 16.5%; top: 35px; transform: translateX(-50%); background-color: #FAA0A0; border-style: none;';
   });
 
   recognition.addEventListener('audioend', () => {
     transcribeButton.innerText = 'Start';
-    transcribeButton.style.cssText = 'width: 100px; position: relative; left: 42%; top: 8px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
+    transcribeButton.style.cssText = 'width: 110px; position: relative; left: 16.5%; top: 35px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
     recognition.stop();
   });
 
@@ -157,72 +123,68 @@ const startListening = async (isPartialTextReplace = false) => {
   recognition.start();
 }
 
-
 const stopListening = () => {
   recognition.stop();
 }
-
 
 const renderStartButton = (selector) => {
   const startRecordingButton = document.createElement('button');
   startRecordingButton.id = 'start-dictation-microphone';
   startRecordingButton.innerText = 'Start';
-  startRecordingButton.style.cssText = 'width: 100px; position: relative; left: 42%; top: 8px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
+  startRecordingButton.style.cssText = 'width: 110px; position: relative; left: 16.5%; top: 35px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
   startRecordingButton.onclick = () => { startListening() };
   selector.parentNode.appendChild(startRecordingButton);
 }
-waitForElement('.form-control-select.w-100', renderStartButton, false, false);
-
+waitForElement('.new-sm-label.css-1up6yon', renderStartButton, false, false);
 
 const renderStopButton = (selector) => {
   const stopRecordingButton = document.createElement('button');
   stopRecordingButton.id = 'stop-dictation-microphone';
   stopRecordingButton.innerText = 'Stop';
-  stopRecordingButton.style.cssText = 'width: 100px; position: relative; left: 43%; top: 8px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
+  stopRecordingButton.style.cssText = 'width: 100px; position: relative; left: 17%; top: 35px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
   stopRecordingButton.onclick = () => { stopListening() };
   selector.parentNode.appendChild(stopRecordingButton);
 }
-waitForElement('.form-control-select.w-100', renderStopButton, false, false);
+waitForElement('.new-sm-label.css-1up6yon', renderStopButton, false, false);
 
+// Hide side panel when page loads.
+waitForElement('.bi.bi-chevron-right', (element) => { element.click() }, false, false);
 
 const linkBuilder = () => {
-  const _title_input = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
-  const _binding_selected = document.querySelector('.form-control-select.w-100');
+  const _title_input = document.querySelector('.custom-input.w-full');
+  const _binding_selected = document.querySelector('.custom-select.css-ecfv9d');
 
   const selected_b = _binding_selected.value;
   const title = _title_input.value.toLowerCase().replace(/^\s+/g, '').replace(/\s+/g, ' ').replace(/\s+$/g, '').replaceAll(' ', '+');
   let _binding = '';
 
   switch(selected_b) {
-    case 'Hardcover':
-      _binding = '&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656020011';
+    case '&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656022011': // 'Paperback'
+      _binding = '&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656022011';
       break;
-    case 'Spiral':
+    case '&rh=n%3A283155%2Cp_n_feature_browse-bin%3A23488071011': // Spiral
       _binding = '&rh=n%3A283155%2Cp_n_feature_browse-bin%3A23488071011';
       break;
-    case 'Board':
+    case '&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656019011': // Board
       _binding = '&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656019011';
       break;
     default:
-      _binding = '&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656022011'; // Default 'Paperback' so we don't have to set if it is 'Unknown' on UI.
+      _binding = '&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656020011'; // Hardcover
       break;
   }
 
   return [`https://www.amazon.com/s?k=${title}${_binding}`, _title_input.value];
 }
 
-
 const command = (object) => {
   chrome.runtime.sendMessage({ message: object.instruction, url: object.link, search: object.query }, function() {});
 }
-
 
 const unifiedSearch = () => {
   const parameters = linkBuilder();
   command({ instruction: 'new-amazon-url', link: parameters[0]});
   command({ instruction: 'search-query', query: parameters[1]});
 }
-
 
 const customHotkeys = (key) => {
   const hotkeys = {
@@ -233,9 +195,8 @@ const customHotkeys = (key) => {
   command({ instruction: hotkeys[key] });
 }
 
-
 const rotateImage = (key) => {
-  const image = document.querySelector('.card-body');
+  const image = document.querySelector('.css-6pg88b');
   const direction = {
     'ArrowUp': 'rotate(0deg)',
     'ArrowRight': 'rotate(90deg)',
@@ -245,8 +206,7 @@ const rotateImage = (key) => {
   image.style.transform = direction[key];
 }
 
-
-const customActions = () => {
+const vim = () => {
   const hotkeys = ['c', 'i', 'n'];
   const arrowKeys = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'];
   // Custom actions when nothing is focused.
@@ -262,21 +222,27 @@ const customActions = () => {
     }
   });
 
-  let titleInputBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
+  const title = document.querySelector('.custom-input.w-full');
   // Apply changes made via Surfingkeys VIM mode.
-  titleInputBox.addEventListener('change', (e) => {
+  title.addEventListener('change', (e) => {
     const event = new Event('input', { bubbles: true });
-    titleInputBox.dispatchEvent(event);
+    title.dispatchEvent(event);
   });
+
   // Custom actions when title box is focused.
-  titleInputBox.addEventListener('keydown', (e) => {
+  title.addEventListener('keydown', (e) => {
     switch(e.key) {
       case 'Escape':
-        e.preventDefault();
-        if (titleInputBox.value !== '') {
-          customHotkeys('n');
+        if (title.value.length !== 0) {
           unifiedSearch();
+          customHotkeys('n');
         }
+        break;
+      case '.':
+        e.preventDefault();
+        document.querySelector('.custom-select.css-ecfv9d').selectedIndex = 1;
+        unifiedSearch();
+        customHotkeys('n');
         break;
       case ',':
         e.preventDefault();
@@ -286,146 +252,64 @@ const customActions = () => {
         e.preventDefault();
         startListening(true);
         break;
-      case '.':
+      case '/':
         e.preventDefault();
         startListening();
         break;
     }
-  });
+  })
 
-  // Custom actions when binding selection is focused.
-  const bindingBox = document.querySelector('.form-control-select.w-100');
-  bindingBox.addEventListener('keydown', (e) => {
+  // Custom actions when binding box is focused.
+  const binding = document.querySelector('.custom-select.css-ecfv9d');
+  binding.addEventListener('keydown', (e) => {
     switch(e.key) {
       case 'Escape':
-        e.preventDefault();
         unifiedSearch();
-        break;
+        customHotkeys('n');
       case 'Tab':
         e.preventDefault();
-        titleInputBox.focus();
-        break;
-      case 'Enter':
-        e.preventDefault();
-        loseFocus();
+        title.focus();
         break;
     }
-  });
+  })
 }
+waitForElement('.new-sm-label.css-1up6yon', vim, false, true);
 
+const adjustRecognitionSoftware = () => {
+  const container = document.querySelector('.css-12rxo42');
+  container.style.cssText = "transform: translate(430px, 0px);";
 
-// Hide side panel when page loads.
-waitForElement('.navigation-btn.ms-auto', (element) => { element.click() }, false, false);
+  const card = document.querySelector('.css-l5snnm');
+  card.style.cssText = "position: relative; width: 900px; max-height: 900px; transform: translate(0px, -160px);";
 
-
-// Change image box position and adjust image dimensions.
-const adjustImage = (element) => {
-  element.style.cssText = 'position: absolute; overflow: hidden; transform: translate(12.5px, -20px);';
-  element.querySelector('img').style.cssText = 'height: 550px; width: 750px;';
-  document.querySelector('.col-md-6.mb-4').style.cssText = 'position: absolute; transform: translate(850px, 0px);';
-  document.querySelector('.mini-navbar.ms-auto').style.cssText = 'position: absolute; list-style: none; padding: 0px; transform: translate(1125px, 995px);';
-}
-waitForElement('.col-auto.mb-2', adjustImage, false, true);
-
-
-// Reposition recognition software results interface.
-const adjustRecognitionSoftwareInterface = (element) => {
-  if (element) {
-    const removeThisElements = ['h6', '.col-md-6.mb-4 > .sm-label', '.sm-card > h6'];
-    removeThisElements.forEach((selector) => {
-      const target = document.querySelector(selector);
-      if (target !== null) { target.remove() };
-    });
-    element.style.cssText = 'background-color: rgb(15, 15, 15);'; // Recognition software results card.
-    // Set height for recognition results card.
-    const setHeight = document.querySelector('.sm-card > div');
-    if (setHeight !== null) { setHeight.style.maxHeight = '850px' };
-  }
-}
-waitForElement('.sm-card', adjustRecognitionSoftwareInterface, false, true);
-
-
-// Detect wrong binding from user interface box.
-const detectUnknownBinding = (element) => {
-  const cardBody = document.querySelector('.col-md-5.mb-2.react-draggable .card-body');
-  const binding = document.querySelector('.form-control');
-  if (binding) {
-    binding.value !== 'Unknown' ? cardBody.removeAttribute('style') : cardBody.style.cssText = 'background-color: #E74C3C';
-  }
-}
-waitForElement('.form-control', detectUnknownBinding, false, true);
-
-
-// Detect wrong binding from recognition software box.
-const detectWrongBinding = (element) => {
-  const recognitionSoftwareResults = document.querySelectorAll('.sm-card.d-flex');
-  const paperbackVariants = ['paperback', 'mass_market', 'mass market paperback', 'perfect paperback'];
-  if (element) {
-    const validBookBindings = {
-      'hardcover': ['hardcover'],
-      'paperback': paperbackVariants,
-      'mass market': paperbackVariants,
-      'spiral': ['spiral-bound', 'spiral_bound', 'ring-bound', 'ring_bound', 'plastic comb', 'plastic_comb', ...paperbackVariants],
-      'board': ['board book', 'board_book']
-    }
-    const correctBinding = element.value.toLowerCase();
-    const result = validBookBindings[correctBinding];
-    recognitionSoftwareResults.forEach((e) => {
-      const setResultsFontColor = e.querySelectorAll('span.d-block > span');
-      setResultsFontColor.forEach((e) => {
-        e.style.color = '#FEE715FF';
-      })
-      const bindingToCheck = e.querySelector('.d-block:nth-child(3)').firstChild.nextSibling.textContent.toLowerCase();
-      if (result === undefined || !result.includes(bindingToCheck)) {
-        e.style.backgroundColor = '#0A3061';
-      }
-    })
-  }
-}
-waitForElement('.form-control', detectWrongBinding, false, true);
-
-
-// See if there is sales rank and highlight.
-// Set margin for recognition software results for consistency.
-const highlightSalesRank = (element) => {
-  const targets = document.querySelectorAll('.d-block');
-  if (targets) {
-    element.forEach((target) => {
-      target.style.margin = '0px 10px 10px';
-    });
-    targets.forEach((target) => {
-      if (target.textContent.includes('Sales Rank')) {
-        target.style.cssText = 'background-color: #DE3163';
-      }
-    });
-  }
   findVisibleButton();
-  findVisibleCard();
+  //findVisibleCard();
 }
-waitForElement('.sm-card.d-flex', highlightSalesRank, true, true);
+waitForElement('.new-sm-label.css-1up6yon', adjustRecognitionSoftware, false, true);
 
+const idImageUserInterface = () => {
+  const imageId = document.querySelector('.new-sm-label.css-1up6yon');
+  imageId.style.cssText = "transform: translate(0px, -30px);";
 
-// Reposition and adjust user interface box width.
-const adjustUserInterface = (element) => {
-  const title = document.querySelectorAll('.sm-label')[5];
-  if (title) { title.remove() };
-  document.querySelector('.col-md-5.mb-2.react-draggable').style.cssText = 'position: absolute; width: 810px; transform: translate(11px, 573px);';
-  document.querySelector('.col-md-5.mb-2.react-draggable > label').style.visibility = 'hidden'; // 'Drag Me' label on top of the card.
-  document.querySelectorAll('.form-control.form-control-second-primary')[1].style.cssText = "position: absolute; transform: translate(-16px, -325px);";
+  const taskImage = document.querySelector('.new-mb-4.css-iscebk');
+  taskImage.style.cssText = " width: 1000px; height: 300px; transform: translate(-50px, 0px)";
+
+  const ui = document.querySelector('.css-1ssh553');
+  ui.style.cssText = "transform: translate(-1050px, 500px);";
+
 }
-waitForElement('.col-md-5.mb-2.react-draggable > .card > .card-body', adjustUserInterface, false, false);
+waitForElement('.new-sm-label.css-1up6yon', idImageUserInterface, false, true);
 
+const removeGeneratedLink = (element) => {
+    element.hidden = true;
+}
+waitForElement('.css-1ad5bf3', removeGeneratedLink, false, true);
 
-// Run custom QOL event listeners.
-waitForElement('.mb-2 > .form-control.form-control-second-primary', customActions, false, false);
-
-
-// Ensure input box for book titles is not in focus.
-// Ensure input box for ASIN has no value.
 window.onfocus = () => {
   loseFocus();
-  const target = document.querySelector('.form-control.form-control-second-primary');
+  const target = document.querySelector('.custom-input.new-mb-4');
   if (target) {
     if (target.value !== '') { setNativeValue(target, '') };
   }
 }
+

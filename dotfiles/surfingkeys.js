@@ -98,7 +98,7 @@ function triggerEvent(obj, event) {
 
 // scroll to next/previous element
 function scrollUpOrDown(action) {
-  const cards = document.querySelectorAll('.sm-card.d-flex');
+  const cards = document.querySelectorAll('.css-2dg54o');
   const callback = ((entries, io) => {
     let state = [];
 
@@ -152,10 +152,10 @@ mapkey('b', 'switch between not complete and undecided', function() {
 // enter assigned ASIN is book is valuable
 mapkey('l', 'valuable book', function() {
   const ASIN = '0600621987';
-  const isbnBox = document.querySelector('.form-control.form-control-second-primary');
-  const submitButton = document.querySelector('.btn-second-primary');
-  isbnBox.value = ASIN;
-  triggerEvent(isbnBox, 'input');
+  const masterIsbnBox = document.querySelector('.custom-input.new-mb-4');
+  const submitButton = document.querySelector('.custom-button.css-dm0erh');
+  masterIsbnBox.value = ASIN;
+  triggerEvent(masterIsbnBox, 'input');
   submitButton.click();
   Clipboard.write(' ');
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
@@ -163,24 +163,24 @@ mapkey('l', 'valuable book', function() {
 // enter assigned ASIN is book is valuable
 mapkey('w', 'medium valuable', function() {
   const ASIN = 'B0006XVY3S';
-  const isbnBox = document.querySelector('.form-control.form-control-second-primary');
-  const submitButton = document.querySelector('.btn-second-primary');
-  isbnBox.value = ASIN;
-  triggerEvent(isbnBox, 'input');
+  const masterIsbnBox = document.querySelector('.custom-input.new-mb-4');
+  const submitButton = document.querySelector('.custom-button.css-dm0erh');
+  masterIsbnBox.value = ASIN;
+  triggerEvent(masterIsbnBox, 'input');
   submitButton.click();
   Clipboard.write(' ');
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // show hints for 'Use ASIN button'
 mapkey('r', 'show hints for Use ASIN button', function() {
-  Hints.create('.buttonVisible.cardVisible', function(element) {
+  Hints.create('.buttonVisible', function(element) {
     element.click();
   })
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // focus book title input box
 mapkey('t', 'focus book title input box', function() {
-  const bookTitleBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
+  const bookTitleBox = document.querySelector('.custom-input.w-full');
   bookTitleBox.focus();
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
@@ -192,33 +192,43 @@ mapkey('s', 'dictate book title', function() {
 
 // click reject and reason button
 mapkey('h', 'click reject and reason button', function() {
-  const rejectButton = document.querySelector('.btn.mb-2') || document.querySelector('.btn-outline.mb-2');
-  const rejectReasonButton = document.querySelector('.dropdown-body li > button');
-  rejectButton.click();
-  rejectReasonButton.click();
+  const rejectReasonButton = document.querySelector('.custom-select.new-w-full');
+  rejectReasonButton.selectedIndex = 1;
+  triggerEvent(rejectReasonButton, 'change');
+  const rejectButton = document.querySelector('.custom-button-2.css-dm0erh');
+  if (rejectReasonButton.selectedIndex === 1) {
+    rejectButton.click();
+  }
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // ASIN box
 mapkey('a', 'paste clipboard content, hit submit button', function() {
-  const isbnBox = document.querySelector('.form-control.form-control-second-primary');
-  const submitButton = document.querySelector('.btn-second-primary');
-  if (isbnBox.value.length === 0) {
-    Clipboard.read( (response) => { isbnBox.value = response.data });
+  const masterIsbnBox = document.querySelector('.custom-input.new-mb-4');
+  const submitButton = document.querySelector('.custom-button.css-dm0erh');
+  if (masterIsbnBox.value.length === 0) {
+    Clipboard.read( (response) => { masterIsbnBox.value = response.data });
   }
-  triggerEvent(isbnBox, 'input');
-  submitButton.click();
-  Clipboard.write(' ');
+  triggerEvent(masterIsbnBox, 'input');
+  if (masterIsbnBox.value !== ' ') {
+    submitButton.click();
+    Clipboard.write(' ');
+  } else {
+    masterIsbnBox.value = '';
+    triggerEvent(masterIsbnBox, 'input');
+    masterIsbnBox.blur();
+  }
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
 // get title from recognition software and focus titlebox
 mapkey('e', 'get title from recognition software', function() {
-  const titleBox = document.querySelector('.mb-2 > .form-control.form-control-second-primary');
-  Hints.create(".sm-card.d-flex", function(element) {
-    let title = element.querySelector('.d-block').textContent;
+  const bookTitleBox = document.querySelector('.custom-input.w-full');
+  Hints.create(".css-2dg54o", function(element) {
+    let _title = element.querySelector('.new-sm-label.new-mb-1');
+    let title = _title.textContent;
     title = title.replace(/^Title:\s|[;|:||,]/gi, '').replace(/&/gi, 'and');
-    titleBox.value = title;
-    triggerEvent(titleBox, 'input');
-    titleBox.focus();
+    bookTitleBox.value = title;
+    triggerEvent(bookTitleBox, 'input');
+    bookTitleBox.focus();
   });
 }, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 

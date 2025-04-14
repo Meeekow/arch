@@ -5,6 +5,13 @@ function unifiedSearch(query) {
   searchButton.click();
 }
 
+// This is for switching focus to amazon/worthpoint/ebay window.
+let lastFocusedWindowId = null;
+chrome.windows.onFocusChanged.addListener((windowId) => {
+  if (windowId !== chrome.windows.WINDOW_ID_NONE) {
+    lastFocusedWindowId = windowId; // Update only if it's a real window switch
+  }
+})
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   // For amazon, we have to do it this way since we need
@@ -43,15 +50,14 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
   // Switch focus to amazon/worthpoint/ebay window.
   if (message.message === "alt-tab") {
-    chrome.tabs.query({ currentWindow: false }, function(tabs) {
-      if (tabs.length > 0) {
-        const windowId = tabs[0].windowId;
-        if (windowId) {
-          chrome.windows.update(windowId, { focused: true }, function() {});
-        }
+    chrome.windows.getAll({ populate: false }, function(windows) {
+      const currentWindowId = chrome.windows.WINDOW_ID_CURRENT;
+      // Find another window that's not currently focused
+      const otherWindow = windows.find(win => win.id !== lastFocusedWindowId);
+      if (otherWindow) {
+        chrome.windows.update(otherWindow.id, { focused: true }, () => {});
       }
     })
-    sendResponse({ reply: "alt-tabbing" });
   }
 
   // Reset zoom level.
@@ -67,9 +73,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   if (message.message === "zoom-in") {
     chrome.tabs.query({ active: true }, function(tabs) {
       const tabId = tabs[0].id;
-      chrome.tabs.getZoom(tabId, function(zoomFactor) {
-        chrome.tabs.setZoom(tabId, 2);
-      })
+      chrome.tabs.setZoom(tabId, 2);
     })
     sendResponse({ reply: "zooming-in" });
   }

@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Bookparse",
+  "name": "Bookparse-Test",
   "version": "1.0",
   "permissions": [
     "tabs",
@@ -19,7 +19,7 @@
   "content_scripts": [
     {
       "matches": ["https://bookparse.com/dashboard/*/*"],
-      "include_globs": ["https://bookparse.com/dashboard/*/bookidentification#*"],
+      "include_globs": ["https://bookparse.com/dashboard/*/bookidentification*"],
       "js": ["content.js"]
     }
   ]
