@@ -5,14 +5,6 @@ function unifiedSearch(query) {
   searchButton.click();
 }
 
-// This is for switching focus to amazon/worthpoint/ebay window.
-let lastFocusedWindowId = null;
-chrome.windows.onFocusChanged.addListener((windowId) => {
-  if (windowId !== chrome.windows.WINDOW_ID_NONE) {
-    lastFocusedWindowId = windowId; // Update only if it's a real window switch
-  }
-})
-
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   // For amazon, we have to do it this way since we need
   // the correct binding to be queried too.
@@ -51,14 +43,15 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   // Switch focus to amazon/worthpoint/ebay window.
   if (message.message === "alt-tab") {
     chrome.windows.getAll({ populate: false }, function(windows) {
-      const currentWindowId = chrome.windows.WINDOW_ID_CURRENT;
-      // Find another window that's not currently focused
-      const otherWindow = windows.find(win => win.id !== lastFocusedWindowId);
-      if (otherWindow) {
-        chrome.windows.update(otherWindow.id, { focused: true }, () => {});
-      }
-    })
+      chrome.windows.getLastFocused({}, function(lastFocused) {
+        const otherWindow = windows.find(win => win.id !== lastFocused.id);
+        if (otherWindow) {
+          chrome.windows.update(otherWindow.id, { focused: true });
+        }
+      });
+    });
   }
+
 
   // Reset zoom level.
   if (message.message === "reset-zoom-level") {
