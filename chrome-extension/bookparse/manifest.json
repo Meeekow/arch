@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Bookparse-Test",
+  "name": "Bookparse",
   "version": "1.0",
   "permissions": [
     "tabs",
