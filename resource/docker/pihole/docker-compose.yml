@@ -1,7 +1,7 @@
 services:
   pihole:
     container_name: pihole
-    image: pihole/pihole:2024.07.0 # <- update image version here, see: https://github.com/pi-hole/docker-pi-hole/releases
+    image: pihole/pihole:latest # <- update image version here, see: https://github.com/pi-hole/docker-pi-hole/releases
     hostname: pihole.local
     depends_on:
       - unbound
@@ -16,24 +16,23 @@ services:
       - "8081:80/tcp" # web ui -> using port 8081 to avoid conflict with qbittorent-nox
       - "53:53/tcp" # DNS tcp port is used as fallback for longer dns messages
       - "53:53/udp" # DNS port
-    # RECOMMENDED: Uncomment and adapt if you want to persist pihole configurations after restart
     volumes:
       - './pihole/:/etc/pihole/'
       - './dnsmasq/:/etc/dnsmasq.d/'
     environment:
-      WEBPASSWORD: "mm"
-      FTLCONF_LOCAL_IPV4: 192.168.254.200 # <-- match ipv4_address of host
       TZ: Manila/Asia
-      PIHOLE_DNS_: 172.21.200.3#53 # forward to unbound
+      FTLCONF_LOCAL_IPV4: 192.168.254.200 # <-- match ipv4_address of host
+      FTLCONF_webserver_api_password: "mm"
+      FTLCONF_dns_upstreams: 172.21.200.3#53 # forward to unbound
+      DNSMASQ_LISTENING: "all"
       DNSSEC: false
       WEBTHEME: default-light
     dns:
       - 127.0.0.1
-      #- 9.9.9.9 # Quad9
-      #- 1.1.1.1 # CloudFlare
     networks:
       pihole_dns_network:
         ipv4_address: 172.21.200.2 # <-- use this ip as dns when connected to pihole_dns_network (i.e. within a docker network)
+
   unbound:
     container_name: unbound
     image: mvance/unbound:latest
