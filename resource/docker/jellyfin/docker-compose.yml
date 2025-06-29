@@ -7,6 +7,7 @@ services:
       - ./config:/config
       - ./cache:/cache
       - ./mnt/media/movies:/movies:ro
+      - ./mnt/media/educational:/educational:ro
       - ./mnt/media/shows:/shows:ro
     restart: 'unless-stopped'
     group_add:
