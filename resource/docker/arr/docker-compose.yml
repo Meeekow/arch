@@ -39,5 +39,5 @@ services:
       - ./data/tv:/data/tv #optional
       - ./data/torrents:/data/downloads
     ports:
-      - 8989:8989
+      - 8989:8989                                                                                                                  
     restart: unless-stopped
