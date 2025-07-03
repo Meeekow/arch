@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "GMail Email Address Grabber",
+  "version": "1.0",
+  "permissions": [
+    "tabs",
+    "scripting",
+    "windows"
+  ],
+  "host_permissions": [
+      "https://docs.google.com/spreadsheets/d/1wWJx4HWXMvoVm1jwaKwPm184d3FciGVHjTcS24yDUDY/edit?gid=591902741#gid=591902741"
+  ],
+  "action": {},
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://mail.google.com/mail/u/0/d/*",
+        "https://docs.google.com/spreadsheets/d/1wWJx4HWXMvoVm1jwaKwPm184d3FciGVHjTcS24yDUDY/edit?gid=591902741#gid=591902741"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

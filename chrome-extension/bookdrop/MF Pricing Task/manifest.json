@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "MF Pricing",
+  "version": "1.0",
+  "permissions": ["tabs", "windows"],
+  "action": {},
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://docs.google.com/spreadsheets/d/1CCCA0LQkDCqNUWgRZ40MWOHQcO0s0rD0mZF*"
+      ],
+      "js": ["google-spreadsheet-content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "*://*.amazon.com/*",
+        "*://docs.google.com/*"
+      ],
+      "js": ["amazon-seller-content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

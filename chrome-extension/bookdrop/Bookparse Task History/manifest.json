@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "Bookparse Task History",
+  "version": "1.0",
+  "permissions": [
+    "tabs",
+    "scripting",
+    "windows"
+  ],
+  "host_permissions": [
+    "https://www.amazon.com/",
+    "https://www.worthpoint.com/",
+    "https://www.ebay.com/"
+  ],
+  "action": {},
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://bookparse.com/dashboard/*/*"
+      ],
+      "include_globs": ["https://bookparse.com/dashboard/*/review-task?id=*",
+                        "https://bookparse.com/dashboard/*/task-history?*"
+      ],
+      "js": ["bookparse-content.js"]
+    },
+    {
+      "matches": [
+        "*://*.amazon.com/*",
+        "*://*.worthpoint.com/*",
+        "*://*.ebay.com/*"
+      ],
+      "js": ["amz-wrth-ebay-content.js"]
+    }
+  ]
+}
