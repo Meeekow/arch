@@ -1,6 +1,14 @@
 const tabStateMap = new Map(); // tabId → { originalWindowId, positionValue }
 const livePositionMap = new Map(); // windowId → { tabId → positionValue }
 
+// Helper to get or create position map for a window
+function getOrCreatePositionMap(windowId) {
+  if (!livePositionMap.has(windowId)) {
+    livePositionMap.set(windowId, {});
+  }
+  return livePositionMap.get(windowId);
+}
+
 function generatePositionValue() {
   return Math.floor(Math.random() * 9000) + 1000; // 1000–9999
 }
@@ -17,30 +25,26 @@ chrome.commands.onCommand.addListener(async (command) => {
     if (!tabStateMap.has(tab.id)) {
       const tabs = await chrome.tabs.query({ windowId: tab.windowId });
 
-      // Initialize position values for this window if not done yet
-      if (!livePositionMap.has(tab.windowId)) {
-        const posMap = {};
+      const posMap = getOrCreatePositionMap(tab.windowId);
+      if (!posMap[tab.id]) {
         let current = 1000;
         for (const t of tabs) {
-          posMap[t.id] = current;
-          current += 1000;
+          if (!posMap[t.id]) {
+            posMap[t.id] = current;
+            current += 1000;
+          }
         }
-        livePositionMap.set(tab.windowId, posMap);
       }
 
-      const posMap = livePositionMap.get(tab.windowId);
       const positionValue = posMap[tab.id];
 
-      // Save detached tab state
       tabStateMap.set(tab.id, {
         originalWindowId: tab.windowId,
         positionValue
       });
 
-      // Remove from active tab positions
       delete posMap[tab.id];
 
-      // Move tab to a new or existing detached window
       const existingDetachedWindow = await findDetachedWindow(tab.id);
       if (existingDetachedWindow) {
         await chrome.tabs.move(tab.id, { windowId: existingDetachedWindow.id, index: -1 });
@@ -62,7 +66,7 @@ chrome.commands.onCommand.addListener(async (command) => {
       const { originalWindowId, positionValue } = state;
       const tabs = await chrome.tabs.query({ windowId: originalWindowId });
 
-      const posMap = livePositionMap.get(originalWindowId) || {};
+      const posMap = getOrCreatePositionMap(originalWindowId);
       const sortedTabs = tabs
         .map(t => ({ tab: t, pos: posMap[t.id] }))
         .filter(t => typeof t.pos === 'number')
@@ -85,11 +89,7 @@ chrome.commands.onCommand.addListener(async (command) => {
       await chrome.windows.update(originalWindowId, { focused: true });
       await chrome.tabs.update(tab.id, { active: true });
 
-      if (!livePositionMap.has(originalWindowId)) {
-        livePositionMap.set(originalWindowId, {});
-      }
-      livePositionMap.get(originalWindowId)[tab.id] = positionValue;
-
+      getOrCreatePositionMap(originalWindowId)[tab.id] = positionValue;
       tabStateMap.delete(tab.id);
     } catch (err) {
       tabStateMap.delete(tab.id);
@@ -102,9 +102,9 @@ chrome.tabs.onDetached.addListener(async (tabId, detachInfo) => {
   if (tabStateMap.has(tabId)) return;
 
   const { oldWindowId } = detachInfo;
-  if (!livePositionMap.has(oldWindowId)) return;
-
   const posMap = livePositionMap.get(oldWindowId);
+  if (!posMap) return;
+
   const positionValue = posMap[tabId];
   if (typeof positionValue !== 'number') return;
 
@@ -126,11 +126,7 @@ chrome.tabs.onAttached.addListener((tabId, attachInfo) => {
 
   if (newWindowId === originalWindowId) {
     tabStateMap.delete(tabId);
-
-    if (!livePositionMap.has(originalWindowId)) {
-      livePositionMap.set(originalWindowId, {});
-    }
-    livePositionMap.get(originalWindowId)[tabId] = positionValue;
+    getOrCreatePositionMap(originalWindowId)[tabId] = positionValue;
   }
 });
 
