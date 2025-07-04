@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Attach and Detach Tabs",
-  "description": "Detach the current active tab to a new window, and reattach it with a second hotkey.",
+  "name": "Tab Detach/Reattach",
   "version": "1.0",
-  "permissions": ["tabs", "windows"],
+  "description": "Detach and reattach active tab with hotkeys.",
+  "permissions": ["tabs", "storage", "windows", "scripting"],
   "background": {
     "service_worker": "background.js"
   },
@@ -12,16 +12,16 @@
       "suggested_key": {
         "default": "Alt+Shift+J"
       },
-      "description": "Detach the current tab to a new window"
+      "description": "Detach active tab"
     },
     "reattach-tab": {
       "suggested_key": {
         "default": "Alt+Shift+K"
       },
-      "description": "Reattach the current tab to its original window and position"
+      "description": "Reattach active tab"
     }
   },
   "action": {
-    "default_title": "Tab Manager"
+    "default_title": "Tab Detacher"
   }
 }
