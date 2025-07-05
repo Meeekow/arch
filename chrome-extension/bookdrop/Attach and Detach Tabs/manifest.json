@@ -1,9 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Tab Detach/Reattach",
+  "name": "Tab Manipulation",
   "version": "1.0",
-  "description": "Detach and reattach active tab with hotkeys.",
-  "permissions": ["tabs", "storage", "windows", "scripting"],
+  "permissions": ["tabs", "windows"],
   "background": {
     "service_worker": "background.js"
   },
@@ -12,16 +11,14 @@
       "suggested_key": {
         "default": "Alt+Shift+J"
       },
-      "description": "Detach active tab"
+      "description": "Detach the focused active tab"
     },
     "reattach-tab": {
       "suggested_key": {
         "default": "Alt+Shift+K"
       },
-      "description": "Reattach active tab"
+      "description": "Reattach the focused active tab"
     }
   },
-  "action": {
-    "default_title": "Tab Detacher"
-  }
+  "host_permissions": ["<all_urls>"]
 }
