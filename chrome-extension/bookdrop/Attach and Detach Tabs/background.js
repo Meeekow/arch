@@ -1,10 +1,10 @@
 // background.js
 
-const tabStateMap = new Map(); // tabId => { windowId, positionValue: { num, den } }
+const tabStateMap = new Map(); // tabId => { windowId, positionValue: { num, den }, manuallyReattached?: boolean }
 const livePositionMap = new Map(); // windowId => Map(tabId => { num, den })
 
 function initialRational(index) {
-  return { num: (index + 1), den: 1 };
+  return { num: index + 1, den: 1 };
 }
 
 function rationalToFloat(r) {
@@ -20,6 +20,7 @@ function initializeTabPositions() {
     for (const win of windows) {
       const positionMap = new Map();
       win.tabs.forEach((tab, index) => {
+        if (tab.incognito) return;
         const pos = initialRational(index);
         positionMap.set(tab.id, pos);
         tabStateMap.set(tab.id, { windowId: win.id, positionValue: pos });
@@ -34,9 +35,7 @@ chrome.runtime.onInstalled.addListener(initializeTabPositions);
 
 function detachTab(tab) {
   const state = tabStateMap.get(tab.id);
-  if (!state) return;
-
-  if (tab.windowId !== state.windowId) return; // already detached, do nothing
+  if (!state || tab.windowId !== state.windowId || tab.incognito) return;
 
   chrome.windows.get(tab.windowId, { populate: true }, (win) => {
     const tabs = win.tabs;
@@ -60,7 +59,6 @@ function detachTab(tab) {
     }
 
     tabStateMap.set(tab.id, { windowId: tab.windowId, positionValue: newPos });
-
     const positionMap = livePositionMap.get(tab.windowId);
     if (positionMap) positionMap.delete(tab.id);
 
@@ -85,15 +83,20 @@ function reattachTab(tabId) {
   if (!state) return;
 
   chrome.tabs.get(tabId, (tab) => {
-    if (!tab || tab.windowId === state.windowId) return; // already in correct window, do nothing
+    if (!tab || tab.incognito) return;
 
-    const { windowId, positionValue } = state;
+    const { windowId, positionValue, manuallyReattached } = state;
+
+    if (tab.windowId === windowId && !manuallyReattached) return;
 
     chrome.windows.get(windowId, { populate: true }, (win) => {
-      const otherTabs = win.tabs.filter(t => t.id !== tabId);
-      const tabEntries = otherTabs
-        .filter(t => tabStateMap.has(t.id))
-        .map(t => ({ tab: t, pos: tabStateMap.get(t.id).positionValue }));
+      const tabEntries = win.tabs.map((t) => {
+        const tState = tabStateMap.get(t.id);
+        return {
+          tab: t,
+          pos: tState ? tState.positionValue : initialRational(t.index)
+        };
+      });
 
       tabEntries.sort((a, b) => rationalToFloat(a.pos) - rationalToFloat(b.pos));
 
@@ -103,11 +106,8 @@ function reattachTab(tabId) {
       for (let i = 0; i < tabEntries.length; i++) {
         const entryFloat = rationalToFloat(tabEntries[i].pos);
         if (entryFloat > targetFloat) {
-          const visualTab = win.tabs.find(t => t.id === tabEntries[i].tab.id);
-          if (visualTab) {
-            insertIndex = visualTab.index;
-            break;
-          }
+          insertIndex = tabEntries[i].tab.index;
+          break;
         }
       }
 
@@ -115,7 +115,6 @@ function reattachTab(tabId) {
         const posMap = livePositionMap.get(windowId) || new Map();
         posMap.set(tabId, positionValue);
         livePositionMap.set(windowId, posMap);
-
         tabStateMap.set(tabId, { windowId, positionValue });
 
         chrome.windows.update(windowId, { focused: true }, () => {
@@ -126,10 +125,28 @@ function reattachTab(tabId) {
   });
 }
 
+chrome.tabs.onAttached.addListener((tabId, attachInfo) => {
+  const state = tabStateMap.get(tabId);
+  if (state && state.windowId !== attachInfo.newWindowId) {
+    const pos = state.positionValue;
+    // Preserve original windowId instead of replacing it
+    tabStateMap.set(tabId, {
+      windowId: state.windowId,
+      positionValue: pos,
+      manuallyReattached: true
+    });
+
+    const posMap = livePositionMap.get(attachInfo.newWindowId) || new Map();
+    posMap.set(tabId, pos);
+    livePositionMap.set(attachInfo.newWindowId, posMap);
+  }
+});
+
 function updateWindowPositionValues(windowId, callback) {
   chrome.windows.get(windowId, { populate: true }, (win) => {
     const newMap = new Map();
     win.tabs.forEach((tab, index) => {
+      if (tab.incognito) return;
       const pos = initialRational(index);
       newMap.set(tab.id, pos);
       tabStateMap.set(tab.id, { windowId, positionValue: pos });
