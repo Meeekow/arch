@@ -125,9 +125,18 @@ class TabManager {
       let newPos;
 
       if (tab.index === tabs.length - 1) {
-        // Tab is the last in the window — assign a very high positionValue
-        const lastValue = this.rationalToFloat(this.initialRational(tabs.length));
-        newPos = { num: Math.ceil(lastValue * 1000) + 5000, den: 1000 };
+        // Assign a position value greater than all existing ones
+        const values = tabs
+          .filter(t => t.id !== tab.id)
+          .map(t => this.tabStateMap.get(t.id)?.positionValue)
+          .filter(Boolean);
+
+        const maxVal = values.reduce((max, val) =>
+          this.rationalToFloat(val) > this.rationalToFloat(max) ? val : max,
+          { num: 1, den: 1 }
+        );
+
+        newPos = { num: maxVal.num + 5000, den: maxVal.den };
       } else {
         newPos = this.computePositionBetween(
           tabs[tab.index - 1],
@@ -174,7 +183,7 @@ class TabManager {
         let insertIndex = win.tabs.length;
 
         for (const entry of tabEntries) {
-          if (this.rationalToFloat(entry.pos) > targetFloat) {
+          if (targetFloat < this.rationalToFloat(entry.pos)) {
             insertIndex = entry.tab.index;
             break;
           }
@@ -218,16 +227,18 @@ class TabManager {
 const tabManager = new TabManager();
 
 tabManager.restore(() => {
-  chrome.commands.onCommand.addListener((command) => {
+  tabManager.restore(() => {
     if (!tabManager.initialized) {
       tabManager.initialized = true;
       tabManager.initializeTabPositions();
     }
 
-    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-      if (!tab) return;
-      if (command === "detach-tab") tabManager.detachTab(tab);
-      if (command === "reattach-tab") tabManager.reattachTab(tab.id);
+    chrome.commands.onCommand.addListener((command) => {
+      chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+        if (!tab) return;
+        if (command === "detach-tab") tabManager.detachTab(tab);
+        if (command === "reattach-tab") tabManager.reattachTab(tab.id);
+      });
     });
   });
 });
