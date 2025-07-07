@@ -1,8 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "Tab Manipulation",
-  "version": "1.0",
-  "permissions": ["tabs", "windows", "storage"],
+  "name": "Tab Detach Reattach",
+  "version": "1.2",
+  "description": "Detaches and reattaches tabs to their original position using hotkeys.",
+  "permissions": [
+    "tabs",
+    "windows",
+    "storage"
+  ],
   "background": {
     "service_worker": "background.js"
   },
@@ -11,14 +16,14 @@
       "suggested_key": {
         "default": "Alt+Shift+J"
       },
-      "description": "Detach the focused active tab"
+      "description": "Detaches the currently focused tab into a new or existing window."
     },
     "reattach-tab": {
       "suggested_key": {
         "default": "Alt+Shift+K"
       },
-      "description": "Reattach the focused active tab"
+      "description": "Reattaches the last detached tab to its original window and position."
     }
   },
-  "host_permissions": ["<all_urls>"]
+  "minimum_chrome_version": "93"
 }
