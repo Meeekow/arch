@@ -9,147 +9,150 @@ const waitForElement = (selector, callback, isArray = false, shouldMonitor = fal
   observer.observe(document, options);
 }
 
-const loseFocus = () => {
-  const blob = document.body;
-  blob.tabIndex = 0;
-  blob.focus();
-  blob.tabIndex = -1;
-}
+// const loseFocus = () => {
+//   const blob = document.body;
+//   blob.tabIndex = 0;
+//   blob.focus();
+//   blob.tabIndex = -1;
+// }
 
-const setNativeValue = (element, value) => {
-  let lastValue = element.value;
-  element.value = value;
-  let event = new Event('input', { target: element, bubbles: true });
-  // React 15
-  event.simulated = true;
-  // React 16
-  let tracker = element._valueTracker;
-  if (tracker) { tracker.setValue(lastValue) };
-  element.dispatchEvent(event);
-}
+// const setNativeValue = (element, value) => {
+//   let lastValue = element.value;
+//   element.value = value;
+//   let event = new Event('input', { target: element, bubbles: true });
+//   // React 15
+//   event.simulated = true;
+//   // React 16
+//   let tracker = element._valueTracker;
+//   if (tracker) { tracker.setValue(lastValue) };
+//   element.dispatchEvent(event);
+// }
 
-const findVisibleButton = () => {
-  let callback = (entries, observer) => {
-    entries.forEach((entry) => {
-      const target = entry.target;
-      if (entry.isIntersecting){
-        target.classList.add('buttonVisible');
-      } else {
-        target.classList.remove('buttonVisible');
-      }
-    })
-  }
+// const findVisibleButton = () => {
+//   let callback = (entries, observer) => {
+//     entries.forEach((entry) => {
+//       const target = entry.target;
+//       if (entry.isIntersecting){
+//         target.classList.add('buttonVisible');
+//       } else {
+//         target.classList.remove('buttonVisible');
+//       }
+//     })
+//   }
 
-  let observer = new IntersectionObserver(callback, {
-    threshold: [1]
-  })
+//   let observer = new IntersectionObserver(callback, {
+//     threshold: [1]
+//   })
 
-  const buttons = document.querySelectorAll('.css-gywnln');
-  for (const b of buttons) {
-    observer.observe(b);
-  }
-}
+//   const buttons = document.querySelectorAll('.css-gywnln');
+//   for (const b of buttons) {
+//     observer.observe(b);
+//   }
+// }
 
-const findVisibleCard = () => {
-  let callback = (entries, observer) => {
-    entries.forEach((entry) => {
-      const target = entry.target;
-      if (entry.isIntersecting){
-        target.querySelector('button').classList.add('cardVisible');
-      } else {
-        target.querySelector('button').classList.remove('cardVisible');
-      }
-    })
-  }
+// const findVisibleCard = () => {
+//   let callback = (entries, observer) => {
+//     entries.forEach((entry) => {
+//       const target = entry.target;
+//       if (entry.isIntersecting){
+//         target.querySelector('button').classList.add('cardVisible');
+//       } else {
+//         target.querySelector('button').classList.remove('cardVisible');
+//       }
+//     })
+//   }
 
-  let observer = new IntersectionObserver(callback, {
-    threshold: [0.5]
-  })
+//   let observer = new IntersectionObserver(callback, {
+//     threshold: [0.5]
+//   })
 
-  const cards = document.querySelectorAll('.css-2dg54o');
-  for (const c of cards) {
-    observer.observe(c);
-  }
-}
+//   const cards = document.querySelectorAll('.css-2dg54o');
+//   for (const c of cards) {
+//     observer.observe(c);
+//   }
+// }
 
-const replaceSelectedText = (replacementText, wordSelectionStart, wordSelectionEnd) => {
-  const titleInputBox = document.querySelector('.custom-input.w-full');
-  let result = `${wordSelectionStart} ${replacementText} ${wordSelectionEnd}`;
-  result = result.replace(/^\s+/g, '').replace(/\s+/g, ' ').replace(/\s+$/g, '');
-  setNativeValue(titleInputBox, result);
-}
+// const replaceSelectedText = (replacementText, wordSelectionStart, wordSelectionEnd) => {
+//   const titleInputBox = document.querySelector('.custom-input.w-full');
+//   let result = `${wordSelectionStart} ${replacementText} ${wordSelectionEnd}`;
+//   result = result.replace(/^\s+/g, '').replace(/\s+/g, ' ').replace(/\s+$/g, '');
+//   setNativeValue(titleInputBox, result);
+// }
 
-let recognition;
-const startListening = async (isPartialTextReplace = false) => {
-  const titleInputBox = document.querySelector('.custom-input.w-full');
-  const transcribeButton = document.querySelector('#start-dictation-microphone');
+// let recognition;
+// const startListening = async (isPartialTextReplace = false) => {
+//   const titleInputBox = document.querySelector('.custom-input.w-full');
+//   const transcribeButton = document.querySelector('#start-dictation-microphone');
 
-  const wordSelectionStart = titleInputBox.value.slice(0, titleInputBox.selectionStart);
-  const wordSelectionEnd = titleInputBox.value.slice(titleInputBox.selectionEnd);
+//   const wordSelectionStart = titleInputBox.value.slice(0, titleInputBox.selectionStart);
+//   const wordSelectionEnd = titleInputBox.value.slice(titleInputBox.selectionEnd);
 
-  const speechRecognition = window.webkitSpeechRecognition;
-  recognition = new speechRecognition();
-  recognition.lang = 'en-US';
-  recognition.interimResults = true;
+//   const speechRecognition = window.webkitSpeechRecognition;
+//   recognition = new speechRecognition();
+//   recognition.lang = 'en-US';
+//   recognition.interimResults = true;
 
-  recognition.addEventListener('audiostart', () => {
-    transcribeButton.innerText = 'Transcribing';
-    transcribeButton.style.cssText = 'width: 110px; position: relative; left: 16.5%; top: 35px; transform: translateX(-50%); background-color: #FAA0A0; border-style: none;';
-  });
+//   recognition.addEventListener('audiostart', () => {
+//     transcribeButton.innerText = 'Transcribing';
+//     transcribeButton.style.cssText = 'width: 110px; position: relative; left: 16.5%; top: 35px; transform: translateX(-50%); background-color: #FAA0A0; border-style: none;';
+//   });
 
-  recognition.addEventListener('audioend', () => {
-    transcribeButton.innerText = 'Start';
-    transcribeButton.style.cssText = 'width: 110px; position: relative; left: 16.5%; top: 35px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
-    recognition.stop();
-  });
+//   recognition.addEventListener('audioend', () => {
+//     transcribeButton.innerText = 'Start';
+//     transcribeButton.style.cssText = 'width: 110px; position: relative; left: 16.5%; top: 35px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
+//     recognition.stop();
+//   });
 
-  recognition.addEventListener('result', (e) => {
-    const transcript = Array.from(e.results)
-      .map((result) => result[0])
-      .map((result) => result.transcript);
-    isPartialTextReplace ? replaceSelectedText(transcript, wordSelectionStart, wordSelectionEnd) : setNativeValue(titleInputBox, transcript);
-    titleInputBox.focus();
-  });
+//   recognition.addEventListener('result', (e) => {
+//     const transcript = Array.from(e.results)
+//       .map((result) => result[0])
+//       .map((result) => result.transcript);
+//     isPartialTextReplace ? replaceSelectedText(transcript, wordSelectionStart, wordSelectionEnd) : setNativeValue(titleInputBox, transcript);
+//     titleInputBox.focus();
+//   });
 
-  recognition.addEventListener('error', () => {
-    recognition.stop();
-    setTimeout(() => {
-      recognition.start();
-    }, 100);
-  });
-  recognition.start();
-}
+//   recognition.addEventListener('error', () => {
+//     recognition.stop();
+//     setTimeout(() => {
+//       recognition.start();
+//     }, 100);
+//   });
+//   recognition.start();
+// }
 
-const stopListening = () => {
-  recognition.stop();
-}
+// const stopListening = () => {
+//   recognition.stop();
+// }
 
-const renderStartButton = (selector) => {
-  const startRecordingButton = document.createElement('button');
-  startRecordingButton.id = 'start-dictation-microphone';
-  startRecordingButton.innerText = 'Start';
-  startRecordingButton.style.cssText = 'width: 110px; position: relative; left: 16.5%; top: 35px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
-  startRecordingButton.onclick = () => { startListening() };
-  selector.parentNode.appendChild(startRecordingButton);
-}
-waitForElement('.new-sm-label.css-1up6yon', renderStartButton, false, false);
+// const renderStartButton = (selector) => {
+//   const startRecordingButton = document.createElement('button');
+//   startRecordingButton.id = 'start-dictation-microphone';
+//   startRecordingButton.innerText = 'Start';
+//   startRecordingButton.style.cssText = 'width: 110px; position: relative; left: 16.5%; top: 35px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
+//   startRecordingButton.onclick = () => { startListening() };
+//   selector.parentNode.appendChild(startRecordingButton);
+// }
+// waitForElement('.new-sm-label.css-1up6yon', renderStartButton, false, false);
 
-const renderStopButton = (selector) => {
-  const stopRecordingButton = document.createElement('button');
-  stopRecordingButton.id = 'stop-dictation-microphone';
-  stopRecordingButton.innerText = 'Stop';
-  stopRecordingButton.style.cssText = 'width: 100px; position: relative; left: 17%; top: 35px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
-  stopRecordingButton.onclick = () => { stopListening() };
-  selector.parentNode.appendChild(stopRecordingButton);
-}
-waitForElement('.new-sm-label.css-1up6yon', renderStopButton, false, false);
+// const renderStopButton = (selector) => {
+//   const stopRecordingButton = document.createElement('button');
+//   stopRecordingButton.id = 'stop-dictation-microphone';
+//   stopRecordingButton.innerText = 'Stop';
+//   stopRecordingButton.style.cssText = 'width: 100px; position: relative; left: 17%; top: 35px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
+//   stopRecordingButton.onclick = () => { stopListening() };
+//   selector.parentNode.appendChild(stopRecordingButton);
+// }
+// waitForElement('.new-sm-label.css-1up6yon', renderStopButton, false, false);
 
 // Hide side panel when page loads.
 waitForElement('.bi.bi-chevron-right', (element) => {
   element.click()
   document.addEventListener('copy', function(e) {
-      link = e.target.parentElement.lastElementChild.querySelector('a').getAttribute('href')
-      window.open(link, '_blank');
+      const elem = e.target.parentElement.lastElementChild.querySelector('a');
+      if (elem) {
+        const link = elem.getAttribute('href');
+        window.open(link, '_blank');
+      }
   })
 }, false, false);
 
@@ -241,24 +244,24 @@ const vim = () => {
           customHotkeys('n');
         }
         break;
-      case '.':
-        e.preventDefault();
-        document.querySelector('.custom-select.css-ecfv9d').selectedIndex = 1;
-        unifiedSearch();
-        customHotkeys('n');
-        break;
-      case ',':
-        e.preventDefault();
-        loseFocus();
-        break;
-      case 'Enter':
-        e.preventDefault();
-        startListening(true);
-        break;
-      case '/':
-        e.preventDefault();
-        startListening();
-        break;
+      // case '.':
+      //   e.preventDefault();
+      //   document.querySelector('.custom-select.css-ecfv9d').selectedIndex = 1;
+      //   unifiedSearch();
+      //   customHotkeys('n');
+      //   break;
+      // case ',':
+      //   e.preventDefault();
+      //   loseFocus();
+      //   break;
+      // case 'Enter':
+      //   e.preventDefault();
+      //   startListening(true);
+      //   break;
+      // case '/':
+      //   e.preventDefault();
+      //   startListening();
+      //   break;
     }
   })
 

@@ -128,3 +128,70 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   // Return true to keep the message channel open for an asynchronous response
   return true;
 })
+
+
+// Move tab automatically to amz / worthpoint / ebay
+const TARGET_URL = "https://cdn.bookparse.com";
+const movedTabs = new Set();                    // Tracks moved tabs
+const originToMovedMap = new Map();             // originTabId → movedTabId
+
+function shouldMove(url) {
+  return typeof url === "string" && url.includes(TARGET_URL);
+}
+
+async function moveTabIfNeeded(tabId, tab) {
+  if (movedTabs.has(tabId)) return;
+  if (tab.openerTabId === undefined) return; // Ignore manually opened tabs
+
+  const url = tab.pendingUrl || tab.url || "";
+  if (!shouldMove(url)) return;
+
+  const sourceWindowId = tab.windowId;
+  if (!sourceWindowId) return;
+
+  const windows = await chrome.windows.getAll({ populate: false });
+  const targetWindows = windows.filter(w =>
+    w.id !== sourceWindowId && w.type === "normal" && !w.incognito
+  );
+
+  if (targetWindows.length === 0) return;
+
+  const destinationWindow = targetWindows[0];
+
+  const movedTab = await chrome.tabs.move(tabId, {
+    windowId: destinationWindow.id,
+    index: -1
+  });
+
+  await chrome.tabs.update(movedTab.id, { active: true });
+
+  movedTabs.add(tabId);
+  originToMovedMap.set(tab.openerTabId, movedTab.id);
+}
+
+// Listen for tab creation (only works for programmatic tabs with openerTabId)
+chrome.tabs.onCreated.addListener(async (tab) => {
+  await moveTabIfNeeded(tab.id, tab);
+});
+
+// Fallback for programmatically opened tabs with delayed URLs
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  const url = changeInfo.url || changeInfo.pendingUrl;
+  if (shouldMove(url)) {
+    await moveTabIfNeeded(tabId, tab);
+  }
+});
+
+// Close moved tab when origin tab is closed
+chrome.tabs.onRemoved.addListener(async (closedTabId) => {
+  const movedTabId = originToMovedMap.get(closedTabId);
+  if (!movedTabId) return;
+
+  try {
+    await chrome.tabs.remove(movedTabId);
+    originToMovedMap.delete(closedTabId);
+    movedTabs.delete(movedTabId);
+  } catch (e) {
+    console.warn("Failed to auto-close moved tab:", e);
+  }
+});
