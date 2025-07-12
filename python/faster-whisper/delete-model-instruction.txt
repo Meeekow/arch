@@ -1,0 +1,20 @@
+# Install
+pip install -U "huggingface_hub[cli]"
+
+# Run
+huggingface-cli delete-cache
+
+# Select the models you want to remove
+
+
+# Here is my approach on Windows 11 with 1050 Ti.
+https://github.com/openai/whisper/discussions/47#discussioncomment-5558664
+- Install the latest Driver
+- Install CUDA 118
+- Uninstall pytorch via pip uninstall torch && pip cache purge
+- Install pytorch via pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+- Verify CUDA is enabled via python -c "import torch; print(\"CUDA enabled:\", torch.cuda.is_available());"
+
+
+# Whisper Models from HuggingFace
+https://huggingface.co/distil-whisper
