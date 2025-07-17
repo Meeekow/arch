@@ -1,29 +1,21 @@
 {
   "manifest_version": 3,
-  "name": "Tab Detach Reattach",
-  "version": "1.2",
-  "description": "Detaches and reattaches tabs to their original position using hotkeys.",
-  "permissions": [
-    "tabs",
-    "windows",
-    "storage"
-  ],
+  "name": "Tab Detacher",
+  "version": "1.0",
+  "description": "Detach active tab to another window or new window with Ctrl+Shift+H",
+  "permissions": ["tabs", "storage", "windows"],
   "background": {
     "service_worker": "background.js"
   },
   "commands": {
     "detach-tab": {
       "suggested_key": {
-        "default": "Alt+Shift+J"
+        "default": "Ctrl+Shift+H"
       },
-      "description": "Detaches the currently focused tab into a new or existing window."
-    },
-    "reattach-tab": {
-      "suggested_key": {
-        "default": "Alt+Shift+K"
-      },
-      "description": "Reattaches the last detached tab to its original window and position."
+      "description": "Detach tab to another or new window"
     }
   },
-  "minimum_chrome_version": "93"
+  "action": {
+    "default_title": "Tab Detacher"
+  }
 }
