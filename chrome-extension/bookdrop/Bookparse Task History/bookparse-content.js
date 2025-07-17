@@ -9,141 +9,6 @@ const waitForElement = (selector, callback, isArray = false, shouldMonitor = fal
   observer.observe(document, options);
 }
 
-// const loseFocus = () => {
-//   const blob = document.body;
-//   blob.tabIndex = 0;
-//   blob.focus();
-//   blob.tabIndex = -1;
-// }
-
-// const setNativeValue = (element, value) => {
-//   let lastValue = element.value;
-//   element.value = value;
-//   let event = new Event('input', { target: element, bubbles: true });
-//   // React 15
-//   event.simulated = true;
-//   // React 16
-//   let tracker = element._valueTracker;
-//   if (tracker) { tracker.setValue(lastValue) };
-//   element.dispatchEvent(event);
-// }
-
-// const findVisibleButton = () => {
-//   let callback = (entries, observer) => {
-//     entries.forEach((entry) => {
-//       const target = entry.target;
-//       if (entry.isIntersecting){
-//         target.classList.add('buttonVisible');
-//       } else {
-//         target.classList.remove('buttonVisible');
-//       }
-//     })
-//   }
-
-//   let observer = new IntersectionObserver(callback, {
-//     threshold: [1]
-//   })
-
-//   const buttons = document.querySelectorAll('.css-gywnln');
-//   for (const b of buttons) {
-//     observer.observe(b);
-//   }
-// }
-
-// const findVisibleCard = () => {
-//   let callback = (entries, observer) => {
-//     entries.forEach((entry) => {
-//       const target = entry.target;
-//       if (entry.isIntersecting){
-//         target.querySelector('button').classList.add('cardVisible');
-//       } else {
-//         target.querySelector('button').classList.remove('cardVisible');
-//       }
-//     })
-//   }
-
-//   let observer = new IntersectionObserver(callback, {
-//     threshold: [0.5]
-//   })
-
-//   const cards = document.querySelectorAll('.css-2dg54o');
-//   for (const c of cards) {
-//     observer.observe(c);
-//   }
-// }
-
-// const replaceSelectedText = (replacementText, wordSelectionStart, wordSelectionEnd) => {
-//   const titleInputBox = document.querySelector('.custom-input.w-full');
-//   let result = `${wordSelectionStart} ${replacementText} ${wordSelectionEnd}`;
-//   result = result.replace(/^\s+/g, '').replace(/\s+/g, ' ').replace(/\s+$/g, '');
-//   setNativeValue(titleInputBox, result);
-// }
-
-// let recognition;
-// const startListening = async (isPartialTextReplace = false) => {
-//   const titleInputBox = document.querySelector('.custom-input.w-full');
-//   const transcribeButton = document.querySelector('#start-dictation-microphone');
-
-//   const wordSelectionStart = titleInputBox.value.slice(0, titleInputBox.selectionStart);
-//   const wordSelectionEnd = titleInputBox.value.slice(titleInputBox.selectionEnd);
-
-//   const speechRecognition = window.webkitSpeechRecognition;
-//   recognition = new speechRecognition();
-//   recognition.lang = 'en-US';
-//   recognition.interimResults = true;
-
-//   recognition.addEventListener('audiostart', () => {
-//     transcribeButton.innerText = 'Transcribing';
-//     transcribeButton.style.cssText = 'width: 110px; position: relative; left: 16.5%; top: 35px; transform: translateX(-50%); background-color: #FAA0A0; border-style: none;';
-//   });
-
-//   recognition.addEventListener('audioend', () => {
-//     transcribeButton.innerText = 'Start';
-//     transcribeButton.style.cssText = 'width: 110px; position: relative; left: 16.5%; top: 35px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
-//     recognition.stop();
-//   });
-
-//   recognition.addEventListener('result', (e) => {
-//     const transcript = Array.from(e.results)
-//       .map((result) => result[0])
-//       .map((result) => result.transcript);
-//     isPartialTextReplace ? replaceSelectedText(transcript, wordSelectionStart, wordSelectionEnd) : setNativeValue(titleInputBox, transcript);
-//     titleInputBox.focus();
-//   });
-
-//   recognition.addEventListener('error', () => {
-//     recognition.stop();
-//     setTimeout(() => {
-//       recognition.start();
-//     }, 100);
-//   });
-//   recognition.start();
-// }
-
-// const stopListening = () => {
-//   recognition.stop();
-// }
-
-// const renderStartButton = (selector) => {
-//   const startRecordingButton = document.createElement('button');
-//   startRecordingButton.id = 'start-dictation-microphone';
-//   startRecordingButton.innerText = 'Start';
-//   startRecordingButton.style.cssText = 'width: 110px; position: relative; left: 16.5%; top: 35px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
-//   startRecordingButton.onclick = () => { startListening() };
-//   selector.parentNode.appendChild(startRecordingButton);
-// }
-// waitForElement('.new-sm-label.css-1up6yon', renderStartButton, false, false);
-
-// const renderStopButton = (selector) => {
-//   const stopRecordingButton = document.createElement('button');
-//   stopRecordingButton.id = 'stop-dictation-microphone';
-//   stopRecordingButton.innerText = 'Stop';
-//   stopRecordingButton.style.cssText = 'width: 100px; position: relative; left: 17%; top: 35px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
-//   stopRecordingButton.onclick = () => { stopListening() };
-//   selector.parentNode.appendChild(stopRecordingButton);
-// }
-// waitForElement('.new-sm-label.css-1up6yon', renderStopButton, false, false);
-
 // Hide side panel when page loads.
 waitForElement('.bi.bi-chevron-right', (element) => {
   element.click()
@@ -215,108 +80,68 @@ const rotateImage = (key) => {
 const vim = () => {
   const hotkeys = ['c', 'i', 'n'];
   const arrowKeys = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'];
-  // Custom actions when nothing is focused.
-  document.addEventListener('keydown', (e) => {
-    if (e.target.nodeName === 'BODY' && !e.ctrlKey) {
-      const k = e.key;
-      if (hotkeys.includes(k)) {
-        customHotkeys(k);
-      } else if (arrowKeys.includes(k)) {
-        e.preventDefault();
-        rotateImage(k);
+
+  if (!window._keydownListenerAttached) {
+    window._keydownListenerAttached = true;
+
+    document.addEventListener('keydown', onKeyDown);
+    function onKeyDown(e) {
+      if (e.target.nodeName === 'BODY' && !e.ctrlKey) {
+        const k = e.key;
+        switch(k) {
+          case 'n':
+          case 'i':
+            document.querySelector('.material-symbols-rounded.css-c3ghyy').click();
+            customHotkeys(k);
+            break;
+        }
+
+        if (hotkeys.includes(k)) {
+          customHotkeys(k);
+        } else if (arrowKeys.includes(k)) {
+          e.preventDefault();
+          rotateImage(k);
+        }
       }
     }
-  });
 
-  const title = document.querySelector('.custom-input.w-full');
-  // Apply changes made via Surfingkeys VIM mode.
-  title.addEventListener('change', (e) => {
-    const event = new Event('input', { bubbles: true });
-    title.dispatchEvent(event);
-  });
+    const title = document.querySelector('.custom-input.w-full');
+    // Apply changes made via Surfingkeys VIM mode.
+    title.addEventListener('change', applyChanges);
+    function applyChanges() {
+      const event = new Event('input', { bubbles: true });
+      title.dispatchEvent(event);
+    }
 
-  // Custom actions when title box is focused.
-  title.addEventListener('keydown', (e) => {
-    switch(e.key) {
-      case 'Escape':
-        if (title.value.length !== 0) {
+    title.addEventListener('keydown', sendQuery);
+    function sendQuery(e) {
+      switch(e.key) {
+        case 'Escape':
           unifiedSearch();
           customHotkeys('n');
-        }
-        break;
-      // case '.':
-      //   e.preventDefault();
-      //   document.querySelector('.custom-select.css-ecfv9d').selectedIndex = 1;
-      //   unifiedSearch();
-      //   customHotkeys('n');
-      //   break;
-      // case ',':
-      //   e.preventDefault();
-      //   loseFocus();
-      //   break;
-      // case 'Enter':
-      //   e.preventDefault();
-      //   startListening(true);
-      //   break;
-      // case '/':
-      //   e.preventDefault();
-      //   startListening();
-      //   break;
+          break;
+      }
     }
-  })
 
-  // Custom actions when binding box is focused.
-  const binding = document.querySelector('.custom-select.css-ecfv9d');
-  binding.addEventListener('keydown', (e) => {
-    switch(e.key) {
-      case 'Escape':
-        unifiedSearch();
-        customHotkeys('n');
-      case 'Tab':
-        e.preventDefault();
-        title.focus();
-        break;
+    const binding = document.querySelector('.custom-select.css-ecfv9d');
+    binding.addEventListener('keydown', bindingSelection);
+    function bindingSelection(e) {
+      switch(e.key) {
+        case 'Escape':
+          unifiedSearch();
+          customHotkeys('n');
+        case 'Tab':
+          e.preventDefault();
+          title.focus();
+          break;
+      }
     }
-  })
+
+  }
 }
 waitForElement('.new-sm-label.css-1up6yon', vim, false, true);
-
-// const adjustRecognitionSoftware = () => {
-//   const container = document.querySelector('.css-12rxo42');
-//   container.style.cssText = "transform: translate(430px, 0px);";
-
-//   const card = document.querySelector('.css-l5snnm');
-//   card.style.cssText = "position: relative; width: 900px; max-height: 900px; transform: translate(0px, -160px);";
-
-//   findVisibleButton();
-//   findVisibleCard();
-// }
-// waitForElement('.new-sm-label.css-1up6yon', adjustRecognitionSoftware, false, true);
-
-// const idImageUserInterface = () => {
-//   const imageId = document.querySelector('.new-sm-label.css-1up6yon');
-//   imageId.style.cssText = "transform: translate(0px, -30px);";
-
-//   const taskImage = document.querySelector('.new-mb-4.css-iscebk');
-//   taskImage.style.cssText = " width: 1000px; height: 300px; transform: translate(-50px, 0px)";
-
-//   const ui = document.querySelector('.css-1ssh553');
-//   ui.style.cssText = "transform: translate(-1050px, 500px);";
-
-// }
-// waitForElement('.new-sm-label.css-1up6yon', idImageUserInterface, false, true);
 
 const removeGeneratedLink = (element) => {
     element.hidden = true;
 }
 waitForElement('.css-1ad5bf3', removeGeneratedLink, false, true);
-
-// window.onfocus = () => {
-//   loseFocus();
-//   const target = document.querySelector('.custom-input.new-mb-4');
-//   if (target) {
-//     if (target.value !== '') { setNativeValue(target, '') };
-//   }
-// }
-
-

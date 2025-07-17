@@ -5,6 +5,7 @@ function unifiedSearch(query) {
   searchButton.click();
 }
 
+
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   // For amazon, we have to do it this way since we need
   // the correct binding to be queried too.
@@ -71,13 +72,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     sendResponse({ reply: "zooming-in" });
   }
 
-  // Return true to keep the message channel open for an asynchronous response
-  return true;
-})
 
-
-// AMAZON, WORTHPOINT, EBAY
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+  // Switch focus to bookparse window.
   if (message.message === "focus-bookparse") {
     chrome.tabs.query({ currentWindow: false }, function(tabs) {
       const indexToFind = 1;
@@ -93,6 +89,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     sendResponse({ reply: "focusing-bookparse" });
   }
 
+  // Switch tab focus in amazon/worthpoint/ebay window.
   if (message.message === "switch-tab-left") {
     chrome.tabs.query({ currentWindow: true }, function(tabs) {
       for (let i = 0, l = tabs.length - 1; i <= l; i++) {
@@ -108,6 +105,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     sendResponse({ reply: "switching-tab-left" });
   }
 
+  // Switch tab focus in amazon/worthpoint/ebay window.
   if (message.message === "switch-tab-right") {
     chrome.tabs.query({ currentWindow: true }, function(tabs) {
       chrome.tabs.query({ currentWindow: true }, function(tabs) {
@@ -130,68 +128,97 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 })
 
 
-// Move tab automatically to amz / worthpoint / ebay
 const TARGET_URL = "https://cdn.bookparse.com";
-const movedTabs = new Set();                    // Tracks moved tabs
-const originToMovedMap = new Map();             // originTabId → movedTabId
+const tabMap = new Map(); // originTabId → movedTabId
 
-function shouldMove(url) {
-  return typeof url === "string" && url.includes(TARGET_URL);
-}
+let windowAId = null;
+let windowBId = null;
 
-async function moveTabIfNeeded(tabId, tab) {
-  if (movedTabs.has(tabId)) return;
-  if (tab.openerTabId === undefined) return; // Ignore manually opened tabs
-
-  const url = tab.pendingUrl || tab.url || "";
-  if (!shouldMove(url)) return;
-
-  const sourceWindowId = tab.windowId;
-  if (!sourceWindowId) return;
-
-  const windows = await chrome.windows.getAll({ populate: false });
-  const targetWindows = windows.filter(w =>
-    w.id !== sourceWindowId && w.type === "normal" && !w.incognito
-  );
-
-  if (targetWindows.length === 0) return;
-
-  const destinationWindow = targetWindows[0];
-
-  const movedTab = await chrome.tabs.move(tabId, {
-    windowId: destinationWindow.id,
-    index: -1
-  });
-
-  await chrome.tabs.update(movedTab.id, { active: true });
-
-  movedTabs.add(tabId);
-  originToMovedMap.set(tab.openerTabId, movedTab.id);
-}
-
-// Listen for tab creation (only works for programmatic tabs with openerTabId)
+// Handle tab creation (with potential opener)
 chrome.tabs.onCreated.addListener(async (tab) => {
-  await moveTabIfNeeded(tab.id, tab);
+  if (windowAId === null || windowBId === null) {
+    initializeWindowCache();
+  }
+
+  if (tab.url?.startsWith(TARGET_URL)) {
+    await handleTargetTab(tab.id, tab, tab.openerTabId);
+  }
 });
 
-// Fallback for programmatically opened tabs with delayed URLs
+// Handle navigation in existing tab
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  const url = changeInfo.url || changeInfo.pendingUrl;
-  if (shouldMove(url)) {
-    await moveTabIfNeeded(tabId, tab);
+  if (changeInfo.status === 'complete' && tab.url?.startsWith(TARGET_URL)) {
+    await handleTargetTab(tabId, tab);
   }
 });
 
-// Close moved tab when origin tab is closed
+// When any tab is closed
 chrome.tabs.onRemoved.addListener(async (closedTabId) => {
-  const movedTabId = originToMovedMap.get(closedTabId);
-  if (!movedTabId) return;
+  if (tabMap.has(closedTabId)) {
+    const movedTabId = tabMap.get(closedTabId);
+    try {
+      await chrome.tabs.remove(movedTabId);
+    } catch (e) {
+      console.warn(`Could not close moved tab ${movedTabId}:`, e);
+    }
+    tabMap.delete(closedTabId);
+  }
 
-  try {
-    await chrome.tabs.remove(movedTabId);
-    originToMovedMap.delete(closedTabId);
-    movedTabs.delete(movedTabId);
-  } catch (e) {
-    console.warn("Failed to auto-close moved tab:", e);
+  for (const [originId, movedId] of tabMap.entries()) {
+    if (movedId === closedTabId) {
+      tabMap.delete(originId);
+      break;
+    }
   }
 });
+
+// Core tab move + tracking logic
+async function handleTargetTab(tabId, tab, originTabId = null) {
+  try {
+    // Skip if windows not initialized or less than 2 exist
+    if (!windowAId || !windowBId || windowAId === windowBId) {
+      console.warn('Insufficient window info; skipping tab handling.');
+      return;
+    }
+
+    const originWindowId = tab.windowId;
+    const targetWindowId = (originWindowId === windowAId) ? windowBId : windowAId;
+
+    if (!originTabId) originTabId = tab.openerTabId || tabId;
+
+    // Avoid re-handling already-moved tabs
+    if ([...tabMap.values()].includes(tabId)) return;
+
+    const movedTab = await chrome.tabs.move(tabId, {
+      windowId: targetWindowId,
+      index: 0
+    });
+
+    await chrome.tabs.update(movedTab.id, { active: true });
+
+    await chrome.windows.update(originWindowId, { focused: true });
+
+    tabMap.set(originTabId, movedTab.id);
+
+  } catch (e) {
+    console.error('Error in handleTargetTab:', e);
+  }
+}
+
+// Cache exactly 2 window IDs
+async function initializeWindowCache() {
+  try {
+    const windows = await chrome.windows.getAll({ populate: false });
+
+    if (windows.length === 2) {
+      windowAId = windows[0].id;
+      windowBId = windows[1].id;
+    } else {
+      windowAId = null;
+      windowBId = null;
+      console.warn('Expected 2 windows, found', windows.length);
+    }
+  } catch (e) {
+    console.error('Failed to initialize window cache:', e);
+  }
+}
