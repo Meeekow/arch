@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Manager",
+  "version": "1.0",
+  "description": "Toggle between tabs and copy current tab URL.",
+  "permissions": ["tabs", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "go-back-tab": {
+      "suggested_key": {
+        "default": "Alt+P"
+      },
+      "description": "Go back to previously active tab"
+    },
+    "copy-current-url": {
+      "suggested_key": {
+        "default": "Alt+U"
+      },
+      "description": "Copy current tab's URL to clipboard"
+    },
+    "detach-or-reattach-tab": {
+      "suggested_key": {
+        "default": "Alt+H"
+      },
+      "description": "Detach current tab to new window, or reattach to existing window"
+    }
+  }
+}
