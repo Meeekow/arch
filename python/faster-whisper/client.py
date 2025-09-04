@@ -1,4 +1,4 @@
-from faster_whisper import WhisperModel
+# client_script.py
 import sounddevice as sd
 import soundfile as sf
 import numpy as np
@@ -6,18 +6,12 @@ import pyautogui
 import keyboard
 import time
 import io
-
-# Load the model only once
-print("Loading Whisper model...")
-MODEL = WhisperModel("distil-large-v3", compute_type="int8_float16")
-print("Model loaded.")
+import requests
 
 class TranscriptionSession:
-    def __init__(self, model, sample_rate=16000, channels=1, beam_size=10):
-        self.model = model
+    def __init__(self, sample_rate=16000, channels=1):
         self.sample_rate = sample_rate
         self.channels = channels
-        self.beam_size = beam_size
         self.audio_chunks = []
         self.is_recording = False
         self.record_start_time = 0
@@ -68,11 +62,14 @@ class TranscriptionSession:
         sf.write(buffer, recorded, self.sample_rate, format='WAV')
         buffer.seek(0)
 
-        print("📝 Transcribing from in-memory buffer...")
-        segments, _ = self.model.transcribe(buffer, language="en", beam_size=self.beam_size, temperature=0.0)
+        print("📡 Sending audio to model server...")
+        response = requests.post("http://127.0.0.1:5050/transcribe", files={"audio": buffer})
 
-        raw = [segment.text.strip() for segment in segments]
-        full_text = " ".join(raw)
+        if response.status_code != 200:
+            print("❌ Error from server:", response.text)
+            return
+
+        full_text = response.json().get("text", "")
         if not self.trim_output:
             full_text = " " + full_text.lstrip()
 
@@ -82,8 +79,7 @@ class TranscriptionSession:
 
 class App:
     def __init__(self):
-        self.model = MODEL  # Shared persistent model
-        self.session = TranscriptionSession(self.model)
+        self.session = TranscriptionSession()
 
     def start(self):
         keyboard.add_hotkey('win+space', lambda: self.session.toggle_recording(trim_output=False))
