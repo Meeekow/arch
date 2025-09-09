@@ -80,15 +80,15 @@ if ( self.origin === "https://www.messenger.com" ) {
 
 // bookparse
 if ( self.origin === "https://bookparse.com" ) {
-  Hints.setCharacters("tshae");
+  Hints.setCharacters("haei");
   settings.scrollStepSize = 50;
 }
 
 // remove everything except the ff. to avoid unwanted actions
-unmapAllExcept(['j', 'k', 'cs', 'gg', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse.com\/dashboard\/.\/bookidentification.*/i);
+unmapAllExcept(['j', 'k', 'cs', 'gg', 'gxx', '<Ctrl-i>', '<Esc>'], /bookparse.com\/dashboard\/.\/review-task.*/i);
 
 // change scroll target
-map('p', 'cs', /bookparse.com\/dashboard\/.\/bookidentification.*/i); unmap('cs', /bookparse.com\/dashboard\/.\/bookidentification.*/i);
+map('p', 'cs', /bookparse.com\/dashboard\/.\/bookidentification.*/i); unmap('cs', /bookparse.com\/dashboard\/.\/review-task.*/i);
 
 // trigger event so that new value would reflect
 function triggerEvent(obj, event) {
@@ -133,110 +133,88 @@ function scrollUpOrDown(action) {
   })
 }
 
-mapkey('d', 'scroll down', function() {
+mapkey('d', 'Scroll Down', function() {
   scrollUpOrDown("down");
-}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
+}, {domain: /bookparse.com\/dashboard\/.\/review-task.*/i} );
 
-mapkey('u', 'scroll up', function() {
+mapkey('u', 'Scroll Up', function() {
   scrollUpOrDown("up");
-}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
+}, {domain: /bookparse.com\/dashboard\/.\/review-task.*/i} );
 
-// switch between not complete and undecided
-mapkey('b', 'switch between not complete and undecided', function() {
-  const url = location.href;
-  const taskButton = document.querySelectorAll('a.mini-navbar-item');
-  url.indexOf('undecided') > -1 ? taskButton[0].click()
-                                : taskButton[1].click();
-}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
-
-// enter assigned ASIN is book is valuable
-mapkey('l', 'valuable book', function() {
-  const ASIN = '0600621987';
-  const masterIsbnBox = document.querySelector('.custom-input.new-mb-4');
-  const submitButton = document.querySelector('.custom-button.css-dm0erh');
-  masterIsbnBox.value = ASIN;
-  triggerEvent(masterIsbnBox, 'input');
-  submitButton.click();
-  Clipboard.write(' ');
-}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
-
-// enter assigned ASIN is book is valuable
-mapkey('w', 'medium valuable', function() {
-  const ASIN = 'B0006XVY3S';
-  const masterIsbnBox = document.querySelector('.custom-input.new-mb-4');
-  const submitButton = document.querySelector('.custom-button.css-dm0erh');
-  masterIsbnBox.value = ASIN;
-  triggerEvent(masterIsbnBox, 'input');
-  submitButton.click();
-  Clipboard.write(' ');
-}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
-
-// show hints for 'Use ASIN button'
-mapkey('r', 'show hints for Use ASIN button', function() {
-  Hints.create('.buttonVisible', function(element) {
-    element.click();
-  })
-}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
-
-// focus book title input box
-mapkey('t', 'focus book title input box', function() {
+// Focus the input box for book titles
+mapkey('t', 'Focus the input box for book titles', function() {
   const bookTitleBox = document.querySelector('.custom-input.w-full');
   bookTitleBox.focus();
-}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
+}, {domain: /bookparse.com\/dashboard\/.\/review-task.*/i} );
 
-// dictate book title
-mapkey('s', 'dictate book title', function() {
-  const startDictateButton = document.querySelector('#start-dictation-microphone');
-  startDictateButton.click();
-}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
+// Click the "Submit Review" button and close the tab after 1.5 seconds
+mapkey('s', 'Click the "Submit Review"', function() {
+  Hints.create(".custom-button.w-full.css-gefgn7", Hints.dispatchMouseClick);
+  setTimeout(() => {
+    window.close();
+  }, 1500);
+}, {domain: /bookparse.com\/dashboard\/.\/review-task.*/i} );
 
-// click reject and reason button
-mapkey('h', 'click reject and reason button', function() {
-  const rejectReasonButton = document.querySelector('.custom-select.new-w-full');
-  rejectReasonButton.selectedIndex = 1;
-  triggerEvent(rejectReasonButton, 'change');
-  const rejectButton = document.querySelector('.custom-button-2.css-dm0erh');
-  if (rejectReasonButton.selectedIndex === 1) {
-    rejectButton.click();
-  }
-}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
+// Open task image in a new tab
+mapkey('h', 'Open task image in a new tab', function() {
+  const image = document.querySelector('.css-6pg88b > img');
+  window.open(image.src);
+}, {domain: /bookparse.com\/dashboard\/.\/review-task.*/i} );
 
-// ASIN box
-mapkey('a', 'paste clipboard content, hit submit button', function() {
-  const masterIsbnBox = document.querySelector('.custom-input.new-mb-4');
-  const submitButton = document.querySelector('.custom-button.css-dm0erh');
-  if (masterIsbnBox.value.length === 0) {
-    Clipboard.read( (response) => { masterIsbnBox.value = response.data });
-  }
-  triggerEvent(masterIsbnBox, 'input');
-  if (masterIsbnBox.value !== ' ') {
-    submitButton.click();
-    Clipboard.write(' ');
-  } else {
-    masterIsbnBox.value = '';
-    triggerEvent(masterIsbnBox, 'input');
-    masterIsbnBox.blur();
-  }
-}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
 
-// get title from recognition software and focus titlebox
-mapkey('e', 'get title from recognition software', function() {
-  const bookTitleBox = document.querySelector('.custom-input.w-full');
-  Hints.create(".cardVisible.buttonVisible", function(element) {
-    const _element = element.closest('.css-2dg54o');
-    let _title = _element.querySelector('.new-sm-label.new-mb-1');
-    let title = _title.textContent;
-    title = title.replace(/^Title:\s|[;|:||,]/gi, '').replace(/&/gi, 'and');
-    bookTitleBox.value = title;
-    triggerEvent(bookTitleBox, 'input');
-    bookTitleBox.focus();
+unmapAllExcept(['gg', '<Ctrl-i>'], /bookparse.com\/dashboard\/.\/bookidentification\/not\-complete.*/i);
+
+mapkey('d', 'Scroll Down', function() {
+  scrollUpOrDown("down");
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification\/not\-complete.*/i} );
+
+mapkey('u', 'Scroll Up', function() {
+  scrollUpOrDown("up");
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification\/not\-complete.*/i} );
+
+// Click the "Submit Review" button
+mapkey('s', 'Click the "Submit Review"', function() {
+  Hints.create(".custom-button.css-dm0erh", Hints.dispatchMouseClick);
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification\/not\-complete.*/i} );
+
+// Click the "Undecided" button
+mapkey('h', 'Click the "Submit Review"', function() {
+  // const element = document.querySelector('.custom-button-2.css-dm0erh') || document.querySelector('.custom-button.css-dm0erh');
+  // element.click();
+  Hints.create(".custom-button-2.css-dm0erh", Hints.dispatchMouseClick);
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification\/not\-complete.*/i} );
+
+// Grab book title from recognition software
+mapkey('a', 'Grab book title from recognition software"', function() {
+  Hints.create(".new-sm-label.new-mb-1", function(title) {
+    const inputBox = document.querySelector('.custom-input.w-full');
+    inputBox.value = title.textContent;
+    triggerEvent(inputBox, 'input');
+    inputBox.focus();
+    inputBox.blur();
   });
-}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification\/not\-complete.*/i} );
 
-// click asin link that opens in new tab
-mapkey('f', 'click asin link that opens in new tab', function() {
-  Hints.create("a.link.d-block", Hints.dispatchMouseClick);
-}, {domain: /bookparse.com\/dashboard\/.\/bookidentification.*/i} );
+// Grab book title from recognition software
+mapkey('e', 'Focus input box for book titles"', function() {
+  Hints.create(".custom-input.w-full", Hints.dispatchMouseClick);
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification\/not\-complete.*/i} );
+
+// Click the "Master" button
+mapkey('t', 'Click the "Submit Review"', function() {
+  // Hints.create(".new-sm-label.css-k48934", function(element) {
+  Hints.create(".css-gywnln.buttonVisible", function(element) {
+    element.click();
+  });
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification\/not\-complete.*/i} );
+
+// Click the "Alternative" buttons
+mapkey('r', 'Click the "Submit Review"', function() {
+  // Hints.create(".new-sm-label.css-k48934", function(element) {
+  Hints.create(".css-7pjmqk.buttonVisible", function(element) {
+    element.click();
+  });
+}, {domain: /bookparse.com\/dashboard\/.\/bookidentification\/not\-complete.*/i} );
 
 
 // Worthpoint || Ebay
