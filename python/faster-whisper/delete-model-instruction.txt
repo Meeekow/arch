@@ -2,7 +2,8 @@
 pip install -U "huggingface_hub[cli]"
 
 # Run
-huggingface-cli delete-cache
+# huggingface-cli delete-cache
+hf cache delete
 
 # Select the models you want to remove
 
