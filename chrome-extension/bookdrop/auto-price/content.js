@@ -26,3 +26,9 @@ const setPrice = () => {
   setNativeValue(element, "49.99");
 }
 waitForElement(".btn.css-c6xvfb", setPrice);
+
+const setDescription = () => {
+  const element = document.querySelector(".new-form-input.css-1ezpyu1");
+  setNativeValue(element, "Please use pictures to determine exact condition.");
+}
+waitForElement(".btn.css-c6xvfb", setDescription);
