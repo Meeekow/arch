@@ -2,12 +2,12 @@
 import sounddevice as sd
 import soundfile as sf
 import numpy as np
-import pyautogui
 import keyboard
 import time
 import io
 import requests
 import pyperclip
+import re
 
 class TranscriptionSession:
     def __init__(self, sample_rate=16000, channels=1):
@@ -17,15 +17,17 @@ class TranscriptionSession:
         self.is_recording = False
         self.record_start_time = 0
         self.trim_output = False
+        self.capitalize = False
 
-    def toggle_recording(self, trim_output=False):
+    def toggle_recording(self, trim_output=False, capitalize=False):
         if not self.is_recording:
-            self.start_recording(trim_output)
+            self.start_recording(trim_output, capitalize)
         else:
             self.stop_and_transcribe()
 
-    def start_recording(self, trim_output):
+    def start_recording(self, trim_output, capitalize):
         self.trim_output = trim_output
+        self.capitalize = capitalize
         self.is_recording = True
         self.audio_chunks = []
         self.record_start_time = time.time()
@@ -71,8 +73,14 @@ class TranscriptionSession:
             return
 
         full_text = response.json().get("text", "")
-        if not self.trim_output:
-            full_text = " " + full_text.lstrip()
+        if self.trim_output:
+            full_text = full_text.lstrip()
+        else:
+            full_text = " " + full_text
+
+        if self.capitalize:
+            full_text = ' '.join(w.capitalize() for w in full_text.split())
+            full_text = re.sub(r'[^A-Za-z0-9 ]+', '', full_text)
 
         pyperclip.copy(full_text)
         keyboard.press_and_release('ctrl+v')
@@ -83,8 +91,9 @@ class App:
         self.session = TranscriptionSession()
 
     def start(self):
-        keyboard.add_hotkey('win+space', lambda: self.session.toggle_recording(trim_output=False))
-        keyboard.add_hotkey('ctrl+space', lambda: self.session.toggle_recording(trim_output=True))
+        keyboard.add_hotkey('win+space', lambda: self.session.toggle_recording(trim_output=False, capitalize=False))
+        keyboard.add_hotkey('ctrl+space', lambda: self.session.toggle_recording(trim_output=True, capitalize=False))
+        keyboard.add_hotkey('win+enter', lambda: self.session.toggle_recording(trim_output=True, capitalize=True))
         print("🎙️ Ready. Use hotkeys to start/stop recording.")
         keyboard.wait()
 

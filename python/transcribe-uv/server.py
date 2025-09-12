@@ -5,12 +5,17 @@ import soundfile as sf
 import tempfile
 import io
 import os
+import numpy as np
 
 app = Flask(__name__)
 
 print("🔄 Loading Whisper model...")
-model = WhisperModel("distil-large-v3", compute_type="int8")
+model = WhisperModel("distil-small.en", compute_type="int8")
+# model = WhisperModel("distil-large-v3", compute_type="int8")
 print("✅ Model loaded and ready.")
+
+silent_audio = np.zeros(int(16000 * 0.1), dtype=np.float32)
+model.transcribe(silent_audio, language="en")
 
 @app.route("/transcribe", methods=["POST"])
 def transcribe():

@@ -1,6 +1,6 @@
 # Install hf cli
 ```
-# How to use HF in cli to delete models
+uv pip install -U "huggingface_hub[cli]"
 ```
 
 # Delete models from HuggingFace
