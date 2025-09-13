@@ -8,9 +8,10 @@ import io
 import requests
 import pyperclip
 import re
+import librosa
 
 class TranscriptionSession:
-    def __init__(self, sample_rate=16000, channels=1):
+    def __init__(self, sample_rate=44100, channels=1):
         self.sample_rate = sample_rate
         self.channels = channels
         self.audio_chunks = []
@@ -56,13 +57,22 @@ class TranscriptionSession:
             print("⚠️ No audio captured.")
             return
 
+        # Concatenate the audio chunks
         recorded = np.concatenate(self.audio_chunks, axis=0)
+
+        # Check if the audio is stereo (2 channels) and convert to mono if necessary
         if recorded.ndim == 2:
             recorded = recorded.mean(axis=1)
-        recorded = recorded.astype(np.float32).flatten()
 
+        # Resample from 44.1 kHz to 16 kHz
+        recorded_resampled = librosa.resample(recorded, orig_sr=44100, target_sr=16000)
+
+        # Ensure the audio is in float32 format
+        recorded_resampled = recorded_resampled.astype(np.float32)
+
+        # Write the resampled audio to a buffer
         buffer = io.BytesIO()
-        sf.write(buffer, recorded, self.sample_rate, format='WAV')
+        sf.write(buffer, recorded_resampled, 16000, format='WAV')  # Use 16kHz here
         buffer.seek(0)
 
         print("📡 Sending audio to model server...")
@@ -101,3 +111,4 @@ class App:
 if __name__ == "__main__":
     app = App()
     app.start()
+
