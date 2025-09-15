@@ -93,7 +93,7 @@ user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", 
 
 // Network Settings
 // enable custom DNS over HTTPS address
-user_pref("network.trr.mode", 0);
+user_pref("network.trr.mode", 5);
 // custom address to point DNS over HTTPS
 //user_pref("network.trr.uri", "127.0.0.1");
 // custom address to point DNS over HTTPS
@@ -172,6 +172,11 @@ user_pref("browser.discovery.enabled", false);
 user_pref("app.shield.optoutstudies.enabled", false);
 // Enable HTTPS only mode
 user_pref("dom.security.https_only_mode", true);
+
+
+/* HTTPS-Only Mode ***/
+// Send daily usage ping to Mozilla
+user_pref("datareporting.usage.uploadEnabled", false); // [DEFAULT: true]
 
 
 /* Add-ons & Extensions ***/
