@@ -11,8 +11,6 @@ app = Flask(__name__)
 
 print("🔄 Loading Whisper model...")
 model = WhisperModel("distil-small.en", device="cuda", compute_type="int8")
-#model = WhisperModel("distil-small.en", device="cpu", compute_type="int8")
-# model = WhisperModel("distil-large-v3", compute_type="int8")
 print("✅ Model loaded and ready.")
 
 silent_audio = np.zeros(int(16000 * 0.1), dtype=np.float32)
