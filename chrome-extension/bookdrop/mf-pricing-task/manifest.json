@@ -17,10 +17,17 @@
     },
     {
       "matches": [
-        "*://*.amazon.com/*",
+        "https://sellercentral.amazon.com/myinventory/*",
         "*://docs.google.com/*"
       ],
       "js": ["amazon-seller-content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://www.amazon.com/dp/*"
+      ],
+      "js": ["amazon.js"],
       "run_at": "document_idle"
     }
   ]
