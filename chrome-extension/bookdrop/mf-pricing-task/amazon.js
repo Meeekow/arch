@@ -1,32 +1,23 @@
+const waitForElement = (selector, callback, isArray = false, shouldMonitor = false, options = { childList: true, subtree: true }) => {
+  const observer = new MutationObserver(function(mutations, mo) {
+    const element = isArray ? document.querySelectorAll(selector) : document.querySelector(selector);
+    if (element) {
+      if (!shouldMonitor) { mo.disconnect() };
+      element.click();
+    }
+  })
+  observer.observe(document, options);
+}
+
 function sleep(ms) {
   return new Promise(function(resolve) {
     setTimeout(resolve, ms);
   })
 }
 
-function clickBuyBoxButton() {
-  const element = document.querySelector('[role=button].a-popover-trigger.a-declarative');
-  const binding = document.querySelectorAll('.a-link-normal.mm-grid-aod-popover-format-entry');
+waitForElement('[role=button].a-popover-trigger.a-declarative');
 
-  if (element) {
-    element.click();
-  }
-
-  sleep(300)
-    .then(function() {
-      if (binding.length > 0) {
-        binding[0].click();
-      }
-      return sleep(300);
-    })
-}
-
-document.addEventListener('keydown', function(e) {
-  const k = e.key;
-  switch (k) {
-    case 'a':
-      e.preventDefault();
-      clickBuyBoxButton();
-      break;
-  }
+sleep(300).then(function() {
+  waitForElement('.a-link-normal.mm-grid-aod-popover-format-entry');
+  return sleep(300);
 })
