@@ -9,15 +9,9 @@ const waitForElement = (selector, callback, isArray = false, shouldMonitor = fal
   observer.observe(document, options);
 }
 
-function sleep(ms) {
-  return new Promise(function(resolve) {
-    setTimeout(resolve, ms);
-  })
-}
-
-waitForElement('[role=button].a-popover-trigger.a-declarative');
-
-sleep(300).then(function() {
+const main = () => {
+  waitForElement('[role=button].a-popover-trigger.a-declarative');
   waitForElement('.a-link-normal.mm-grid-aod-popover-format-entry');
-  return sleep(300);
-})
+  waitForElement('.a-button-close.a-declarative');
+}
+main();
