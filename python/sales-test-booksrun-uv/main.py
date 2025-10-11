@@ -14,8 +14,10 @@ from pywinauto import Desktop
 
 # Constants
 GET_ASIN = 'win+enter'
+# GET_ASIN = 'ctrl+space'
 UNLIKELY = 'ctrl+enter'
 LIKELY = 'shift+enter'
+# LIKELY = 'win+enter'
 PROTON = 'alt+enter'
 
 CHECK_IMAGE = 'check.png'
@@ -286,10 +288,10 @@ def firefox_container_tab():
 
     current_tab = (current_tab % 11) + 1
     wait()
-
+    
     pyautogui.press('enter')
     wait()
-
+    
     pyperclip.copy("https://booksrun.com/counterfeit/calculator")
     wait()
     pyautogui.hotkey('ctrl', 'v')
