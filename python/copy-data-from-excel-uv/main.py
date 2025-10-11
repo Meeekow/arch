@@ -20,7 +20,7 @@ def combine_excels(source_file):
     print("Program has finished running!")
 
     # Optionally delete the folder (uncomment if needed)
-    # shutil.rmtree(source_file)
+    shutil.rmtree(source_file)
 
 if __name__ == "__main__":
     combine_excels(sys.argv[1])
