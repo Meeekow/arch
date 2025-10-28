@@ -9,12 +9,31 @@ const waitForElement = (selector, callback, isArray = false, shouldMonitor = fal
   observer.observe(document, options);
 }
 
+// Update background color
+const changeBGColor = () => {
+  // Grab the raw alt isbns
+  const raw = []
+
+  document.querySelectorAll('.css-j5uwgx > li').forEach((e) => {
+    raw.push(e.textContent);
+  })
+
+  document.querySelectorAll('.css-2dg54o span.new-sm-label:nth-child(2)').forEach((e) => {
+    const isbn = e.textContent;
+    if (raw.includes(isbn)) {
+      e.parentElement.style.backgroundColor = "blue"
+    }
+  })
+}
+waitForElement('.new-sm-label.new-mb-1', changeBGColor, true, true);
+
 // Highlight keywords in listing titles
 const highlightKeywords = () => {
   const keywords = [
     'series',
     'set(?:s)?',
     'book(?:s)?',
+    'part(?:s)?',
     'year(?:s)?',
     'volume(?:s)?',
     'edition(?:s)?',
