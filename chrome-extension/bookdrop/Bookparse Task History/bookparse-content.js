@@ -1,30 +1,30 @@
 const waitForElement = (selector, callback, isArray = false, shouldMonitor = false, options = { childList: true, subtree: true }) => {
-  const observer = new MutationObserver(function(mutations, mo) {
+  const observer = new MutationObserver(function (mutations, mo) {
     const element = isArray ? document.querySelectorAll(selector) : document.querySelector(selector);
     if (element) {
-      if (!shouldMonitor) { mo.disconnect() };
+      if (!shouldMonitor) { mo.disconnect() }
       callback(element);
     }
   });
   observer.observe(document, options);
-}
+};
 
 // Update background color
 const changeBGColor = () => {
   // Grab the raw alt isbns
-  const raw = []
+  const raw = [];
 
   document.querySelectorAll('.css-j5uwgx > li').forEach((e) => {
     raw.push(e.textContent);
-  })
+  });
 
   document.querySelectorAll('.css-2dg54o span.new-sm-label:nth-child(2)').forEach((e) => {
     const isbn = e.textContent;
     if (raw.includes(isbn)) {
-      e.parentElement.style.backgroundColor = "lightpink"
+      e.parentElement.style.backgroundColor = "lightpink";
     }
-  })
-}
+  });
+};
 waitForElement('.new-sm-label.new-mb-1', changeBGColor, true, true);
 
 // Highlight keywords in listing titles
@@ -56,7 +56,7 @@ const highlightKeywords = () => {
 };
 waitForElement('.new-sm-label.new-mb-1', highlightKeywords, true, true);
 
-// Highlight keywords in listing titles base on what the user types
+// Highlight keywords in listing titles based on what the user types
 const highlightUserQuery = () => {
   const bookTitleInputBox = document.querySelector('.custom-input.w-full');
 
@@ -143,23 +143,22 @@ const highlightUserQuery = () => {
 };
 waitForElement('.custom-input.w-full', highlightUserQuery, false, true);
 
-
 // Add a class on visible buttons for SurfingKeys
 const findVisibleButton = () => {
   let callback = (entries, observer) => {
     entries.forEach((entry) => {
       const target = entry.target;
-      if (entry.isIntersecting){
+      if (entry.isIntersecting) {
         target.classList.add('buttonVisible');
       } else {
         target.classList.remove('buttonVisible');
       }
-    })
-  }
+    });
+  };
 
   let observer = new IntersectionObserver(callback, {
     threshold: [1]
-  })
+  });
 
   const buttons = document.querySelectorAll('.css-gywnln');
   for (const b of buttons) {
@@ -170,22 +169,22 @@ const findVisibleButton = () => {
   for (const b of altButtons) {
     observer.observe(b);
   }
-
-}
+};
 
 // Add a class on visible buttons for SurfingKeys
 waitForElement('.css-2dg54o', findVisibleButton, false, true);
 
 // Hide side panel when page loads.
 waitForElement('.material-symbols-rounded', (element) => {
-  element.click()
-  document.addEventListener('copy', function(e) {
-      const elem = e.target.parentElement.lastElementChild.querySelector('a');
-      if (elem) {
-        const link = elem.getAttribute('href');
-        window.open(link, '_blank');
-      }
-  })
+  element.click();
+  document.addEventListener('copy', function (e) {
+    const elem = e.target.parentElement.lastElementChild.querySelector('a');
+    if (elem) {
+      const link = elem.getAttribute('href');
+      command({ instruction: "focus-qa" });
+      window.open(link, '_blank');
+    }
+  });
 }, false, false);
 
 const linkBuilder = () => {
@@ -196,7 +195,7 @@ const linkBuilder = () => {
   const title = _title_input.value.toLowerCase().replace(/^\s+/g, '').replace(/\s+/g, ' ').replace(/\s+$/g, '').replaceAll(' ', '+');
   let _binding = '';
 
-  switch(selected_b) {
+  switch (selected_b) {
     case '&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656022011': // 'Paperback'
       _binding = '&rh=n%3A283155%2Cp_n_feature_browse-bin%3A2656022011';
       break;
@@ -212,26 +211,26 @@ const linkBuilder = () => {
   }
 
   return [`https://www.amazon.com/s?k=${title}${_binding}`, _title_input.value];
-}
+};
 
 const command = (object) => {
-  chrome.runtime.sendMessage({ message: object.instruction, url: object.link, search: object.query }, function() {});
-}
+  chrome.runtime.sendMessage({ message: object.instruction, url: object.link, search: object.query }, function () { });
+};
 
 const unifiedSearch = () => {
   const parameters = linkBuilder();
-  command({ instruction: 'new-amazon-url', link: parameters[0]});
-  command({ instruction: 'search-query', query: parameters[1]});
-}
+  command({ instruction: 'new-amazon-url', link: parameters[0] });
+  command({ instruction: 'search-query', query: parameters[1] });
+};
 
 const customHotkeys = (key) => {
   const hotkeys = {
     'c': 'alt-tab',
     'i': 'zoom-in',
     'n': 'reset-zoom-level'
-  }
+  };
   command({ instruction: hotkeys[key] });
-}
+};
 
 const rotateImage = (key) => {
   const image = document.querySelector('.css-6pg88b');
@@ -240,13 +239,48 @@ const rotateImage = (key) => {
     'ArrowRight': 'rotate(90deg)',
     'ArrowDown': 'rotate(180deg)',
     'ArrowLeft': 'rotate(270deg)'
-  }
+  };
   image.style.transform = direction[key];
-}
+};
+
+const setNativeValue = (element, value) => {
+  let lastValue = element.value;
+  element.value = value;
+  let event = new Event('input', { target: element, bubbles: true });
+  // React 15
+  event.simulated = true;
+  // React 16
+  let tracker = element._valueTracker;
+  if (tracker) { tracker.setValue(lastValue) }
+  element.dispatchEvent(event);
+};
+
+const loseFocus = () => {
+  const blob = document.body;
+  blob.tabIndex = 0;
+  blob.focus();
+  blob.tabIndex = -1;
+};
 
 const vim = () => {
-  const hotkeys = ['c', 'i', 'n'];
+  // const hotkeys = ['c', 'i', 'n'];
+  const hotkeys = [];
   const arrowKeys = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'];
+
+  async function pasteFromClipboard() {
+    try {
+      const text = await navigator.clipboard.readText();
+      console.log("Clipboard contents:", text);
+
+      const title = document.querySelector('.custom-input.w-full');
+      title.focus();
+      setNativeValue(title, text);
+      loseFocus();
+
+    } catch (err) {
+      console.error("Failed to read clipboard", err);
+    }
+  }
 
   if (!window._keydownListenerAttached) {
     window._keydownListenerAttached = true;
@@ -255,15 +289,35 @@ const vim = () => {
     function onKeyDown(e) {
       if (e.target.nodeName === 'BODY' && !e.ctrlKey) {
         const k = e.key;
-        switch(k) {
+        switch (k) {
+          case 's':
+            e.preventDefault();
+            document.querySelector('.custom-button.w-full.css-gefgn7').click();
+            command({ instruction: "focus-qa" });
+            setTimeout(() => {
+              window.close();
+            }, 500);
+            break;
+          case 'f':
+            e.preventDefault();
+            pasteFromClipboard();
+            break;
+          case 'e':
+            e.preventDefault();
+            document.querySelector('.custom-input.w-full').focus();
+            break;
+	  /*
           case 'n':
           case 'i':
+            e.preventDefault();
             document.querySelector('.material-symbols-rounded.css-c3ghyy').click();
             customHotkeys(k);
             break;
+	  */
         }
 
         if (hotkeys.includes(k)) {
+          e.preventDefault();
           customHotkeys(k);
         } else if (arrowKeys.includes(k)) {
           e.preventDefault();
@@ -283,7 +337,7 @@ const vim = () => {
 
   title.addEventListener('keydown', sendQuery);
   function sendQuery(e) {
-    switch(e.key) {
+    switch (e.key) {
       case 'Escape':
         title.blur();
         // unifiedSearch();
@@ -295,7 +349,7 @@ const vim = () => {
   const binding = document.querySelector('.custom-select.css-ecfv9d');
   binding.addEventListener('keydown', bindingSelection);
   function bindingSelection(e) {
-    switch(e.key) {
+    switch (e.key) {
       case 'Escape':
         unifiedSearch();
         customHotkeys('n');
@@ -305,11 +359,10 @@ const vim = () => {
         break;
     }
   }
-
-}
+};
 waitForElement('.new-sm-label.css-1up6yon', vim, false, true);
 
 const removeGeneratedLink = (element) => {
-    element.hidden = true;
-}
+  element.hidden = true;
+};
 waitForElement('.css-1ad5bf3', removeGeneratedLink, false, true);
