@@ -24,6 +24,21 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     sendResponse({ reply: "sending-new-amazon-url" });
   }
 
+  if (message.message === "focus-qa") {
+    chrome.tabs.query({}, function(tabs) {
+      const spreadsheetId = '1qXsHPjYazP1iAjGbu26RVjyyrnT3Xrn0HwA1UTAGLQc';
+      const targetTab = tabs.find(tab => tab.url.includes(spreadsheetId));
+      if (targetTab) {
+        chrome.windows.update(targetTab.windowId, { focused: true }, function() {
+          chrome.tabs.update(targetTab.id, { active: true });
+        })
+      } else {
+        console.log("QA tab not found!");
+      }
+    })
+    sendResponse({ reply: "focusing-qa" });
+  }
+
   // Update ebay and worthpoint to match what
   // is being searched on amazon.
   if (message.message === "search-query") {
@@ -52,7 +67,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       });
     });
   }
-
 
   // Reset zoom level.
   if (message.message === "reset-zoom-level") {
