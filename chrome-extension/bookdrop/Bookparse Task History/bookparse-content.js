@@ -21,7 +21,7 @@ const changeBGColor = () => {
   document.querySelectorAll('.css-2dg54o span.new-sm-label:nth-child(2)').forEach((e) => {
     const isbn = e.textContent;
     if (raw.includes(isbn)) {
-      e.parentElement.style.backgroundColor = "blue"
+      e.parentElement.style.backgroundColor = "lightpink"
     }
   })
 }
