@@ -9,9 +9,10 @@ const waitForElement = (selector, callback, isArray = false, shouldMonitor = fal
   observer.observe(document, options);
 }
 
-async function getSenderEmailAddress(emailAddress) {
+async function getSenderEmailAddress(name, emailAddress) {
   try {
-    await navigator.clipboard.writeText(emailAddress);
+    const data = `${name}\t${emailAddress}`
+    await navigator.clipboard.writeText(data);
   } catch (err) {
     console.log(err);
   }
@@ -19,9 +20,10 @@ async function getSenderEmailAddress(emailAddress) {
 
 function attachListener() {
   document.addEventListener('click', function(evt) {
+    const name = evt.target.getAttribute('data-name');
     const emailAddress = evt.target.getAttribute('jid');
     if (emailAddress !== null) {
-      getSenderEmailAddress(emailAddress);
+      getSenderEmailAddress(name, emailAddress);
       chrome.runtime.sendMessage({ message: 'focus-email-directory', email: emailAddress }, function() {});
     }
   })
