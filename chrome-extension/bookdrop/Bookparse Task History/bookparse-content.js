@@ -339,8 +339,10 @@ const vim = () => {
   function sendQuery(e) {
     switch (e.key) {
       case 'Escape':
+        e.preventDefault();
         title.blur();
-        // unifiedSearch();
+        title.removeEventListener('keydown', sendQuery);
+        unifiedSearch();
         // customHotkeys('n');
         break;
     }
@@ -360,7 +362,7 @@ const vim = () => {
     }
   }
 };
-waitForElement('.new-sm-label.css-1up6yon', vim, false, true);
+waitForElement('.new-sm-label.css-m0u5l', vim, false, true);
 
 const removeGeneratedLink = (element) => {
   element.hidden = true;
