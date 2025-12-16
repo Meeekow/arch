@@ -56,6 +56,24 @@ const highlightKeywords = () => {
 };
 waitForElement('.new-sm-label.new-mb-1', highlightKeywords, true, true);
 
+// Highlight keywords in listing titles
+const highlightBinding = () => {
+  const binding = document.querySelectorAll('.new-sm-label:nth-child(5)');
+
+  binding.forEach((el) => {
+    // Skip if already processed
+    if (el.dataset.keywordsHighlighted === "true") return;
+
+    el.innerHTML = el.innerHTML.replace(el.innerHTML, (match) => {
+      return `<mark class="highlight-binding" !important; style="background: lightblue !important; font-size: 18px !important">${match}</mark>`;
+    });
+
+    // Mark as processed
+    el.dataset.keywordsHighlighted = "true";
+  });
+};
+waitForElement('.new-sm-label.new-mb-1', highlightBinding, true, true);
+
 // Highlight keywords in listing titles based on what the user types
 const highlightUserQuery = () => {
   const bookTitleInputBox = document.querySelector('.custom-input.w-full');
