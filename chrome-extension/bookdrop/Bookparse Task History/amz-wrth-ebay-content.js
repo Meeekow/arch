@@ -1,3 +1,4 @@
+/*
 function command(instruction) {
   chrome.runtime.sendMessage({ message: instruction }, function() {});
 }
@@ -14,7 +15,7 @@ document.addEventListener('keydown', function(e) {
     command(hotkeys[e.key]);
   }
 })
-
+*/
 
 function removeFooterElements() {
   const selectors = [
