@@ -1,4 +1,4 @@
-import threading
+# clipboard_listener.py
 import time
 import ctypes
 from ctypes import wintypes
@@ -205,8 +205,10 @@ def shift_dates(s):
     before_date = datetime.strptime(before_str, "%Y/%m/%d").date()
 
     # Shift by 1 day
-    new_after = after_date + timedelta(days=1)
-    new_before = before_date + timedelta(days=1)
+    # new_after = after_date + timedelta(days=1)
+    new_after = after_date - timedelta(days=1)
+    # new_before = before_date + timedelta(days=1)
+    new_before = before_date - timedelta(days=1)
 
     return f"after:{new_after.strftime('%Y/%m/%d')} before:{new_before.strftime('%Y/%m/%d')}"
 
