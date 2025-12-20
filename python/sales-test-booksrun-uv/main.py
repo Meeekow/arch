@@ -59,7 +59,8 @@ def focus_window(window_title):
 def find_chrome_window():
     """Find the Chrome window with Google Sheets open."""
     try:
-        return Desktop(backend="uia").window(title_re=".*Google Sheets -.*Chrome")
+        # return Desktop(backend="uia").window(title_re=".*Google Sheets -.*Chrome")
+        return Desktop(backend="uia").window(title_re="Sales Test - Google Sheets -.*Chrome")
     except Exception as e:
         print(f"[ERROR] Couldn't find Chrome window: {e}")
         return None
@@ -209,6 +210,7 @@ def get_asin():
 
         # Uncomment if you want to search immediately
         click_image_on_screen(SEARCH_IMAGE, region=right_half_region)
+        # click_image_on_screen(SEARCH_IMAGE)
     except Exception as e:
         print(f"[ERROR] in get_asin: {e}")
 
@@ -269,7 +271,7 @@ def connect_to_random_country():
 
     firefox_container_tab()
 
-    pyautogui.moveTo(last_click_pos[0], last_click_pos[1])
+    pyautogui.moveTo(last_click_pos[0], last_click_pos[1] + 21)
 
 
 def firefox_container_tab():
@@ -305,6 +307,7 @@ def firefox_container_tab():
     wait()
 
     click_captcha_or_bypass(CLOUDFLARE, CHECK_IMAGE, region=right_half_region)
+    # click_captcha_or_bypass(CLOUDFLARE, CHECK_IMAGE)
 
 
 def main():
