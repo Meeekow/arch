@@ -308,6 +308,7 @@ const vim = () => {
       if (e.target.nodeName === 'BODY' && !e.ctrlKey) {
         const k = e.key;
         switch (k) {
+          /*
           case 's':
             e.preventDefault();
             document.querySelector('.custom-button.w-full.css-gefgn7').click();
@@ -316,6 +317,7 @@ const vim = () => {
               window.close();
             }, 500);
             break;
+          */
           case 'f':
             e.preventDefault();
             pasteFromClipboard();
@@ -386,3 +388,76 @@ const removeGeneratedLink = (element) => {
   element.hidden = true;
 };
 waitForElement('.css-1ad5bf3', removeGeneratedLink, false, true);
+
+
+const replaceSelectedText = (replacementText, wordSelectionStart, wordSelectionEnd) => {
+  const titleInputBox = document.querySelector('.custom-input.w-full');
+  let result = `${wordSelectionStart} ${replacementText} ${wordSelectionEnd}`;
+  result = result.replace(/^\s+/g, '').replace(/\s+/g, ' ').replace(/\s+$/g, '');
+  setNativeValue(titleInputBox, result);
+}
+
+let recognition;
+const startListening = async (isPartialTextReplace = false) => {
+  const titleInputBox = document.querySelector('.custom-input.w-full');
+  const transcribeButton = document.querySelector('#start-dictation-microphone');
+
+  const wordSelectionStart = titleInputBox.value.slice(0, titleInputBox.selectionStart);
+  const wordSelectionEnd = titleInputBox.value.slice(titleInputBox.selectionEnd);
+
+  const speechRecognition = window.webkitSpeechRecognition;
+  recognition = new speechRecognition();
+  recognition.lang = 'en-US';
+  recognition.interimResults = true;
+
+  recognition.addEventListener('audiostart', () => {
+    transcribeButton.innerText = 'Transcribing';
+    transcribeButton.style.cssText = 'width: 110px; position: relative; left: 16.5%; top: 35px; transform: translateX(-50%); background-color: #FAA0A0; border-style: none;';
+  });
+
+  recognition.addEventListener('audioend', () => {
+    transcribeButton.innerText = 'Start';
+    transcribeButton.style.cssText = 'width: 110px; position: relative; left: 16.5%; top: 35px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
+    recognition.stop();
+  });
+
+  recognition.addEventListener('result', (e) => {
+    const transcript = Array.from(e.results)
+      .map((result) => result[0])
+      .map((result) => result.transcript);
+    isPartialTextReplace ? replaceSelectedText(transcript, wordSelectionStart, wordSelectionEnd) : setNativeValue(titleInputBox, transcript);
+    titleInputBox.focus();
+  });
+
+  recognition.addEventListener('error', () => {
+    recognition.stop();
+    setTimeout(() => {
+      recognition.start();
+    }, 100);
+  });
+  recognition.start();
+}
+
+const stopListening = () => {
+  recognition.stop();
+}
+
+const renderStartButton = (selector) => {
+  const startRecordingButton = document.createElement('button');
+  startRecordingButton.id = 'start-dictation-microphone';
+  startRecordingButton.innerText = 'Start';
+  startRecordingButton.style.cssText = 'width: 110px; position: relative; left: 16.5%; top: 35px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
+  startRecordingButton.onclick = () => { startListening() };
+  selector.parentNode.appendChild(startRecordingButton);
+}
+waitForElement('.new-sm-label.css-m0u5l', renderStartButton, false, false);
+
+const renderStopButton = (selector) => {
+  const stopRecordingButton = document.createElement('button');
+  stopRecordingButton.id = 'stop-dictation-microphone';
+  stopRecordingButton.innerText = 'Stop';
+  stopRecordingButton.style.cssText = 'width: 100px; position: relative; left: 17%; top: 35px; transform: translateX(-50%); background-color: rgb(243, 243, 243); border-style: none;';
+  stopRecordingButton.onclick = () => { stopListening() };
+  selector.parentNode.appendChild(stopRecordingButton);
+}
+waitForElement('.new-sm-label.css-m0u5l', renderStopButton, false, false);
