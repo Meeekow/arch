@@ -199,7 +199,7 @@ waitForElement('.material-symbols-rounded', (element) => {
     const elem = e.target.parentElement.lastElementChild.querySelector('a');
     if (elem) {
       const link = elem.getAttribute('href');
-      command({ instruction: "focus-qa" });
+      //command({ instruction: "focus-qa" });
       window.open(link, '_blank');
     }
   });
@@ -308,16 +308,14 @@ const vim = () => {
       if (e.target.nodeName === 'BODY' && !e.ctrlKey) {
         const k = e.key;
         switch (k) {
-          /*
           case 's':
             e.preventDefault();
             document.querySelector('.custom-button.w-full.css-gefgn7').click();
-            command({ instruction: "focus-qa" });
+            //command({ instruction: "focus-qa" });
             setTimeout(() => {
               window.close();
             }, 500);
             break;
-          */
           case 'f':
             e.preventDefault();
             pasteFromClipboard();
@@ -382,7 +380,7 @@ const vim = () => {
     }
   }
 };
-waitForElement('.new-sm-label.css-m0u5l', vim, false, true);
+waitForElement('.new-sm-label.css-1up6yon', vim, false, true);
 
 const removeGeneratedLink = (element) => {
   element.hidden = true;
@@ -461,3 +459,4 @@ const renderStopButton = (selector) => {
   selector.parentNode.appendChild(stopRecordingButton);
 }
 waitForElement('.new-sm-label.css-m0u5l', renderStopButton, false, false);
+
